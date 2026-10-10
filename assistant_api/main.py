@@ -224,6 +224,7 @@ For mixed questions, also explain the stable concept from general knowledge."""
         get_store=lambda: app.state.finance_store,
         admin_dependency=admin,
         feeds_client_getter=lambda: app.state.feeds,
+        external_feeds_enabled=lambda: settings.external_feeds,
     ))
 
     return app

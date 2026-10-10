@@ -176,9 +176,11 @@ class DCFReport:
     probability_weighted_value_per_share: str | None
     probability_weighted_reason: str | None
     margin_of_safety: dict[str, str] | None
+    margin_of_safety_reason: str | None
 
 
-def compute_dcf_report(scenarios: list[dict], current_price: str | None) -> DCFReport:
+def compute_dcf_report(scenarios: list[dict], current_price: str | None,
+                       current_price_date: str | None = None) -> DCFReport:
     results = [
         compute_dcf_scenario(
             s["name"], s["projected_fcff"], s["discount_rate"], s["terminal_growth_rate"],
@@ -199,16 +201,24 @@ def compute_dcf_report(scenarios: list[dict], current_price: str | None) -> DCFR
         reason = "Expected value requires every scenario to have a user-supplied probability"
 
     margin_of_safety = None
-    if current_price is not None and weighted is not None:
+    margin_of_safety_reason = None
+    if current_price is None:
+        margin_of_safety_reason = "No current_price (with current_price_date) was supplied"
+    elif weighted is None:
+        margin_of_safety_reason = "No probability-weighted fair value is available: " + (reason or "unknown")
+    elif weighted <= 0:
+        margin_of_safety_reason = "Probability-weighted fair value is not positive; margin of safety is not meaningful"
+    else:
         price = Decimal(current_price)
         if price <= 0:
-            margin_of_safety = None
+            margin_of_safety_reason = "current_price must be positive"
         else:
-            mos = (weighted - price) / weighted if weighted != 0 else Decimal(0)
+            mos = (weighted - price) / weighted
             margin_of_safety = {
                 "formula": "(fair_value - price) / fair_value",
                 "fair_value": str(weighted),
                 "price": str(price),
+                "price_date": current_price_date,
                 "margin_of_safety": str(mos),
                 "note": "Analytical measure of discount to a user-approved valuation; not guaranteed downside protection.",
             }
@@ -217,4 +227,46 @@ def compute_dcf_report(scenarios: list[dict], current_price: str | None) -> DCFR
         probability_weighted_value_per_share=str(weighted) if weighted is not None else None,
         probability_weighted_reason=reason,
         margin_of_safety=margin_of_safety,
+        margin_of_safety_reason=margin_of_safety_reason,
     )
+
+
+def compute_dcf_sensitivity(base: dict, discount_rate_deltas: list[str],
+                            terminal_growth_deltas: list[str]) -> dict:
+    """Deterministic value-per-share grid varying discount_rate and
+    terminal_growth_rate around a single base scenario's own rates.
+
+    Combinations where discount_rate would fall at or below terminal_growth_rate
+    are reported as explicitly not meaningful rather than omitted silently."""
+    base_r = Decimal(base["discount_rate"])
+    base_g = Decimal(base["terminal_growth_rate"])
+    rows = []
+    for rd in discount_rate_deltas:
+        r = base_r + Decimal(rd)
+        row = {"discount_rate": str(r), "cells": []}
+        for gd in terminal_growth_deltas:
+            g = base_g + Decimal(gd)
+            cell = {"terminal_growth_rate": str(g)}
+            if r <= g:
+                cell["value_per_share"] = None
+                cell["not_meaningful"] = "discount_rate must be greater than terminal_growth_rate"
+            else:
+                try:
+                    result = compute_dcf_scenario(
+                        base["name"], base["projected_fcff"], str(r), str(g),
+                        base["net_debt"], base["shares_diluted"],
+                    )
+                    cell["value_per_share"] = result.value_per_share
+                    cell["not_meaningful"] = None
+                except ValueError as exc:
+                    cell["value_per_share"] = None
+                    cell["not_meaningful"] = str(exc)
+            row["cells"].append(cell)
+        rows.append(row)
+    return {
+        "base_discount_rate": str(base_r),
+        "base_terminal_growth_rate": str(base_g),
+        "rows": rows,
+        "note": "Deterministic recomputation of the same scenario's formula at alternate "
+                "rates; not a prediction or recommendation.",
+    }

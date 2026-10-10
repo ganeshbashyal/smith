@@ -234,7 +234,10 @@ Invoke-RestMethod http://127.0.0.1:8000/api/finance/securities -Method Post -Hea
 ### Data model and provenance
 
 Companies (`fin_securities`), evidence documents (`fin_evidence` + bounded
-2,000-character passages), point-in-time statement figures (`fin_statements`),
+2,000-character passages keyed to real PDF page numbers, not chunk IDs),
+versioned point-in-time statement figures (`fin_statements` +
+`fin_statement_revisions` — re-saving a period never overwrites; every save
+creates a new immutable revision and prior revisions remain queryable),
 versioned investment theses (`fin_thesis_revisions`), watchlists/price
 history/alerts/catalysts, immutable valuation runs, and long-only portfolios/
 holdings are stored additively in the existing `mr_smith.sqlite3`. The first
@@ -242,66 +245,94 @@ time the finance tables are created against a pre-existing database, a
 timestamped, size- and `PRAGMA integrity_check`-verified backup
 (`mr_smith.pre-finance-migration-<UTC timestamp>.sqlite3.bak`) is written next
 to it before any new table is created; personal history/settings tables are
-untouched. Every statement figure either traces to a confirmed evidence
-document or requires an explicit manual-entry source note — there is no silent
-"no source" path. Missing figures are always `null`, never coerced to zero.
+untouched. Every statement figure (via single-entry or CSV/JSON
+preview/confirm import) either traces to a confirmed evidence document you
+own for that security or requires an explicit manual-entry source note — there
+is no silent "no source" path, and linking someone else's evidence to your
+security is rejected with HTTP 422. Missing figures are always `null`, never
+coerced to zero.
 
 Evidence accepts pasted text or a PDF upload (`pypdf`, text layer only, 25MB
-cap); scanned/encrypted/unreadable PDFs return an explicit `limitations`
-string instead of guessing or silently dropping content — OCR is out of scope.
-A recent evidence document for a security is also surfaced as attributed
-context in `/api/chat` and `/api/research` by passing `"entity_symbol":"BHP"`
-on the request.
+cap, typed upload metadata validated before any parsing); scanned/encrypted/
+unreadable PDFs return HTTP 422 instead of silently saving blank evidence.
+Multi-chunk pages are preserved as a single page each — `page_count` always
+reflects actual PDF pages, never internal text chunks. A recent evidence
+document for a security is also surfaced as attributed context in
+`/api/chat` and `/api/research` by passing `"entity_symbol":"BHP"` on the
+request.
 
 ### Watchlists, price history and alerts
 
-Watchlists hold up to 50 deduplicated symbols. `POST
-/api/finance/watchlists/{id}/refresh` fetches at most one year of daily bars
-per symbol from Yahoo's public chart endpoint (bounded concurrency, a single
-retry on HTTP 429, raw vs. adjusted close kept distinct), de-duplicates
-already-seen `(symbol, date)` observations, and raises an in-app alert when a
-configured `price_alert_threshold_pct` is crossed between the two most recent
-observations. This is a best-effort, potentially delayed public source — not a
-broker or paid feed, and not scheduled; refreshes are always user-initiated.
+Watchlists hold up to 50 deduplicated **`.AX`-suffixed ASX symbols only**
+(validated before any network call). `POST
+/api/finance/watchlists/{id}/refresh` returns HTTP 503 unless the
+`MR_SMITH_EXTERNAL_FEEDS=1` environment variable is set — refreshes never
+silently attempt a network call. When enabled, it fetches at most one year of
+daily bars per symbol from Yahoo's public chart endpoint (bounded
+concurrency, a single retry on HTTP 429, raw vs. adjusted close kept
+distinct), records each bar's actual Sydney exchange date (via
+`exchangeTimezoneName`/`zoneinfo`, not naive UTC, so a late-session bar is
+never misdated), de-duplicates already-seen `(symbol, date)` observations,
+and rejects non-finite/negative bar values instead of recording them.
+`POST /api/finance/alerts/evaluate` is a separate, user-initiated, idempotent
+check (re-running it twice creates no duplicate alerts) that raises material
+alerts for near-term catalysts and thesis-review alerts when evidence is
+newer than the latest thesis revision — there is no background scheduler.
 
 ### Deterministic valuation
 
-`POST /api/finance/securities/{symbol}/valuation/ratios` computes, using
-`Decimal` only (never `float`): market cap, net debt, enterprise value, P/E,
+`POST /api/finance/securities/{symbol}/valuation/ratios` requires a
+**confirmed statement revision** (`statement_period` +
+`statement_fiscal_period_end`, not an arbitrary inline dict) and computes,
+using `Decimal` only (never `float`) after converting the statement's own
+monetary scale (units/thousands/millions) and share count to the supplied
+price's currency/date basis: market cap, net debt, enterprise value, P/E,
 EV/EBITDA, free cash flow, FCF yield, dividend yield and cash conversion. Any
 ratio with a missing, zero or negative denominator returns an explicit
 `not_meaningful` reason instead of a fabricated number, alongside the exact
-formula used.
+formula and the statement revision it was computed from.
 
 `POST /api/finance/securities/{symbol}/valuation/dcf` computes a FCFF DCF per
 scenario (`discount_rate` must exceed `terminal_growth_rate` or the request is
-rejected with HTTP 422), an optional probability-weighted expected value per
-share (withheld with a stated reason unless every scenario has a probability
-and they sum to exactly 1), and a margin-of-safety figure
-`(fair_value - price) / fair_value` when a current price is supplied. Every
-ratio and DCF call is saved as an **immutable** `fin_valuation_runs` row
-(inputs + outputs), so past valuations are never silently recomputed in place.
+rejected with HTTP 422; scenario probabilities must each be in `[0, 1]`), an
+optional probability-weighted expected value per share (withheld with a
+stated reason unless every scenario has a probability and they sum to exactly
+1), and a margin-of-safety figure `(fair_value - price) / fair_value` —
+computed only when fair value is strictly positive and a dated current price
+was explicitly supplied, otherwise withheld with a reason. `POST
+.../dcf/sensitivity` re-runs a base scenario across discount-rate and
+terminal-growth deltas; `GET .../dcf/{run_id}/export` produces a Markdown
+export. Every ratio and DCF call is saved as an **immutable**
+`fin_valuation_runs` row (inputs + outputs), so past valuations are never
+silently recomputed in place.
 
 ### Portfolio analytics
 
 Long-only shares/ETFs/AUD cash holdings import via CSV or JSON with an
 atomic preview/confirm flow: `holdings/preview` parses and validates without
 writing; `holdings/confirm` rejects the entire batch on any invalid row (no
-partial import) and otherwise atomically replaces the portfolio's holdings.
-Manual overseas holdings use a user-supplied `manual_aud_value` (no automatic
-or fabricated FX conversion). CSV/JSON columns:
-`symbol, units, cost_basis_total, sector, exposure_notes, is_cash,
-manual_aud_value, valuation_date`.
+partial import, 500-row file budget) and otherwise atomically replaces the
+portfolio's holdings. Units must be positive, cash balances non-negative, all
+monetary figures finite (no `NaN`/`Infinity`), symbols canonical and unique
+within a file. Manual overseas holdings require a user-supplied, dated
+`manual_aud_value` (no automatic or fabricated FX conversion); zero-valued
+holdings are preserved, not dropped. Individual holdings can also be read,
+added, edited and deleted one at a time via `GET/POST
+/api/finance/portfolios/{id}/holdings` and `PUT/DELETE
+.../holdings/{holding_id}`.
 
-`GET /api/finance/portfolios/{id}/analysis` reports coverage-aware weights and
-sector concentration — holdings with no resolvable value are listed under
-`missing_valuations` and excluded from weights, never silently renormalized
-in. `POST /api/finance/portfolios/{id}/scenario` applies user-defined,
-non-overlapping percentage shocks (first matching rule per holding wins) and
-reports baseline vs. shocked totals. Correlation analysis requires a minimum
-number of aligned return observations or explicitly reports itself as
-unavailable; there is no Sharpe/VaR style metric, since no defined method or
-sufficient history is implemented for one.
+`GET /api/finance/portfolios/{id}/analysis` reports a `covered_value_aud`
+subtotal, weights and sector concentration computed **only** over holdings
+with a resolvable value — holdings with no resolvable value are listed under
+`missing_valuations`, and the overall `total_value_aud`/weights/concentration
+are explicitly withheld (not silently renormalized or guessed) whenever
+coverage is incomplete. `POST /api/finance/portfolios/{id}/scenario` applies
+user-defined, non-overlapping percentage shocks (first matching rule per
+holding wins, `pct` must be `>= -100` and finite) and reports baseline vs.
+shocked totals. `GET /api/finance/portfolios/{id}/correlation` computes a
+Pearson correlation between two symbols' aligned daily returns and explicitly
+reports `available: false` with a reason (not a fabricated `0`) when there is
+insufficient aligned history.
 
 ### Explicit exclusions
 

@@ -1,5 +1,6 @@
 from datetime import date
 
+from assistant_api.finance.evidence import passages_with_page_numbers, plain_text_passages
 from assistant_api.finance.repository import FinanceStore
 
 
@@ -10,14 +11,15 @@ def test_additive_schema_creation_and_crud(tmp_path):
     assert store.get_security("BHP")["name"] == "BHP Group"
     assert len(store.list_securities()) == 1
 
+    passages = plain_text_passages("Revenue grew 5% to $50bn.")
     evidence_id, created = store.add_evidence(
         "BHP", "FY24 annual report", "BHP", "annual_report", "annual_report", "https://example.com/bhp.pdf",
-        date(2024, 8, 1), "annual", "hash1", ["Revenue grew 5% to $50bn."],
+        date(2024, 8, 1), "annual", "hash1", passages, page_count=1,
     )
     assert created is True
     evidence_id2, created2 = store.add_evidence(
         "BHP", "FY24 annual report", "BHP", "annual_report", "annual_report", "https://example.com/bhp.pdf",
-        date(2024, 8, 1), "annual", "hash1", ["Revenue grew 5% to $50bn."],
+        date(2024, 8, 1), "annual", "hash1", passages, page_count=1,
     )
     assert created2 is False
     assert evidence_id == evidence_id2
@@ -28,11 +30,11 @@ def test_additive_schema_creation_and_crud(tmp_path):
     context = store.evidence_as_context("BHP")
     assert context and context[0]["source_type"] == "annual_report"
 
-    statement_id = store.save_statement(
+    statement_id, revision = store.save_statement(
         "BHP", "annual", date(2024, 6, 30), "AUD", "millions", True,
         {"revenue": "50000", "net_income": "10000"}, evidence_id, "",
     )
-    assert statement_id
+    assert statement_id and revision == 1
     statements = store.list_statements("BHP")
     assert statements[0]["figures"]["revenue"] == "50000"
 
@@ -42,6 +44,48 @@ def test_additive_schema_creation_and_crud(tmp_path):
     assert revision2 == 2
     revisions = store.list_thesis_revisions("BHP")
     assert [r["revision"] for r in revisions] == [1, 2]
+
+
+def test_statement_save_creates_new_revision_never_overwrites(tmp_path):
+    """Defect 5 regression: confirming the same period twice must version, not upsert."""
+    store = FinanceStore(tmp_path / "finance.sqlite3")
+    store.upsert_security("BHP", "BHP Group", "Materials", "")
+    end = date(2024, 6, 30)
+    id1, rev1 = store.save_statement("BHP", "annual", end, "AUD", "millions", True,
+                                     {"revenue": "50000"}, None, "First confirmed entry")
+    id2, rev2 = store.save_statement("BHP", "annual", end, "AUD", "millions", True,
+                                     {"revenue": "52000"}, None, "Corrected entry")
+    assert rev1 == 1 and rev2 == 2
+    assert id1 != id2
+
+    revisions = store.list_statement_revisions("BHP", "annual", end.isoformat())
+    assert [r["revision"] for r in revisions] == [1, 2]
+    assert revisions[0]["figures"]["revenue"] == "50000"
+    assert revisions[1]["figures"]["revenue"] == "52000"
+
+    # list_statements/latest_statement only surface the latest revision per period.
+    latest = store.list_statements("BHP")
+    assert len(latest) == 1
+    assert latest[0]["figures"]["revenue"] == "52000"
+    assert latest[0]["revision"] == 2
+
+
+def test_pdf_evidence_preserves_true_page_numbers_across_multi_chunk_pages(tmp_path):
+    """Defect 6 regression: a page split into several chunks must still be one page."""
+    store = FinanceStore(tmp_path / "finance.sqlite3")
+    store.upsert_security("BHP", "BHP Group", "Materials", "")
+    long_page = "A" * 5000  # longer than PASSAGE_CHARS -> splits into multiple chunks on page 1
+    pages = [long_page, "Short page two text."]
+    passages = passages_with_page_numbers(pages)
+    assert len({p["page_number"] for p in passages}) == 2  # exactly 2 real pages
+    assert max(p["chunk_index"] for p in passages if p["page_number"] == 1) > 1
+
+    evidence_id, _ = store.add_evidence(
+        "BHP", "FY24 annual report", "BHP", "annual_report", "annual_report", "",
+        None, "annual", "hash-pdf", passages, page_count=len(pages),
+    )
+    doc = store.get_evidence(evidence_id)
+    assert doc["page_count"] == 2  # not the chunk count
 
 
 def test_watchlist_price_bars_alerts_and_catalysts(tmp_path):
@@ -88,6 +132,23 @@ def test_valuation_runs_and_portfolio_holdings(tmp_path):
     # Replace is atomic: a second call fully supersedes the first.
     store.replace_holdings(portfolio_id, [{"symbol": "RIO", "units": "10", "is_cash": False}])
     assert [h["symbol"] for h in store.list_holdings(portfolio_id)] == ["RIO"]
+
+
+def test_single_row_holding_crud(tmp_path):
+    store = FinanceStore(tmp_path / "finance.sqlite3")
+    portfolio_id = store.create_portfolio("Main")
+    holding_id = store.add_holding(portfolio_id, {"symbol": "BHP", "units": "10", "is_cash": False})
+    assert holding_id
+    assert len(store.list_holdings(portfolio_id)) == 1
+
+    updated = store.update_holding(portfolio_id, holding_id, {"symbol": "BHP", "units": "20", "is_cash": False})
+    assert updated is True
+    assert store.list_holdings(portfolio_id)[0]["units"] == "20"
+
+    deleted = store.delete_holding(portfolio_id, holding_id)
+    assert deleted is True
+    assert store.list_holdings(portfolio_id) == []
+    assert store.delete_holding(portfolio_id, holding_id) is False
 
 
 def test_verified_backup_created_before_first_finance_migration(tmp_path):

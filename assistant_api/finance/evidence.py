@@ -27,6 +27,30 @@ def split_passages(text: str, max_chars: int = PASSAGE_CHARS) -> list[str]:
     return passages
 
 
+def passages_with_page_numbers(pages: list[str], max_chars: int = PASSAGE_CHARS) -> list[dict]:
+    """Chunk each PDF page's text independently, preserving the true page
+    number for every chunk (``chunk_index`` numbers chunks within a page).
+
+    A single long page split into several chunks is still cited as one page,
+    not as several distinct pages.
+    """
+    passages: list[dict] = []
+    for page_number, page_text in enumerate(pages, start=1):
+        chunks = split_passages(page_text, max_chars)
+        for chunk_index, chunk in enumerate(chunks, start=1):
+            passages.append({"page_number": page_number, "chunk_index": chunk_index, "text": chunk})
+    return passages
+
+
+def plain_text_passages(text: str, max_chars: int = PASSAGE_CHARS) -> list[dict]:
+    """Plain-text (non-PDF) evidence has no real page concept; everything is
+    attributed to a single logical page 1, with sequential chunk indices."""
+    return [
+        {"page_number": 1, "chunk_index": chunk_index, "text": chunk}
+        for chunk_index, chunk in enumerate(split_passages(text, max_chars), start=1)
+    ]
+
+
 def extract_pdf_text(raw_bytes: bytes) -> tuple[list[str], str]:
     """Returns (page_texts, limitations). Never raises for a readable PDF file."""
     try:

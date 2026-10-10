@@ -36,7 +36,16 @@ CREATE TABLE IF NOT EXISTS fin_evidence (
 
 CREATE TABLE IF NOT EXISTS fin_evidence_passages (
     id INTEGER PRIMARY KEY, evidence_id INTEGER NOT NULL REFERENCES fin_evidence(id),
-    page_number INTEGER NOT NULL, text TEXT NOT NULL
+    page_number INTEGER NOT NULL, chunk_index INTEGER NOT NULL DEFAULT 1, text TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS fin_statement_revisions (
+    id INTEGER PRIMARY KEY, symbol TEXT NOT NULL, period TEXT NOT NULL,
+    fiscal_period_end TEXT NOT NULL, revision INTEGER NOT NULL,
+    currency TEXT NOT NULL, scale TEXT NOT NULL, consolidated INTEGER NOT NULL DEFAULT 1,
+    figures_json TEXT NOT NULL, evidence_id INTEGER, source_note TEXT NOT NULL DEFAULT '',
+    confirmed_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(symbol, period, fiscal_period_end, revision)
 );
 
 CREATE TABLE IF NOT EXISTS fin_statements (
@@ -147,6 +156,15 @@ class FinanceStore:
                 "INSERT OR IGNORE INTO finance_schema_version VALUES (?, ?)",
                 (SCHEMA_VERSION, datetime.now(timezone.utc).isoformat()),
             )
+            # Additive column migrations for tables created before these columns existed.
+            self._ensure_column(db, "fin_price_bars", "observed_at_utc", "TEXT")
+            self._ensure_column(db, "fin_price_bars", "exchange_timezone", "TEXT")
+
+    @staticmethod
+    def _ensure_column(db: sqlite3.Connection, table: str, column: str, coldef: str) -> None:
+        existing = {row["name"] for row in db.execute(f"PRAGMA table_info({table})")}
+        if column not in existing:
+            db.execute(f"ALTER TABLE {table} ADD COLUMN {column} {coldef}")
 
     # -- Securities -----------------------------------------------------
     def upsert_security(self, symbol: str, name: str, sector: str | None, notes: str) -> int:
@@ -170,7 +188,14 @@ class FinanceStore:
     # -- Evidence ---------------------------------------------------------
     def add_evidence(self, symbol: str, title: str, publisher: str, source_type: str,
                      document_type: str, source_url: str, published_on, period: str | None,
-                     content_hash: str, passages: list[str], limitations: str = "") -> tuple[int, bool]:
+                     content_hash: str, passages: list[dict], page_count: int,
+                     limitations: str = "") -> tuple[int, bool]:
+        """``passages`` is a list of {"page_number", "chunk_index", "text"} dicts
+        (see evidence.passages_with_page_numbers / plain_text_passages) so a page
+        split into several chunks is never miscounted as several distinct pages.
+        ``page_count`` is the actual document page count, independent of how
+        many text chunks were produced.
+        """
         with self.connect() as db:
             cursor = db.execute(
                 """INSERT OR IGNORE INTO fin_evidence
@@ -179,17 +204,17 @@ class FinanceStore:
                    VALUES (?,?,?,?,?,?,?,?,?,?,?)""",
                 (symbol, title, publisher, source_type, document_type, source_url,
                  published_on.isoformat() if published_on else None, period,
-                 content_hash, len(passages) or 1, limitations),
+                 content_hash, page_count, limitations),
             )
             row = db.execute(
                 "SELECT id FROM fin_evidence WHERE symbol=? AND content_hash=?", (symbol, content_hash)
             ).fetchone()
             created = cursor.rowcount == 1
             if created:
-                for index, text in enumerate(passages, start=1):
+                for passage in passages:
                     db.execute(
-                        "INSERT INTO fin_evidence_passages(evidence_id, page_number, text) VALUES (?,?,?)",
-                        (row["id"], index, text),
+                        "INSERT INTO fin_evidence_passages(evidence_id, page_number, chunk_index, text) VALUES (?,?,?,?)",
+                        (row["id"], passage["page_number"], passage["chunk_index"], passage["text"]),
                     )
             return row["id"], created
 
@@ -212,8 +237,9 @@ class FinanceStore:
                 ranked.append((score, doc, passage))
         ranked.sort(key=lambda item: -item[0])
         return [
-            {"id": f"finance_evidence:{doc['id']}:{passage['page_number']}", "title": doc["title"],
-             "publisher": doc["publisher"], "source": doc["source_url"] or doc["title"],
+            {"id": f"finance_evidence:{doc['id']}:{passage['page_number']}:{passage['chunk_index']}",
+             "title": doc["title"], "publisher": doc["publisher"],
+             "source": doc["source_url"] or doc["title"],
              "source_type": doc["source_type"], "published_on": doc["published_on"],
              "page": passage["page_number"], "content": passage["text"][:4000]}
             for score, doc, passage in ranked[:limit]
@@ -223,6 +249,11 @@ class FinanceStore:
         with self.connect() as db:
             return [dict(row) for row in db.execute(
                 "SELECT * FROM fin_evidence WHERE symbol=? ORDER BY id", (symbol,))]
+
+    def get_evidence(self, evidence_id: int) -> dict | None:
+        with self.connect() as db:
+            row = db.execute("SELECT * FROM fin_evidence WHERE id=?", (evidence_id,)).fetchone()
+            return dict(row) if row else None
 
     def evidence_as_context(self, symbol: str, limit: int = 5) -> list[dict]:
         """Most recent evidence documents for a symbol, shaped as chat evidence items.
@@ -244,33 +275,64 @@ class FinanceStore:
             for doc in docs
         ]
 
-    # -- Statements ---------------------------------------------------------
+    # -- Statements (immutable, versioned revisions) -------------------------
     def save_statement(self, symbol: str, period: str, fiscal_period_end, currency: str,
                        scale: str, consolidated: bool, figures: dict,
-                       evidence_id: int | None, source_note: str) -> int:
+                       evidence_id: int | None, source_note: str) -> tuple[int, int]:
+        """Always inserts a new revision; never updates a prior one in place.
+
+        Returns (row_id, revision_number).
+        """
+        end_iso = fiscal_period_end.isoformat() if hasattr(fiscal_period_end, "isoformat") else fiscal_period_end
         with self.connect() as db:
-            db.execute(
-                """INSERT INTO fin_statements
-                   (symbol, period, fiscal_period_end, currency, scale, consolidated, figures_json, evidence_id, source_note)
-                   VALUES (?,?,?,?,?,?,?,?,?)
-                   ON CONFLICT(symbol, period, fiscal_period_end) DO UPDATE SET
-                     currency=excluded.currency, scale=excluded.scale, consolidated=excluded.consolidated,
-                     figures_json=excluded.figures_json, evidence_id=excluded.evidence_id, source_note=excluded.source_note""",
-                (symbol, period, fiscal_period_end.isoformat(), currency, scale, int(consolidated),
+            next_revision = db.execute(
+                """SELECT COALESCE(MAX(revision), 0) + 1 AS n FROM fin_statement_revisions
+                   WHERE symbol=? AND period=? AND fiscal_period_end=?""",
+                (symbol, period, end_iso),
+            ).fetchone()["n"]
+            cursor = db.execute(
+                """INSERT INTO fin_statement_revisions
+                   (symbol, period, fiscal_period_end, revision, currency, scale, consolidated,
+                    figures_json, evidence_id, source_note)
+                   VALUES (?,?,?,?,?,?,?,?,?,?)""",
+                (symbol, period, end_iso, next_revision, currency, scale, int(consolidated),
                  json.dumps(figures), evidence_id, source_note),
             )
-            return db.execute(
-                "SELECT id FROM fin_statements WHERE symbol=? AND period=? AND fiscal_period_end=?",
-                (symbol, period, fiscal_period_end.isoformat()),
-            ).fetchone()["id"]
+            return cursor.lastrowid, next_revision
 
     def list_statements(self, symbol: str) -> list[dict]:
+        """Latest revision per (period, fiscal_period_end), newest period first."""
         with self.connect() as db:
             rows = [dict(row) for row in db.execute(
-                "SELECT * FROM fin_statements WHERE symbol=? ORDER BY fiscal_period_end DESC", (symbol,))]
+                """SELECT s1.* FROM fin_statement_revisions s1
+                   WHERE s1.symbol=? AND s1.revision = (
+                       SELECT MAX(s2.revision) FROM fin_statement_revisions s2
+                       WHERE s2.symbol=s1.symbol AND s2.period=s1.period
+                         AND s2.fiscal_period_end=s1.fiscal_period_end
+                   )
+                   ORDER BY s1.fiscal_period_end DESC""",
+                (symbol,),
+            )]
         for row in rows:
             row["figures"] = json.loads(row.pop("figures_json"))
         return rows
+
+    def list_statement_revisions(self, symbol: str, period: str, fiscal_period_end: str) -> list[dict]:
+        """Full immutable revision history for one (symbol, period, fiscal_period_end)."""
+        with self.connect() as db:
+            rows = [dict(row) for row in db.execute(
+                """SELECT * FROM fin_statement_revisions
+                   WHERE symbol=? AND period=? AND fiscal_period_end=? ORDER BY revision""",
+                (symbol, period, fiscal_period_end),
+            )]
+        for row in rows:
+            row["figures"] = json.loads(row.pop("figures_json"))
+        return rows
+
+    def get_statement(self, symbol: str, period: str, fiscal_period_end: str) -> dict | None:
+        statements = [s for s in self.list_statements(symbol)
+                     if s["period"] == period and s["fiscal_period_end"] == fiscal_period_end]
+        return statements[0] if statements else None
 
     def latest_statement(self, symbol: str) -> dict | None:
         statements = self.list_statements(symbol)
@@ -329,14 +391,17 @@ class FinanceStore:
 
     def save_price_bar(self, symbol: str, observed_on: str, currency: str, close: str | None,
                        adjusted_close: str | None, volume: int | None, retrieved_at: str,
-                       publisher: str = "Yahoo Finance") -> bool:
+                       publisher: str = "Yahoo Finance", observed_at_utc: str | None = None,
+                       exchange_timezone: str | None = None) -> bool:
         """Returns True if this observation is newly stored (not previously seen)."""
         with self.connect() as db:
             cursor = db.execute(
                 """INSERT OR IGNORE INTO fin_price_bars
-                   (symbol, observed_on, currency, close, adjusted_close, volume, retrieved_at, publisher)
-                   VALUES (?,?,?,?,?,?,?,?)""",
-                (symbol, observed_on, currency, close, adjusted_close, volume, retrieved_at, publisher),
+                   (symbol, observed_on, currency, close, adjusted_close, volume, retrieved_at, publisher,
+                    observed_at_utc, exchange_timezone)
+                   VALUES (?,?,?,?,?,?,?,?,?,?)""",
+                (symbol, observed_on, currency, close, adjusted_close, volume, retrieved_at, publisher,
+                 observed_at_utc, exchange_timezone),
             )
             return cursor.rowcount == 1
 
@@ -434,3 +499,43 @@ class FinanceStore:
         with self.connect() as db:
             return [dict(row) for row in db.execute(
                 "SELECT * FROM fin_holdings WHERE portfolio_id=? ORDER BY id", (portfolio_id,))]
+
+    def list_portfolios(self) -> list[dict]:
+        with self.connect() as db:
+            return [dict(row) for row in db.execute("SELECT * FROM fin_portfolios ORDER BY name")]
+
+    def add_holding(self, portfolio_id: int, row: dict) -> int:
+        """Single-row holding add (defect-10 CRUD beyond the atomic CSV replace)."""
+        with self.connect() as db:
+            cursor = db.execute(
+                """INSERT INTO fin_holdings
+                   (portfolio_id, symbol, units, cost_basis_total, sector, exposure_notes,
+                    is_cash, manual_aud_value, valuation_date)
+                   VALUES (?,?,?,?,?,?,?,?,?)""",
+                (portfolio_id, row["symbol"], row["units"], row.get("cost_basis_total"),
+                 row.get("sector"), row.get("exposure_notes", ""), int(row.get("is_cash", False)),
+                 row.get("manual_aud_value"),
+                 row["valuation_date"].isoformat() if row.get("valuation_date") else None),
+            )
+            return cursor.lastrowid
+
+    def update_holding(self, portfolio_id: int, holding_id: int, row: dict) -> bool:
+        with self.connect() as db:
+            cursor = db.execute(
+                """UPDATE fin_holdings SET symbol=?, units=?, cost_basis_total=?, sector=?,
+                   exposure_notes=?, is_cash=?, manual_aud_value=?, valuation_date=?
+                   WHERE id=? AND portfolio_id=?""",
+                (row["symbol"], row["units"], row.get("cost_basis_total"), row.get("sector"),
+                 row.get("exposure_notes", ""), int(row.get("is_cash", False)),
+                 row.get("manual_aud_value"),
+                 row["valuation_date"].isoformat() if row.get("valuation_date") else None,
+                 holding_id, portfolio_id),
+            )
+            return cursor.rowcount == 1
+
+    def delete_holding(self, portfolio_id: int, holding_id: int) -> bool:
+        with self.connect() as db:
+            cursor = db.execute(
+                "DELETE FROM fin_holdings WHERE id=? AND portfolio_id=?", (holding_id, portfolio_id)
+            )
+            return cursor.rowcount == 1
