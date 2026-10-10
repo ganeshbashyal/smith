@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mr Smith</title>
+<style>
+:root { color-scheme: light dark; font-family: system-ui; }
+body { max-width: 850px; margin: auto; padding: 1rem; }
+nav { display: flex; flex-wrap: wrap; gap: .5rem; }
+textarea, select, button { font: inherit; padding: .6rem; }
+textarea { box-sizing: border-box; width: 100%; margin-top: 1rem; }
+pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+#error { color: #d44; } a { overflow-wrap: anywhere; }
+</style>
+<h1>Mr Smith</h1>
+<nav aria-label="Assistant tabs">
+<button type="button" data-mode="morning">Morning Brief</button>
+<button type="button" data-mode="finance">Financial Analysis</button>
+<button type="button" data-mode="research">Research &amp; Deep Work</button>
+<a href="/admin">Admin</a>
+</nav>
+<p id="mode">Morning Brief</p>
+<p>Stable concepts use local model knowledge. Current facts need relevant dated sources; coverage is limited.</p>
+<form id="request">
+<label><input type="checkbox" id="refresh-sources"> Refresh approved sources (bypass cache)</label>
+<label for="research-persona">Persona (brief or research)</label>
+<select id="research-persona">
+<option value="">Automatic</option>
+<!-- PERSONA_OPTIONS -->
+</select>
+<label for="question">Question</label>
+<textarea id="question" required maxlength="10000" placeholder="What would you like to understand?"></textarea>
+<label for="material">Article text or notes (research only)</label>
+<textarea id="material" maxlength="60000" disabled></textarea>
+<button id="submit">Ask Mr Smith</button>
+</form>
+<p id="error" role="alert"></p>
+<p id="status" role="status"></p>
+<pre id="answer"></pre>
+<div id="sources"></div>
+<script>
+let mode = 'morning';
+const el = id => document.getElementById(id);
+document.querySelectorAll('[data-mode]').forEach(button => {
+  button.onclick = () => {
+    mode = button.dataset.mode;
+    el('mode').textContent = button.textContent;
+    el('material').disabled = mode !== 'research';
+    el('research-persona').disabled = mode === 'finance';
+  };
+});
+el('request').onsubmit = async event => {
+  event.preventDefault();
+  el('submit').disabled = true;
+  el('error').textContent = '';
+  el('answer').textContent = '';
+  el('sources').replaceChildren();
+  el('status').textContent = 'Loading evidence and model...';
+  const body = { question: el('question').value, refresh_sources: el('refresh-sources').checked };
+  if (mode === 'finance') {
+    body.persona = 'finance';
+  } else if (el('research-persona').value) {
+    body.persona = el('research-persona').value;
+  }
+  if (mode === 'research') {
+    body.material = el('material').value;
+  }
+  try {
+    const response = await fetch(mode === 'research' ? '/api/research' : '/api/chat', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body)
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(typeof data.detail === 'string' ? data.detail : 'Invalid request');
+    el('answer').textContent = data.answer + '\n\n' + data.warnings.join('\n');
+    el('status').textContent = `${data.route.persona} | ${data.route.model} | Updated ${data.updated_at}`;
+    if (data.knowledge_basis) {
+      el('status').textContent += data.knowledge_basis.retrieved_evidence_available
+        ? ' | Retrieved evidence available; claims still require verification'
+        : ' | General model knowledge / supplied notes; no retrieved evidence';
+    }
+    [...data.sources, ...data.tools].forEach(source => {
+      const line = document.createElement('p');
+      line.textContent = `${source.id}: ${source.title || source.tool || source.source} `;
+      try {
+        const url = new URL(source.source);
+        if (['http:', 'https:'].includes(url.protocol)) {
+          const link = document.createElement('a');
+          link.href = url.href; link.textContent = 'Source'; link.target = '_blank'; link.rel = 'noopener noreferrer';
+          line.append(link);
+        }
+      } catch { /* Local source identifiers are plain text. */ }
+      if (source.error) line.append(document.createTextNode(' - ' + source.error));
+      if (source.freshness) line.append(document.createTextNode(' | Freshness: ' + source.freshness));
+      if (source.data && Array.isArray(source.data)) source.data.forEach(item => {
+        if (!item.source) return;
+        const detail = document.createElement('p');
+        detail.textContent = `${item.title} | ${item.published || 'Date unknown'} | ${item.freshness || 'unknown'} `;
+        try {
+          const url = new URL(item.source);
+          if (['http:', 'https:'].includes(url.protocol)) {
+            const link = document.createElement('a');
+            link.href = url.href; link.textContent = 'Read source'; link.target = '_blank'; link.rel = 'noopener noreferrer';
+            detail.append(link);
+          }
+        } catch { detail.append(document.createTextNode('Invalid source link')); }
+        line.append(detail);
+      });
+      el('sources').append(line);
+    });
+  } catch (error) {
+    el('error').textContent = error.message;
+    el('status').textContent = 'Request failed';
+  } finally { el('submit').disabled = false; }
+};
+</script>
+</html>

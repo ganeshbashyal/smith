@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mr Smith Admin</title>
+<style>
+:root { color-scheme: light dark; font-family: system-ui; }
+body { max-width: 700px; margin: auto; padding: 1rem; }
+input, select, button { font: inherit; padding: .5rem; max-width: 100%; }
+pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+</style>
+<h1>Model management</h1>
+<a href="/morning">Back to widget</a>
+<p>Research uses the configured research model. Daily requests use your saved selection.</p>
+<button id="refresh">Refresh model health</button>
+<pre id="status" role="status"></pre>
+<h2>Approved current sources</h2>
+<pre id="sources" role="status"></pre>
+<form id="selection">
+<p><label>Admin token <input id="token" type="password" required autocomplete="off"></label></p>
+<p><label>Daily model <select id="models" required></select></label></p>
+<button id="save">Activate and save model</button>
+</form>
+<p id="error" role="alert"></p>
+<script>
+const el = id => document.getElementById(id);
+async function refresh() {
+  el('error').textContent = '';
+  try {
+    const response = await fetch('/api/sources');
+    if (!response.ok) throw new Error('Source status unavailable');
+    el('sources').textContent = JSON.stringify(await response.json(), null, 2);
+  } catch (error) { el('sources').textContent = error.message; }
+  try {
+    const response = await fetch('/api/models');
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.detail);
+    el('status').textContent = JSON.stringify(data, null, 2);
+    el('models').replaceChildren();
+    data.installed_models.forEach(model => {
+      const option = document.createElement('option');
+      option.value = model; option.textContent = model; option.selected = model === data.selected_model;
+      el('models').append(option);
+    });
+  } catch (error) { el('error').textContent = error.message; }
+}
+el('refresh').onclick = refresh;
+el('selection').onsubmit = async event => {
+  event.preventDefault(); el('save').disabled = true; el('error').textContent = '';
+  try {
+    const response = await fetch('/api/admin/model', {
+      method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + el('token').value },
+      body: JSON.stringify({ model: el('models').value })
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(typeof data.detail === 'string' ? data.detail : 'Invalid request');
+    await refresh();
+  } catch (error) { el('error').textContent = error.message; }
+  finally { el('save').disabled = false; }
+};
+refresh();
+</script>
+</html>
