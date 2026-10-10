@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mr Smith Finance</title>
+<style>
+:root { color-scheme: light dark; font-family: system-ui; }
+body { max-width: 900px; margin: auto; padding: 1rem; }
+input, select, button, textarea { font: inherit; padding: .4rem; max-width: 100%; }
+pre { white-space: pre-wrap; overflow-wrap: anywhere; background: rgba(127,127,127,.1); padding: .5rem; }
+section { border-top: 1px solid rgba(127,127,127,.3); padding-top: 1rem; margin-top: 1rem; }
+label { display: block; margin: .4rem 0; }
+.warn { color: #a85a00; font-size: .9em; }
+</style>
+<h1>Finance research &amp; portfolio tools</h1>
+<a href="/morning">Back to widget</a>
+<p class="warn">Analytical tools only. Ratios, DCF scenarios and sentiment are not financial advice and are not independently verified.</p>
+<p><label>Admin token (kept only in this page, never stored)
+<input id="token" type="password" autocomplete="off" required></label></p>
+<p id="error" role="alert" class="warn"></p>
+
+<section>
+<h2>Securities</h2>
+<form id="security-form">
+  <label>Symbol <input id="sec-symbol" required maxlength="12"></label>
+  <label>Name <input id="sec-name" required maxlength="200"></label>
+  <label>Sector <input id="sec-sector" maxlength="120"></label>
+  <button>Save security</button>
+</form>
+<button id="sec-refresh" type="button">List securities</button>
+<pre id="sec-list"></pre>
+</section>
+
+<section>
+<h2>Evidence (text)</h2>
+<form id="evidence-form">
+  <label>Symbol <input id="ev-symbol" required maxlength="12"></label>
+  <label>Title <input id="ev-title" required maxlength="300"></label>
+  <label>Publisher <input id="ev-publisher" required maxlength="200"></label>
+  <label>Source type
+    <select id="ev-source-type">
+      <option>issuer_filing</option><option>asx_announcement</option>
+      <option>annual_report</option><option>user_upload</option><option>manual_entry</option>
+    </select>
+  </label>
+  <label>Document type
+    <select id="ev-document-type">
+      <option>annual_report</option><option>half_year_report</option><option>announcement</option>
+      <option>transcript</option><option>prospectus</option><option>other</option>
+    </select>
+  </label>
+  <label>Pasted text <textarea id="ev-text" rows="6" required maxlength="2000000"></textarea></label>
+  <button>Save evidence</button>
+</form>
+<pre id="ev-result"></pre>
+</section>
+
+<section>
+<h2>Investment thesis</h2>
+<form id="thesis-form">
+  <label>Symbol <input id="th-symbol" required maxlength="12"></label>
+  <label>Thesis <textarea id="th-thesis" rows="4" required></textarea></label>
+  <label>Counter-thesis <textarea id="th-counter" rows="2"></textarea></label>
+  <label>Invalidation criteria <textarea id="th-invalidation" rows="2"></textarea></label>
+  <button>Save thesis revision</button>
+</form>
+<button id="th-export" type="button">Export latest thesis (Markdown)</button>
+<pre id="th-result"></pre>
+</section>
+
+<section>
+<h2>Watchlist (max 50 symbols, 1 year history)</h2>
+<form id="watchlist-form">
+  <label>Name <input id="wl-name" required maxlength="120"></label>
+  <label>Symbols (comma separated) <input id="wl-symbols" required></label>
+  <label>Alert threshold % (optional) <input id="wl-threshold"></label>
+  <button>Create watchlist</button>
+</form>
+<pre id="wl-result"></pre>
+</section>
+
+<section>
+<h2>Valuation</h2>
+<form id="ratios-form">
+  <label>Symbol <input id="rat-symbol" required maxlength="12"></label>
+  <label>Inputs JSON (price, shares_diluted, cash_and_equivalents, total_debt, revenue, ebitda, net_income, operating_cash_flow, capital_expenditure, dividends_paid)
+    <textarea id="rat-inputs" rows="3">{}</textarea></label>
+  <button>Compute ratios</button>
+</form>
+<pre id="rat-result"></pre>
+</section>
+
+<section>
+<h2>Portfolio</h2>
+<form id="portfolio-form">
+  <label>Portfolio name <input id="pf-name" required></label>
+  <button>Create portfolio</button>
+</form>
+<form id="portfolio-import-form">
+  <label>Portfolio ID <input id="pf-id" type="number" required></label>
+  <label>Holdings CSV/JSON file <input id="pf-file" type="file" required></label>
+  <button id="pf-preview" type="submit">Preview import</button>
+  <button id="pf-confirm" type="button">Confirm import</button>
+</form>
+<button id="pf-analyze" type="button">Analyze portfolio</button>
+<pre id="pf-result"></pre>
+</section>
+
+<script>
+const el = id => document.getElementById(id);
+const headers = () => ({ Authorization: 'Bearer ' + el('token').value });
+const jsonHeaders = () => ({ ...headers(), 'Content-Type': 'application/json' });
+function showError(error) { el('error').textContent = error.message || String(error); }
+async function callJson(url, options, outId) {
+  el('error').textContent = '';
+  try {
+    const response = await fetch(url, options);
+    const data = await response.json();
+    if (!response.ok) throw new Error(typeof data.detail === 'string' ? data.detail : JSON.stringify(data.detail || data));
+    if (outId) el(outId).textContent = JSON.stringify(data, null, 2);
+    return data;
+  } catch (error) { showError(error); throw error; }
+}
+
+el('security-form').onsubmit = async event => {
+  event.preventDefault();
+  await callJson('/api/finance/securities', {
+    method: 'POST', headers: jsonHeaders(),
+    body: JSON.stringify({ symbol: el('sec-symbol').value, name: el('sec-name').value, sector: el('sec-sector').value || null }),
+  }, 'sec-list');
+};
+el('sec-refresh').onclick = () => callJson('/api/finance/securities', { headers: headers() }, 'sec-list');
+
+el('evidence-form').onsubmit = async event => {
+  event.preventDefault();
+  const symbol = el('ev-symbol').value;
+  await callJson(`/api/finance/securities/${encodeURIComponent(symbol)}/evidence`, {
+    method: 'POST', headers: jsonHeaders(),
+    body: JSON.stringify({
+      symbol, title: el('ev-title').value, publisher: el('ev-publisher').value,
+      source_type: el('ev-source-type').value, document_type: el('ev-document-type').value,
+      text: el('ev-text').value,
+    }),
+  }, 'ev-result');
+};
+
+el('thesis-form').onsubmit = async event => {
+  event.preventDefault();
+  const symbol = el('th-symbol').value;
+  await callJson(`/api/finance/securities/${encodeURIComponent(symbol)}/thesis`, {
+    method: 'POST', headers: jsonHeaders(),
+    body: JSON.stringify({
+      symbol, thesis: el('th-thesis').value, counter_thesis: el('th-counter').value,
+      invalidation_criteria: el('th-invalidation').value,
+    }),
+  }, 'th-result');
+};
+el('th-export').onclick = () => callJson(`/api/finance/securities/${encodeURIComponent(el('th-symbol').value)}/thesis/export`, { headers: headers() }, 'th-result');
+
+el('watchlist-form').onsubmit = async event => {
+  event.preventDefault();
+  const symbols = el('wl-symbols').value.split(',').map(s => s.trim()).filter(Boolean);
+  await callJson('/api/finance/watchlists', {
+    method: 'POST', headers: jsonHeaders(),
+    body: JSON.stringify({ name: el('wl-name').value, symbols, price_alert_threshold_pct: el('wl-threshold').value || null }),
+  }, 'wl-result');
+};
+
+el('ratios-form').onsubmit = async event => {
+  event.preventDefault();
+  let inputs;
+  try { inputs = JSON.parse(el('rat-inputs').value || '{}'); } catch { return showError(new Error('Inputs must be valid JSON')); }
+  await callJson(`/api/finance/securities/${encodeURIComponent(el('rat-symbol').value)}/valuation/ratios`, {
+    method: 'POST', headers: jsonHeaders(), body: JSON.stringify(inputs),
+  }, 'rat-result');
+};
+
+el('portfolio-form').onsubmit = async event => {
+  event.preventDefault();
+  const data = await callJson('/api/finance/portfolios', { method: 'POST', headers: jsonHeaders(), body: JSON.stringify({ name: el('pf-name').value }) }, 'pf-result');
+  if (data) el('pf-id').value = data.id;
+};
+el('portfolio-import-form').onsubmit = async event => {
+  event.preventDefault();
+  const form = new FormData(); form.append('file', el('pf-file').files[0]);
+  await callJson(`/api/finance/portfolios/${el('pf-id').value}/holdings/preview`, { method: 'POST', headers: headers(), body: form }, 'pf-result');
+};
+el('pf-confirm').onclick = async () => {
+  const form = new FormData(); form.append('file', el('pf-file').files[0]);
+  await callJson(`/api/finance/portfolios/${el('pf-id').value}/holdings/confirm`, { method: 'POST', headers: headers(), body: form }, 'pf-result');
+};
+el('pf-analyze').onclick = () => callJson(`/api/finance/portfolios/${el('pf-id').value}/analysis`, { headers: headers() }, 'pf-result');
+</script>
+</html>

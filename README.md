@@ -35,9 +35,13 @@ allowlisted HTTP tools -> serialized Ollama generation -> SQLite history`
   brief and research formats. `/api/personas` exposes labels and both formats.
 - `domain_personas.py`: developed non-finance reasoning frameworks, source
   standards, uncertainty handling, safety limits and explicit capability boundaries.
-- `finance.py`: evidence-led market intelligence persona and separate brief/deep
+- `finance/__init__.py`: evidence-led market intelligence persona and separate brief/deep
   research templates: macro-to-company transmission, narrative versus reality,
   financial quality, positioning, counter-theses and invalidation conditions.
+- `finance/` (repository, calculators, portfolio, market_data, evidence, api):
+  the deterministic finance data/valuation/portfolio module described below in
+  **Finance module (deep dive)** — separate from, and not consulted by, the
+  chat persona's free-text reasoning.
 - `routing.py`: ordered word-boundary rules, explicit persona overrides,
   knowledge categories, tool selection, model and output format. Health and
   building rules take precedence for ambiguous requests. Routing considers the
@@ -120,12 +124,12 @@ Invoke-RestMethod http://127.0.0.1:8000/api/research -Method Post -ContentType "
 Daily financial analysis still uses the saved daily model (Llama by default);
 deep financial research uses the configured research model (Gemma by default).
 Neither the persona nor article text can trigger additional tools or models.
-Smart Money Score, numeric conviction, current institutional holdings and
-valuations are unavailable without adequate inputs and an auditable method.
-The prompt does not implement a live ownership ledger, continuous macro regime
-engine, portfolio analytics, alert service or persistent versioned company
-theses. Answer history is not thesis tracking. Those require separate data and
-deterministic calculation/monitoring modules; the assistant must not claim them.
+Smart Money Score, numeric conviction and a live institutional-ownership ledger
+remain unavailable: they would require continuous proprietary data feeds this
+project deliberately excludes. Persistent versioned company theses, watchlists,
+deterministic valuation and long-only portfolio analytics are implemented as a
+separate, explicitly admin-authenticated module — see **Finance module (deep
+dive)** below — not inferred by the chat persona itself.
 
 ## All persona personalities
 
@@ -211,6 +215,102 @@ personal memories. There is no background monitoring.
 Invoke-RestMethod http://127.0.0.1:8000/api/chat -Method Post -ContentType "application/json" -Body '{"question":"Explain inflation simply.","persona":"finance"}'
 Invoke-RestMethod http://127.0.0.1:8000/api/chat -Method Post -ContentType "application/json" -Body '{"question":"Latest NASA space news","refresh_sources":true}'
 ```
+
+## Finance module (deep dive)
+
+All endpoints live under `/api/finance/*` and a `/finance` page (token kept
+in-memory in a password input, never `localStorage`), reusing the **same**
+admin Bearer token as `/api/admin/*` — there is no separate finance secret.
+If `MR_SMITH_ADMIN_TOKEN` is unset, finance endpoints return HTTP 503 exactly
+like the existing admin endpoints; set the environment variable to a private
+value before relying on any finance mutation.
+
+```powershell
+$env:MR_SMITH_ADMIN_TOKEN = "choose-a-private-local-token"
+$headers = @{ Authorization = "******" }
+Invoke-RestMethod http://127.0.0.1:8000/api/finance/securities -Method Post -Headers $headers -ContentType "application/json" -Body '{"symbol":"BHP","name":"BHP Group","sector":"Materials"}'
+```
+
+### Data model and provenance
+
+Companies (`fin_securities`), evidence documents (`fin_evidence` + bounded
+2,000-character passages), point-in-time statement figures (`fin_statements`),
+versioned investment theses (`fin_thesis_revisions`), watchlists/price
+history/alerts/catalysts, immutable valuation runs, and long-only portfolios/
+holdings are stored additively in the existing `mr_smith.sqlite3`. The first
+time the finance tables are created against a pre-existing database, a
+timestamped, size- and `PRAGMA integrity_check`-verified backup
+(`mr_smith.pre-finance-migration-<UTC timestamp>.sqlite3.bak`) is written next
+to it before any new table is created; personal history/settings tables are
+untouched. Every statement figure either traces to a confirmed evidence
+document or requires an explicit manual-entry source note — there is no silent
+"no source" path. Missing figures are always `null`, never coerced to zero.
+
+Evidence accepts pasted text or a PDF upload (`pypdf`, text layer only, 25MB
+cap); scanned/encrypted/unreadable PDFs return an explicit `limitations`
+string instead of guessing or silently dropping content — OCR is out of scope.
+A recent evidence document for a security is also surfaced as attributed
+context in `/api/chat` and `/api/research` by passing `"entity_symbol":"BHP"`
+on the request.
+
+### Watchlists, price history and alerts
+
+Watchlists hold up to 50 deduplicated symbols. `POST
+/api/finance/watchlists/{id}/refresh` fetches at most one year of daily bars
+per symbol from Yahoo's public chart endpoint (bounded concurrency, a single
+retry on HTTP 429, raw vs. adjusted close kept distinct), de-duplicates
+already-seen `(symbol, date)` observations, and raises an in-app alert when a
+configured `price_alert_threshold_pct` is crossed between the two most recent
+observations. This is a best-effort, potentially delayed public source — not a
+broker or paid feed, and not scheduled; refreshes are always user-initiated.
+
+### Deterministic valuation
+
+`POST /api/finance/securities/{symbol}/valuation/ratios` computes, using
+`Decimal` only (never `float`): market cap, net debt, enterprise value, P/E,
+EV/EBITDA, free cash flow, FCF yield, dividend yield and cash conversion. Any
+ratio with a missing, zero or negative denominator returns an explicit
+`not_meaningful` reason instead of a fabricated number, alongside the exact
+formula used.
+
+`POST /api/finance/securities/{symbol}/valuation/dcf` computes a FCFF DCF per
+scenario (`discount_rate` must exceed `terminal_growth_rate` or the request is
+rejected with HTTP 422), an optional probability-weighted expected value per
+share (withheld with a stated reason unless every scenario has a probability
+and they sum to exactly 1), and a margin-of-safety figure
+`(fair_value - price) / fair_value` when a current price is supplied. Every
+ratio and DCF call is saved as an **immutable** `fin_valuation_runs` row
+(inputs + outputs), so past valuations are never silently recomputed in place.
+
+### Portfolio analytics
+
+Long-only shares/ETFs/AUD cash holdings import via CSV or JSON with an
+atomic preview/confirm flow: `holdings/preview` parses and validates without
+writing; `holdings/confirm` rejects the entire batch on any invalid row (no
+partial import) and otherwise atomically replaces the portfolio's holdings.
+Manual overseas holdings use a user-supplied `manual_aud_value` (no automatic
+or fabricated FX conversion). CSV/JSON columns:
+`symbol, units, cost_basis_total, sector, exposure_notes, is_cash,
+manual_aud_value, valuation_date`.
+
+`GET /api/finance/portfolios/{id}/analysis` reports coverage-aware weights and
+sector concentration — holdings with no resolvable value are listed under
+`missing_valuations` and excluded from weights, never silently renormalized
+in. `POST /api/finance/portfolios/{id}/scenario` applies user-defined,
+non-overlapping percentage shocks (first matching rule per holding wins) and
+reports baseline vs. shocked totals. Correlation analysis requires a minimum
+number of aligned return observations or explicitly reports itself as
+unavailable; there is no Sharpe/VaR style metric, since no defined method or
+sufficient history is implemented for one.
+
+### Explicit exclusions
+
+No paid or broker data feeds, no trade execution, no scheduling/cron, no OCR,
+no tax calculations, no short positions or derivatives, and no proprietary
+"scores" (e.g. no Smart Money Score). ETF look-through requires evidence you
+supply; it is never inferred by the model. Private holdings are never sent to
+any external provider — only the approved quote symbol is used for public
+price lookups.
 
 ## Tests
 

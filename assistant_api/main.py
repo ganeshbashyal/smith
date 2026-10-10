@@ -13,6 +13,8 @@ import httpx
 from pydantic import BaseModel, Field, field_validator, model_validator
 
 from assistant_api.config import Settings
+from assistant_api.finance.api import build_router as build_finance_router
+from assistant_api.finance.repository import FinanceStore
 from assistant_api.models import ModelManager
 from assistant_api.personas import BASE_INSTRUCTION, PERSONAS
 from assistant_api.routing import conceptual_question, route_request
@@ -29,6 +31,7 @@ class Question(BaseModel):
     question: str = Field(min_length=1, max_length=10000)
     persona: PersonaName | None = None
     refresh_sources: bool = False
+    entity_symbol: str | None = Field(default=None, max_length=12, description="Optional linked company for finance evidence/context")
 
     @field_validator("question")
     @classmethod
@@ -80,8 +83,10 @@ def create_app(settings: Settings | None = None, *, ollama_transport=None, feed_
     @asynccontextmanager
     async def lifespan(app: FastAPI):
         store = Store(settings.data_dir)
+        finance_store = FinanceStore(settings.data_dir / "mr_smith.sqlite3")
         async with httpx.AsyncClient(base_url=settings.ollama_url, timeout=180, transport=ollama_transport) as ollama, httpx.AsyncClient(timeout=15, transport=feed_transport) as feeds:
             app.state.store = store
+            app.state.finance_store = finance_store
             app.state.models = ModelManager(ollama, store, settings.daily_model)
             app.state.feeds = feeds
             yield
@@ -120,6 +125,8 @@ def create_app(settings: Settings | None = None, *, ollama_transport=None, feed_
         route = route_request(request.question, app.state.models.selected_model,
                               settings.research_model, research=research, persona=request.persona)
         evidence = app.state.store.search(request.question, route.knowledge_sources)
+        if request.entity_symbol:
+            evidence.extend(app.state.finance_store.evidence_as_context(request.entity_symbol.upper()))
         tools = await execute_tools(route.tools, request.question, app.state.feeds, settings.external_feeds,
                                     store=app.state.store, refresh=request.refresh_sources)
         material = request.material if isinstance(request, Research) else ""
@@ -208,6 +215,16 @@ For mixed questions, also explain the stable concept from general knowledge."""
     @app.get("/admin", response_class=HTMLResponse)
     async def admin_page():
         return (Path(__file__).parent / "pages" / "admin.html").read_text(encoding="utf-8")
+
+    @app.get("/finance", response_class=HTMLResponse)
+    async def finance_page():
+        return (Path(__file__).parent / "pages" / "finance.html").read_text(encoding="utf-8")
+
+    app.include_router(build_finance_router(
+        get_store=lambda: app.state.finance_store,
+        admin_dependency=admin,
+        feeds_client_getter=lambda: app.state.feeds,
+    ))
 
     return app
 
