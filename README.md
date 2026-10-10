@@ -17,6 +17,16 @@ $env:MR_SMITH_ADMIN_TOKEN = "choose-a-private-local-token"
 .\.venv\Scripts\python.exe -m uvicorn assistant_api.main:app --reload
 ```
 
+Or use the idempotent launcher, which reuses an existing `.venv`/install and
+never hard-codes a token:
+
+```powershell
+.\scripts\start-mr-smith.ps1                                    # foreground dev mode, no admin features
+.\scripts\start-mr-smith.ps1 -AdminToken "choose-a-private-local-token" -ExternalFeeds -Detached
+```
+
+Run `Get-Help .\scripts\start-mr-smith.ps1 -Full` for all parameters.
+
 Ollama must be running at `http://127.0.0.1:11434`. Open
 [the widget](http://127.0.0.1:8000/morning),
 [model admin](http://127.0.0.1:8000/admin), or
