@@ -342,11 +342,19 @@ non-overlapping percentage shocks (first matching rule per
 holding wins, `pct` must be `>= -100` and finite) and reports
 `covered_baseline_total_aud`/`covered_shocked_total_aud` always, with the true
 `baseline_total_aud`/`shocked_total_aud` similarly withheld unless
-`coverage_complete`. `GET /api/finance/portfolios/{id}/correlation` computes a
-Pearson correlation between two symbols' aligned daily **adjusted-close**
-returns (split/dividend-adjusted, not raw close) and explicitly
-reports `available: false` with a reason (not a fabricated `0`) when there is
-insufficient aligned history.
+`coverage_complete`. `GET /api/finance/portfolios/{id}/correlation` (bounded
+`window` query, `>20` and `<=365` trading days) computes a Pearson
+correlation between two symbols' returns derived purely from
+**adjusted_close** (split/dividend-adjusted). If either symbol has any
+recorded bar missing `adjusted_close`, the whole series is treated as
+inconsistent and the endpoint reports `available: false` with a reason —
+there is no per-bar fallback to raw `close`, which would otherwise mix
+adjusted and unadjusted bases and introduce artificial jumps. Returns are
+aligned by their exact `(start_date, end_date)` interval, not merely by a
+shared end date, so a multi-day return spanning a data gap in one symbol is
+never compared against a different-length interval in the other. The
+endpoint explicitly reports `available: false` with a reason (not a
+fabricated `0`) whenever aligned history is insufficient.
 
 ### Explicit exclusions
 

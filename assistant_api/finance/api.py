@@ -12,7 +12,7 @@ import io
 import json
 import logging
 
-from fastapi import APIRouter, Body, Depends, HTTPException, UploadFile
+from fastapi import APIRouter, Body, Depends, HTTPException, Query, UploadFile
 from pydantic import ValidationError
 
 from assistant_api.finance import calculators, market_data
@@ -528,11 +528,25 @@ def build_router(*, get_store, admin_dependency, feeds_client_getter,
         return portfolio_calc.apply_shocks(valuations, [s.model_dump() for s in shocks])
 
     @router.get("/portfolios/{portfolio_id}/correlation")
-    async def portfolio_correlation(portfolio_id: int, symbol_a: str, symbol_b: str, window: int = 250):
+    async def portfolio_correlation(
+        portfolio_id: int, symbol_a: str, symbol_b: str,
+        window: int = Query(250, gt=20, le=365,
+                             description="Trading-day lookback window; must be >20 and <=365."),
+    ):
         if not store.get_portfolio(portfolio_id):
             raise HTTPException(404, "Unknown portfolio")
         series_a = _return_series(store.price_history(symbol_a.upper(), limit_days=window + 1))
         series_b = _return_series(store.price_history(symbol_b.upper(), limit_days=window + 1))
+        if series_a is None or series_b is None:
+            return {
+                "symbol_a": symbol_a.upper(), "symbol_b": symbol_b.upper(),
+                "available": False,
+                "reason": (
+                    "One or both symbols have price bars with inconsistent or missing "
+                    "adjusted_close values; a reliable like-for-like return series cannot "
+                    "be derived without silently falling back to raw close."
+                ),
+            }
         aligned_a, aligned_b = _align_series(series_a, series_b)
         result = portfolio_calc.pearson_correlation(aligned_a, aligned_b)
         return {"symbol_a": symbol_a.upper(), "symbol_b": symbol_b.upper(), **result}
@@ -586,32 +600,45 @@ def build_router(*, get_store, admin_dependency, feeds_client_getter,
     return router
 
 
-def _return_series(bars: list[dict]) -> list[tuple[str, Decimal]]:
-    """Day-over-day adjusted-close returns, oldest first, keyed by observed_on
-    date. Uses adjusted_close (splits/dividends accounted for) when available,
-    falling back to raw close only if no adjusted figure was recorded, so two
-    symbols are never correlated on inconsistent bases."""
-    def _basis(bar: dict) -> Decimal | None:
-        raw = bar.get("adjusted_close") if bar.get("adjusted_close") is not None else bar.get("close")
-        return Decimal(raw) if raw is not None else None
+def _return_series(bars: list[dict]) -> list[tuple[str, str, Decimal]] | None:
+    """Day-over-day returns, oldest first, each keyed by its exact
+    (start_date, end_date) interval rather than only the end date, so a
+    multi-day return spanning a gap is never later compared against a
+    different symbol's one-day return over an overlapping end date.
 
-    ordered = sorted((b for b in bars if _basis(b) is not None), key=lambda b: b["observed_on"])
-    series = []
+    Requires every bar to carry `adjusted_close` (splits/dividends already
+    accounted for). If any bar in the window is missing it, the whole series
+    is inconsistent and `None` is returned (available:false upstream) rather
+    than silently falling back to raw `close` for just that bar — mixing
+    adjusted and unadjusted bases within one series would introduce
+    artificial jumps around corporate actions.
+    """
+    ordered = sorted(bars, key=lambda b: b["observed_on"])
+    if any(b.get("adjusted_close") is None for b in ordered):
+        return None
+    series: list[tuple[str, str, Decimal]] = []
     for previous, current in zip(ordered, ordered[1:]):
-        prev_close = _basis(previous)
+        prev_close = Decimal(previous["adjusted_close"])
         if prev_close == 0:
             continue
-        ret = (_basis(current) - prev_close) / prev_close
-        series.append((current["observed_on"], ret))
+        cur_close = Decimal(current["adjusted_close"])
+        ret = (cur_close - prev_close) / prev_close
+        series.append((previous["observed_on"], current["observed_on"], ret))
     return series
 
 
-def _align_series(series_a: list[tuple[str, Decimal]],
-                  series_b: list[tuple[str, Decimal]]) -> tuple[list[Decimal], list[Decimal]]:
-    map_a = dict(series_a)
-    map_b = dict(series_b)
-    shared_dates = sorted(set(map_a) & set(map_b))
-    return [map_a[d] for d in shared_dates], [map_b[d] for d in shared_dates]
+def _align_series(series_a: list[tuple[str, str, Decimal]] | None,
+                  series_b: list[tuple[str, str, Decimal]] | None) -> tuple[list[Decimal], list[Decimal]]:
+    """Keep only returns whose exact (start_date, end_date) interval occurs in
+    both series — comparing a 2-day return against another symbol's 1-day
+    return just because they share an end date would compare different
+    economic intervals."""
+    if series_a is None or series_b is None:
+        return [], []
+    map_a = {(start, end): ret for start, end, ret in series_a}
+    map_b = {(start, end): ret for start, end, ret in series_b}
+    shared_intervals = sorted(set(map_a) & set(map_b))
+    return [map_a[i] for i in shared_intervals], [map_b[i] for i in shared_intervals]
 
 
 def _parse_holdings(raw: str, filename: str) -> tuple[list[dict], list[dict]]:

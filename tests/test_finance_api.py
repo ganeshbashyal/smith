@@ -480,27 +480,24 @@ def test_portfolio_correlation_endpoint(finance_client):
     assert correlation.json()["available"] is False  # No price history yet; explicitly unavailable, not zero.
 
 
-def test_return_series_uses_adjusted_close_and_aligns_only_shared_dates():
-    """Follow-up regression: correlation must use adjusted_close (dividends/
-    splits accounted for), not raw close, and must intersect dates rather than
-    assume equal-length series are aligned."""
+def test_return_series_uses_adjusted_close_and_aligns_only_shared_intervals():
+    """Follow-up regression: correlation must derive returns purely from
+    adjusted_close (dividends/splits accounted for) and must align on the
+    exact (start_date, end_date) interval of each return, not just intersect
+    end dates."""
     from assistant_api.finance.api import _align_series, _return_series
 
-    # Raw close implies a +10% day 2->3 move; adjusted_close (post-dividend
-    # adjusted) implies a flat move. If raw close were used the return would
-    # differ from the expected adjusted-close-derived value below.
     bars_a = [
         {"observed_on": "2024-01-01", "close": "100", "adjusted_close": "100"},
         {"observed_on": "2024-01-02", "close": "110", "adjusted_close": "100"},
         {"observed_on": "2024-01-03", "close": "121", "adjusted_close": "110"},
     ]
     series_a = _return_series(bars_a)
-    assert [d for d, _ in series_a] == ["2024-01-02", "2024-01-03"]
-    assert series_a[0][1] == 0  # adjusted_close flat day 1->2, despite close rising 10%.
-    assert series_a[1][1] == Decimal("0.1")  # adjusted_close +10% day 2->3.
+    assert [(s, e) for s, e, _ in series_a] == [("2024-01-01", "2024-01-02"), ("2024-01-02", "2024-01-03")]
+    assert series_a[0][2] == 0  # adjusted_close flat day 1->2, despite close rising 10%.
+    assert series_a[1][2] == Decimal("0.1")  # adjusted_close +10% day 2->3.
 
-    # series_b only overlaps with series_a on 2024-01-03; alignment must
-    # intersect dates, not just truncate/zip by position.
+    # series_b shares the exact (2024-01-02, 2024-01-03) interval with series_a.
     bars_b = [
         {"observed_on": "2024-01-02", "close": "50", "adjusted_close": "50"},
         {"observed_on": "2024-01-03", "close": "55", "adjusted_close": "55"},
@@ -510,6 +507,66 @@ def test_return_series_uses_adjusted_close_and_aligns_only_shared_dates():
     aligned_a, aligned_b = _align_series(series_a, series_b)
     assert aligned_a == [Decimal("0.1")]
     assert aligned_b == [(Decimal("55") - Decimal("50")) / Decimal("50")]
+
+
+def test_return_series_unavailable_when_adjusted_close_missing_for_any_bar():
+    """Mixing adjusted and raw close within a single series would introduce
+    artificial jumps around corporate actions; a series with any bar missing
+    adjusted_close must be treated as wholly unusable, never patched with a
+    per-bar fallback to raw close."""
+    from assistant_api.finance.api import _return_series
+
+    bars = [
+        {"observed_on": "2024-01-01", "close": "100", "adjusted_close": "100"},
+        {"observed_on": "2024-01-02", "close": "110", "adjusted_close": None},  # missing for this one bar
+        {"observed_on": "2024-01-03", "close": "121", "adjusted_close": "110"},
+    ]
+    assert _return_series(bars) is None
+
+
+def test_portfolio_correlation_unavailable_without_consistent_adjusted_close(finance_client):
+    """End-to-end: inconsistent adjusted_close in recorded bars must surface as
+    available:false, not a silently-computed (and potentially wrong) number."""
+    client = finance_client
+    portfolio_id = client.post("/api/finance/portfolios", headers=AUTH, json={"name": "Main"}).json()["id"]
+    store = client.app.state.finance_store
+    for i, (close, adjusted) in enumerate([("100", "100"), ("110", None), ("121", "110")]):
+        day = f"2024-01-0{i + 1}"
+        store.save_price_bar("BHP.AX", day, "AUD", close, adjusted, None, "2024-01-05T00:00:00Z")
+        store.save_price_bar("RIO.AX", day, "AUD", close, close, None, "2024-01-05T00:00:00Z")
+    correlation = client.get(
+        f"/api/finance/portfolios/{portfolio_id}/correlation?symbol_a=BHP.AX&symbol_b=RIO.AX", headers=AUTH,
+    ).json()
+    assert correlation["available"] is False
+    assert "adjusted_close" in correlation["reason"]
+
+
+def test_align_series_rejects_mismatched_intervals_despite_shared_end_date():
+    """A 2-day return (gap day skipped) and a 1-day return that happen to
+    share the same end date are different economic intervals and must never
+    be aligned as if comparable."""
+    from assistant_api.finance.api import _align_series
+
+    # series_a has a gap on 2024-01-02, so its only return spans 01-01 -> 01-03.
+    series_a = [("2024-01-01", "2024-01-03", Decimal("0.21"))]
+    # series_b has no gap: a one-day return ending on the same date, 01-02 -> 01-03.
+    series_b = [("2024-01-02", "2024-01-03", Decimal("0.05"))]
+    aligned_a, aligned_b = _align_series(series_a, series_b)
+    assert aligned_a == []
+    assert aligned_b == []
+
+
+def test_portfolio_correlation_window_bounds(finance_client):
+    client = finance_client
+    portfolio_id = client.post("/api/finance/portfolios", headers=AUTH, json={"name": "Main"}).json()["id"]
+    too_small = client.get(
+        f"/api/finance/portfolios/{portfolio_id}/correlation?symbol_a=BHP.AX&symbol_b=RIO.AX&window=20", headers=AUTH,
+    )
+    assert too_small.status_code == 422
+    too_large = client.get(
+        f"/api/finance/portfolios/{portfolio_id}/correlation?symbol_a=BHP.AX&symbol_b=RIO.AX&window=366", headers=AUTH,
+    )
+    assert too_large.status_code == 422
 
 
 def test_alert_evaluation_is_on_demand_and_deterministic(finance_client):
