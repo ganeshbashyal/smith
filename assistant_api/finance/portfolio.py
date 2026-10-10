@@ -24,6 +24,16 @@ def _days_old(valuation_date: str | None, as_of: date | None = None) -> int | No
     return (reference - parsed).days
 
 
+def _is_future_date(value: str | None) -> bool:
+    if not value:
+        return False
+    try:
+        parsed = date.fromisoformat(value)
+    except ValueError:
+        return False
+    return parsed > datetime.now().date()
+
+
 @dataclass
 class HoldingValuation:
     symbol: str
@@ -59,16 +69,28 @@ def value_holding(holding: dict, latest_price_by_symbol: dict[str, dict]) -> Hol
         return HoldingValuation(symbol, units, True, units, holding.get("valuation_date"), "cash",
                                 holding.get("sector"), "AUD", cost_basis)
     manual_value = holding.get("manual_aud_value")
+    valuation_date = holding.get("valuation_date")
     if manual_value is not None:
+        if _is_future_date(valuation_date):
+            # A future-dated valuation is not valid current evidence; do not use it.
+            return HoldingValuation(symbol, units, False, None, valuation_date, "unavailable_future_dated",
+                                    holding.get("sector"), "AUD", cost_basis)
         return HoldingValuation(
-            symbol, units, False, Decimal(manual_value), holding.get("valuation_date"),
+            symbol, units, False, Decimal(manual_value), valuation_date,
             "manual_aud_entry", holding.get("sector"), "AUD", cost_basis,
         )
     bar = latest_price_by_symbol.get(symbol)
     if bar and bar.get("close") is not None:
+        bar_currency = bar.get("currency")
+        if bar_currency != "AUD":
+            # No automatic FX conversion: a non-AUD or unknown-currency quote
+            # cannot be auto-valued in AUD without a user-supplied manual value.
+            return HoldingValuation(symbol, units, False, None, bar.get("observed_on"),
+                                    "unavailable_non_aud_currency", holding.get("sector"),
+                                    bar_currency or "unknown", cost_basis)
         value = Decimal(bar["close"]) * units
         return HoldingValuation(symbol, units, False, value, bar.get("observed_on"), "asx_quote",
-                                holding.get("sector"), bar.get("currency") or "AUD", cost_basis)
+                                holding.get("sector"), "AUD", cost_basis)
     return HoldingValuation(symbol, units, False, None, None, "unavailable", holding.get("sector"),
                             "AUD", cost_basis)
 
@@ -78,20 +100,48 @@ def value_holding(holding: dict, latest_price_by_symbol: dict[str, dict]) -> Hol
 class PortfolioAnalysis:
     coverage_complete: bool
     total_value_aud: str | None
-    """True portfolio total; None unless every holding has a known valuation."""
+    """True whole-portfolio total; None unless every holding has a known valuation."""
     covered_value_aud: str | None
-    """Subtotal of only the holdings with a known valuation; the basis for weights below."""
+    """Subtotal of only the holdings with a known valuation."""
     coverage_count: int
     total_count: int
     coverage_pct: str
-    weights: dict[str, str]
-    """Weights of each covered holding against covered_value_aud (NOT silently
-    renormalized to imply full-portfolio coverage when holdings are missing)."""
-    sector_concentration: dict[str, str]
+    weights: dict[str, str] | None
+    """True whole-portfolio weights; None unless coverage_complete (never
+    silently substituted with covered-only weights)."""
+    covered_weights: dict[str, str]
+    """Weights of each covered holding against covered_value_aud — always
+    present, but explicitly NOT whole-portfolio weights when coverage is
+    incomplete."""
+    sector_concentration: dict[str, str] | None
+    """True whole-portfolio sector concentration; None unless coverage_complete."""
+    covered_sector_concentration: dict[str, str]
+    """Sector concentration against covered_value_aud only — always present."""
     largest_positions: list[dict]
+    holdings_detail: list[dict]
+    """Every holding (not just the largest), each with its own currency,
+    valuation_date, valuation_source and staleness so missing/foreign-currency/
+    future-dated holdings are visible, not only the top 10."""
     missing_valuations: list[str]
     total_unrealized_gain_aud: str | None
-    """None if any covered holding lacks a cost basis, rather than partial-summing."""
+    """True whole-portfolio unrealized gain; None unless coverage_complete and
+    every covered holding has a cost basis."""
+    covered_unrealized_gain_aud: str | None
+    """Unrealized gain summed over covered holdings only; None if any covered
+    holding lacks a cost basis, rather than partial-summing."""
+
+
+def _position_detail(v: "HoldingValuation") -> dict:
+    return {
+        "symbol": v.symbol,
+        "sector": v.sector,
+        "market_value_aud": str(v.market_value_aud) if v.market_value_aud is not None else None,
+        "valuation_date": v.valuation_date,
+        "valuation_source": v.valuation_source,
+        "currency": v.currency,
+        "is_stale": v.is_stale,
+        "unrealized_gain_aud": str(v.unrealized_gain_aud) if v.unrealized_gain_aud is not None else None,
+    }
 
 
 def analyze_portfolio(valuations: list[HoldingValuation]) -> PortfolioAnalysis:
@@ -99,22 +149,31 @@ def analyze_portfolio(valuations: list[HoldingValuation]) -> PortfolioAnalysis:
     missing = [v.symbol for v in valuations if v.market_value_aud is None]
     covered_total = sum((v.market_value_aud for v in covered), Decimal(0)) if covered else None
     coverage_complete = len(missing) == 0 and len(valuations) > 0
-    true_total = covered_total if coverage_complete else None
-    weights: dict[str, str] = {}
-    sector_totals: dict[str, Decimal] = {}
+
+    covered_weights: dict[str, str] = {}
+    covered_sector_totals: dict[str, Decimal] = {}
     if covered_total and covered_total > 0:
         for v in covered:
-            weights[v.symbol] = str(v.market_value_aud / covered_total)
+            covered_weights[v.symbol] = str(v.market_value_aud / covered_total)
             sector = v.sector or "Unknown"
-            sector_totals[sector] = sector_totals.get(sector, Decimal(0)) + v.market_value_aud
-    sector_concentration = {
-        sector: str(value / covered_total) for sector, value in sector_totals.items()
+            covered_sector_totals[sector] = covered_sector_totals.get(sector, Decimal(0)) + v.market_value_aud
+    covered_sector_concentration = {
+        sector: str(value / covered_total) for sector, value in covered_sector_totals.items()
     } if covered_total and covered_total > 0 else {}
+
+    # True whole-portfolio figures are only ever populated when every holding
+    # resolved to a known value; otherwise they are explicitly withheld rather
+    # than silently substituted with the covered-only figures above.
+    true_total = covered_total if coverage_complete else None
+    weights = covered_weights if coverage_complete else None
+    sector_concentration = covered_sector_concentration if coverage_complete else None
+
     largest = sorted(covered, key=lambda v: v.market_value_aud, reverse=True)[:10]
     covered_gains = [v.unrealized_gain_aud for v in covered]
-    total_unrealized_gain = (
+    covered_unrealized_gain = (
         sum(covered_gains, Decimal(0)) if covered_gains and all(g is not None for g in covered_gains) else None
     )
+    total_unrealized_gain = covered_unrealized_gain if coverage_complete else None
     coverage_pct = str((Decimal(len(covered)) / Decimal(len(valuations)) * 100)) if valuations else "0"
     return PortfolioAnalysis(
         coverage_complete=coverage_complete,
@@ -124,16 +183,16 @@ def analyze_portfolio(valuations: list[HoldingValuation]) -> PortfolioAnalysis:
         total_count=len(valuations),
         coverage_pct=coverage_pct,
         weights=weights,
+        covered_weights=covered_weights,
         sector_concentration=sector_concentration,
-        largest_positions=[
-            {"symbol": v.symbol, "market_value_aud": str(v.market_value_aud),
-             "valuation_date": v.valuation_date, "valuation_source": v.valuation_source,
-             "currency": v.currency, "is_stale": v.is_stale,
-             "unrealized_gain_aud": str(v.unrealized_gain_aud) if v.unrealized_gain_aud is not None else None}
-            for v in largest
-        ],
+        covered_sector_concentration=covered_sector_concentration,
+        largest_positions=[_position_detail(v) for v in largest],
+        holdings_detail=[_position_detail(v) for v in valuations],
         missing_valuations=missing,
         total_unrealized_gain_aud=str(total_unrealized_gain) if total_unrealized_gain is not None else None,
+        covered_unrealized_gain_aud=(
+            str(covered_unrealized_gain) if covered_unrealized_gain is not None else None
+        ),
     )
 
 
@@ -142,16 +201,19 @@ def apply_shocks(valuations: list[HoldingValuation], shocks: list[dict]) -> dict
 
     Each holding is shocked by at most one matching shock (first match wins,
     in the order supplied) to keep overlap rules explicit and non-additive.
+    Whole-portfolio baseline/shocked totals are only reported when every
+    holding resolved to a known value; otherwise only the explicitly-labeled
+    covered subtotal is reported, never a silently substituted "total".
     """
-    shocked_total = Decimal(0)
-    baseline_total = Decimal(0)
+    covered_baseline_total = Decimal(0)
+    covered_shocked_total = Decimal(0)
     applied: list[dict] = []
     unresolved_symbols: list[str] = []
     for v in valuations:
         if v.market_value_aud is None:
             unresolved_symbols.append(v.symbol)
             continue
-        baseline_total += v.market_value_aud
+        covered_baseline_total += v.market_value_aud
         match = next((s for s in shocks if s["symbol_or_group"].upper() == v.symbol.upper()
                      or s["symbol_or_group"].upper() == (v.sector or "").upper()), None)
         if match:
@@ -160,11 +222,16 @@ def apply_shocks(valuations: list[HoldingValuation], shocks: list[dict]) -> dict
             applied.append({"symbol": v.symbol, "shock": match["label"], "pct_change": str(pct)})
         else:
             new_value = v.market_value_aud
-        shocked_total += new_value
+        covered_shocked_total += new_value
+    coverage_complete = not unresolved_symbols
     return {
-        "baseline_total_aud": str(baseline_total),
-        "shocked_total_aud": str(shocked_total),
-        "change_aud": str(shocked_total - baseline_total),
+        "coverage_complete": coverage_complete,
+        "baseline_total_aud": str(covered_baseline_total) if coverage_complete else None,
+        "shocked_total_aud": str(covered_shocked_total) if coverage_complete else None,
+        "change_aud": str(covered_shocked_total - covered_baseline_total) if coverage_complete else None,
+        "covered_baseline_total_aud": str(covered_baseline_total),
+        "covered_shocked_total_aud": str(covered_shocked_total),
+        "covered_change_aud": str(covered_shocked_total - covered_baseline_total),
         "applied_shocks": applied,
         "unresolved_symbols": unresolved_symbols,
         "assumption_note": "Deterministic user-defined shock scenario, not a prediction.",

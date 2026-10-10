@@ -354,6 +354,14 @@ def build_router(*, get_store, admin_dependency, feeds_client_getter,
                 f"No confirmed statement for {symbol} {body.statement_period} "
                 f"{body.statement_fiscal_period_end.isoformat()}; confirm a statement before computing ratios",
             )
+        if body.price_currency != statement["currency"]:
+            raise HTTPException(
+                422,
+                f"price_currency {body.price_currency!r} does not match the confirmed statement's "
+                f"currency {statement['currency']!r}; no automatic FX conversion is performed. "
+                "Supply a price quoted in the statement's currency, or confirm a statement in "
+                f"{body.price_currency!r}.",
+            )
         multiplier = SCALE_MULTIPLIER[statement["scale"]]
         figures = statement["figures"]
         inputs = {"price": body.price, "shares_diluted": figures.get("shares_diluted")}
@@ -362,7 +370,7 @@ def build_router(*, get_store, admin_dependency, feeds_client_getter,
             inputs[field_name] = str(Decimal(raw) * multiplier) if raw is not None else None
         result = calculators.compute_ratios(inputs)
         run_id = store.save_valuation_run(symbol, "ratios", {
-            "price": body.price, "price_date": body.price_date.isoformat(),
+            "price": body.price, "price_currency": body.price_currency, "price_date": body.price_date.isoformat(),
             "statement_period": body.statement_period,
             "statement_fiscal_period_end": body.statement_fiscal_period_end.isoformat(),
             "statement_revision": statement["revision"], "statement_scale": statement["scale"],
@@ -373,9 +381,10 @@ def build_router(*, get_store, admin_dependency, feeds_client_getter,
             "provenance": {
                 "statement_revision": statement["revision"], "statement_currency": statement["currency"],
                 "statement_scale": statement["scale"], "price_date": body.price_date.isoformat(),
-                "note": f"Monetary figures converted from {statement['scale']} to units; "
-                       f"price is assumed to be quoted in {statement['currency']} "
-                       "(no automatic FX conversion is performed).",
+                "price_currency": body.price_currency,
+                "note": f"Monetary figures converted from {statement['scale']} to units. "
+                       f"Price currency ({body.price_currency}) was verified to match the statement's "
+                       f"currency ({statement['currency']}); no automatic FX conversion is performed.",
             },
         }
 
@@ -578,14 +587,21 @@ def build_router(*, get_store, admin_dependency, feeds_client_getter,
 
 
 def _return_series(bars: list[dict]) -> list[tuple[str, Decimal]]:
-    """Day-over-day close-price returns, oldest first, keyed by observed_on date."""
-    ordered = sorted((b for b in bars if b.get("close") is not None), key=lambda b: b["observed_on"])
+    """Day-over-day adjusted-close returns, oldest first, keyed by observed_on
+    date. Uses adjusted_close (splits/dividends accounted for) when available,
+    falling back to raw close only if no adjusted figure was recorded, so two
+    symbols are never correlated on inconsistent bases."""
+    def _basis(bar: dict) -> Decimal | None:
+        raw = bar.get("adjusted_close") if bar.get("adjusted_close") is not None else bar.get("close")
+        return Decimal(raw) if raw is not None else None
+
+    ordered = sorted((b for b in bars if _basis(b) is not None), key=lambda b: b["observed_on"])
     series = []
     for previous, current in zip(ordered, ordered[1:]):
-        prev_close = Decimal(previous["close"])
+        prev_close = _basis(previous)
         if prev_close == 0:
             continue
-        ret = (Decimal(current["close"]) - prev_close) / prev_close
+        ret = (_basis(current) - prev_close) / prev_close
         series.append((current["observed_on"], ret))
     return series
 

@@ -283,10 +283,13 @@ newer than the latest thesis revision — there is no background scheduler.
 
 `POST /api/finance/securities/{symbol}/valuation/ratios` requires a
 **confirmed statement revision** (`statement_period` +
-`statement_fiscal_period_end`, not an arbitrary inline dict) and computes,
-using `Decimal` only (never `float`) after converting the statement's own
-monetary scale (units/thousands/millions) and share count to the supplied
-price's currency/date basis: market cap, net debt, enterprise value, P/E,
+`statement_fiscal_period_end`, not an arbitrary inline dict) and an explicit
+`price_currency` on the request; a mismatch against the confirmed statement's
+own currency is rejected with HTTP 422 (no automatic FX conversion — the
+caller must supply a price already denominated in the statement's currency).
+It computes, using `Decimal` only (never `float`) after converting the
+statement's own monetary scale (units/thousands/millions) and share count to
+the supplied price's date basis: market cap, net debt, enterprise value, P/E,
 EV/EBITDA, free cash flow, FCF yield, dividend yield and cash conversion. Any
 ratio with a missing, zero or negative denominator returns an explicit
 `not_meaningful` reason instead of a fabricated number, alongside the exact
@@ -319,18 +322,29 @@ within a file. Manual overseas holdings require a user-supplied, dated
 holdings are preserved, not dropped. Individual holdings can also be read,
 added, edited and deleted one at a time via `GET/POST
 /api/finance/portfolios/{id}/holdings` and `PUT/DELETE
-.../holdings/{holding_id}`.
+.../holdings/{holding_id}`. A holding is only auto-valued from a watchlist
+quote when the recorded bar currency is exactly `AUD`; a non-AUD or unknown
+bar currency, or any future-dated manual valuation, is left unavailable
+rather than silently priced.
 
 `GET /api/finance/portfolios/{id}/analysis` reports a `covered_value_aud`
-subtotal, weights and sector concentration computed **only** over holdings
-with a resolvable value — holdings with no resolvable value are listed under
-`missing_valuations`, and the overall `total_value_aud`/weights/concentration
-are explicitly withheld (not silently renormalized or guessed) whenever
-coverage is incomplete. `POST /api/finance/portfolios/{id}/scenario` applies
-user-defined, non-overlapping percentage shocks (first matching rule per
-holding wins, `pct` must be `>= -100` and finite) and reports baseline vs.
-shocked totals. `GET /api/finance/portfolios/{id}/correlation` computes a
-Pearson correlation between two symbols' aligned daily returns and explicitly
+subtotal plus always-present `covered_weights`/`covered_sector_concentration`/
+`covered_unrealized_gain_aud` computed **only** over holdings with a
+resolvable value — holdings with no resolvable value are listed under
+`missing_valuations`. The true, whole-portfolio `total_value_aud`/`weights`/
+`sector_concentration`/`total_unrealized_gain_aud` are `null` (never silently
+renormalized or substituted with the covered-only figures) whenever coverage
+is incomplete, and only populated once every holding resolves. A
+`holdings_detail` list reports market value, valuation source, currency and
+staleness for **every** holding, not only the top-10 `largest_positions`.
+`POST /api/finance/portfolios/{id}/scenario` applies user-defined,
+non-overlapping percentage shocks (first matching rule per
+holding wins, `pct` must be `>= -100` and finite) and reports
+`covered_baseline_total_aud`/`covered_shocked_total_aud` always, with the true
+`baseline_total_aud`/`shocked_total_aud` similarly withheld unless
+`coverage_complete`. `GET /api/finance/portfolios/{id}/correlation` computes a
+Pearson correlation between two symbols' aligned daily **adjusted-close**
+returns (split/dividend-adjusted, not raw close) and explicitly
 reports `available: false` with a reason (not a fabricated `0`) when there is
 insufficient aligned history.
 

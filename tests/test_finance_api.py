@@ -1,4 +1,5 @@
 import json
+from decimal import Decimal
 
 import httpx
 import pytest
@@ -251,7 +252,7 @@ def test_valuation_ratios_requires_confirmed_statement_and_applies_scale(finance
     client = finance_client
     _create_bhp(client)
     without_statement = client.post("/api/finance/securities/BHP.AX/valuation/ratios", headers=AUTH, json={
-        "price": "45", "price_date": "2024-07-01", "statement_period": "annual",
+        "price": "45", "price_currency": "AUD", "price_date": "2024-07-01", "statement_period": "annual",
         "statement_fiscal_period_end": "2024-06-30",
     })
     assert without_statement.status_code == 422
@@ -262,7 +263,7 @@ def test_valuation_ratios_requires_confirmed_statement_and_applies_scale(finance
         "source_note": "FY24 annual report, p.12",
     })
     ratios = client.post("/api/finance/securities/BHP.AX/valuation/ratios", headers=AUTH, json={
-        "price": "45", "price_date": "2024-07-01", "statement_period": "annual",
+        "price": "45", "price_currency": "AUD", "price_date": "2024-07-01", "statement_period": "annual",
         "statement_fiscal_period_end": "2024-06-30",
     })
     assert ratios.status_code == 200
@@ -272,6 +273,30 @@ def test_valuation_ratios_requires_confirmed_statement_and_applies_scale(finance
     from decimal import Decimal
     assert Decimal(body["values"]["pe"]) == Decimal(90) / Decimal(25_000_000)
     assert body["provenance"]["statement_revision"] == 1
+
+
+def test_valuation_ratios_rejects_price_currency_mismatch(finance_client):
+    """Defect regression: ASX price in AUD against a USD-reporting issuer must
+    be rejected rather than silently treated as directly comparable."""
+    client = finance_client
+    _create_bhp(client)
+    client.post("/api/finance/securities/BHP.AX/statements", headers=AUTH, json={
+        "symbol": "BHP.AX", "period": "annual", "fiscal_period_end": "2024-06-30", "currency": "USD",
+        "scale": "millions", "shares_diluted": "2", "net_income": "25",
+        "source_note": "FY24 20-F, p.12",
+    })
+    mismatched = client.post("/api/finance/securities/BHP.AX/valuation/ratios", headers=AUTH, json={
+        "price": "45", "price_currency": "AUD", "price_date": "2024-07-01", "statement_period": "annual",
+        "statement_fiscal_period_end": "2024-06-30",
+    })
+    assert mismatched.status_code == 422
+    assert "price_currency" in mismatched.json()["detail"]
+
+    matching = client.post("/api/finance/securities/BHP.AX/valuation/ratios", headers=AUTH, json={
+        "price": "45", "price_currency": "USD", "price_date": "2024-07-01", "statement_period": "annual",
+        "statement_fiscal_period_end": "2024-06-30",
+    })
+    assert matching.status_code == 200
 
 
 def test_valuation_dcf_persists_runs_and_margin_of_safety(finance_client):
@@ -362,6 +387,13 @@ def test_portfolio_import_preview_and_atomic_confirm(finance_client):
     assert body["coverage_complete"] is False
     assert body["total_value_aud"] is None  # Defect-1 regression: never silently renormalized.
     assert body["covered_value_aud"] is not None
+    # Follow-up regression: weights/sector_concentration must never substitute
+    # for whole-portfolio figures when coverage is incomplete; only the
+    # explicitly-named covered_* figures are populated.
+    assert body["weights"] is None
+    assert body["sector_concentration"] is None
+    assert body["covered_weights"]["CASH"] == "1"
+    assert any(h["symbol"] == "BHP.AX" and h["market_value_aud"] is None for h in body["holdings_detail"])
 
 
 def test_portfolio_json_import_overseas_requires_dated_manual_value(finance_client):
@@ -416,6 +448,26 @@ def test_portfolio_scenario_validates_shocks(finance_client):
         {"label": "Crash", "symbol_or_group": "CASH", "pct_change": "-10"},
     ])
     assert valid.status_code == 200
+    body = valid.json()
+    assert body["coverage_complete"] is True
+    assert body["baseline_total_aud"] == "1000"
+
+    client.post(f"/api/finance/portfolios/{portfolio_id}/holdings", headers=AUTH, json={
+        "symbol": "BHP.AX", "units": "10",
+    })
+    incomplete = client.post(f"/api/finance/portfolios/{portfolio_id}/scenario", headers=AUTH, json=[
+        {"label": "Crash", "symbol_or_group": "CASH", "pct_change": "-10"},
+    ])
+    assert incomplete.status_code == 200
+    incomplete_body = incomplete.json()
+    # Regression: an unresolved holding (BHP.AX has no price bar) must withhold
+    # the whole-portfolio baseline/shocked totals, not silently report the
+    # covered-only subtotal as if it were the full portfolio.
+    assert incomplete_body["coverage_complete"] is False
+    assert incomplete_body["baseline_total_aud"] is None
+    assert incomplete_body["shocked_total_aud"] is None
+    assert incomplete_body["covered_baseline_total_aud"] == "1000"
+    assert "BHP.AX" in incomplete_body["unresolved_symbols"]
 
 
 def test_portfolio_correlation_endpoint(finance_client):
@@ -426,6 +478,38 @@ def test_portfolio_correlation_endpoint(finance_client):
     )
     assert correlation.status_code == 200
     assert correlation.json()["available"] is False  # No price history yet; explicitly unavailable, not zero.
+
+
+def test_return_series_uses_adjusted_close_and_aligns_only_shared_dates():
+    """Follow-up regression: correlation must use adjusted_close (dividends/
+    splits accounted for), not raw close, and must intersect dates rather than
+    assume equal-length series are aligned."""
+    from assistant_api.finance.api import _align_series, _return_series
+
+    # Raw close implies a +10% day 2->3 move; adjusted_close (post-dividend
+    # adjusted) implies a flat move. If raw close were used the return would
+    # differ from the expected adjusted-close-derived value below.
+    bars_a = [
+        {"observed_on": "2024-01-01", "close": "100", "adjusted_close": "100"},
+        {"observed_on": "2024-01-02", "close": "110", "adjusted_close": "100"},
+        {"observed_on": "2024-01-03", "close": "121", "adjusted_close": "110"},
+    ]
+    series_a = _return_series(bars_a)
+    assert [d for d, _ in series_a] == ["2024-01-02", "2024-01-03"]
+    assert series_a[0][1] == 0  # adjusted_close flat day 1->2, despite close rising 10%.
+    assert series_a[1][1] == Decimal("0.1")  # adjusted_close +10% day 2->3.
+
+    # series_b only overlaps with series_a on 2024-01-03; alignment must
+    # intersect dates, not just truncate/zip by position.
+    bars_b = [
+        {"observed_on": "2024-01-02", "close": "50", "adjusted_close": "50"},
+        {"observed_on": "2024-01-03", "close": "55", "adjusted_close": "55"},
+        {"observed_on": "2024-01-04", "close": "60", "adjusted_close": "60.5"},
+    ]
+    series_b = _return_series(bars_b)
+    aligned_a, aligned_b = _align_series(series_a, series_b)
+    assert aligned_a == [Decimal("0.1")]
+    assert aligned_b == [(Decimal("55") - Decimal("50")) / Decimal("50")]
 
 
 def test_alert_evaluation_is_on_demand_and_deterministic(finance_client):

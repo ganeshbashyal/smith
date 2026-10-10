@@ -187,6 +187,10 @@ class RatioValuationRequest(DecimalModel):
     """Live price input for ratio valuation; all financial figures come from a
     confirmed statement revision, never from an arbitrary request body."""
     price: str
+    price_currency: Currency = Field(
+        description="Currency the price is quoted in; must match the confirmed statement's "
+                    "currency since no automatic FX conversion is performed",
+    )
     price_date: date = Field(description="Date the price was observed/approved by the user")
     statement_period: Period
     statement_fiscal_period_end: date
@@ -375,6 +379,11 @@ class HoldingRow(DecimalModel):
             raise ValueError(
                 f"{self.symbol}: manual_aud_value requires a valuation_date "
                 "(manually valued overseas holdings must be dated)"
+            )
+        if self.valuation_date is not None and self.valuation_date > date.today():
+            raise ValueError(
+                f"{self.symbol}: valuation_date cannot be in the future "
+                "(a future-dated valuation is not valid current evidence)"
             )
         return self
 
