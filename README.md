@@ -226,6 +226,36 @@ Invoke-RestMethod http://127.0.0.1:8000/api/chat -Method Post -ContentType "appl
 Invoke-RestMethod http://127.0.0.1:8000/api/chat -Method Post -ContentType "application/json" -Body '{"question":"Latest NASA space news","refresh_sources":true}'
 ```
 
+### Year 12 study-notes corpus
+
+`scripts/build_year12_knowledge.py` drafts Markdown study notes for a fixed set
+of senior-secondary topics (Maths Methods, Physics, Chemistry, Biology,
+Economics, Business Studies, English) using Mr Smith's **currently selected**
+local Ollama model, then registers them in the document store via
+`Store.add_document` so the `general`/`science`/`business` personas can
+retrieve them like any other evidence.
+
+This is **not model fine-tuning** - no local training pipeline exists, and no
+model weights are changed. It is a curated, attributed retrieval corpus built
+from the model's own general training knowledge, carrying the same
+"not independently verified" caveat as any other conceptual answer, plus an
+explicit per-note disclaimer to cross-check current syllabus/teacher guidance
+before relying on it for assessment.
+
+Safe to run unattended/overnight:
+- Idempotent generation (skips topics whose file already exists) and
+  idempotent ingestion (content-digest keyed; safe to re-run anytime).
+- Never force-unloads another model - waits for Ollama to be free before each
+  draft, so an in-flight chat/research request is never interrupted.
+- Fully local: notes are written under `data/year12_knowledge/` (already
+  excluded from git) and nothing leaves the local Ollama instance.
+
+```powershell
+python scripts/build_year12_knowledge.py                 # generate + ingest
+python scripts/build_year12_knowledge.py --limit 5        # cap new topics this run
+python scripts/build_year12_knowledge.py --ingest-only    # re-sync DB only, no generation
+```
+
 ## Finance module (deep dive)
 
 All endpoints live under `/api/finance/*` and a `/finance` page (token kept
