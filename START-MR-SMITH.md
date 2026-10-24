@@ -54,6 +54,14 @@ Start the app in the foreground:
 .\scripts\start-mr-smith.ps1
 ```
 
+If PowerShell blocks scripts because of execution policy, use this one-run
+bypass from the same directory; it does not change the machine's policy and
+inherits the token set in the current PowerShell window:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File "D:\Mr_Smith\scripts\start-mr-smith.ps1"
+```
+
 The launcher reuses `D:\Mr_Smith\.venv`, installs the local package if needed,
 checks whether Ollama is reachable, and serves Mr Smith on `127.0.0.1:8000`.
 Keep this PowerShell window open while using the app. Press **Ctrl+C** in this
@@ -90,6 +98,14 @@ Once the server is running, open any of these links:
 The Admin page asks for the same token set in the server's PowerShell window.
 If that PowerShell window is closed, its token is cleared; set it again before
 restarting the app if you need Admin access.
+
+The Admin page's **Local services and resource use** panel shows the Ollama
+server and Mr Smith process, installed/loaded models, memory usage and
+cumulative CPU time. It can start local Ollama. It can gracefully stop Ollama
+only when that server was started by the panel: active model requests finish,
+models are unloaded, and then a shutdown signal is sent. You can also unload
+models while leaving Ollama running. Independently started Ollama processes
+are shown but are never stopped by the panel.
 
 ## 4. Quick health checks
 

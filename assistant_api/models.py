@@ -75,6 +75,27 @@ class ModelManager:
                 self.last_error = "Ollama model selection failed"
                 raise
 
+    async def unload(self) -> list[str]:
+        """Gracefully unload every currently loaded model without changing preference."""
+        async with self.lock:
+            try:
+                loaded = self._names(await self._request("GET", "/api/ps"))
+                for name in loaded:
+                    result = await self._request("POST", "/api/generate", json={
+                        "model": name, "keep_alive": 0, "stream": False,
+                    })
+                    if result.get("done") is not True:
+                        raise ValueError("Ollama did not acknowledge model unload")
+                remaining = self._names(await self._request("GET", "/api/ps"))
+                if remaining:
+                    raise ValueError("Ollama still has models loaded")
+                self.active_model = None
+                self.last_error = None
+                return loaded
+            except (httpx.HTTPError, ValueError, KeyError, TypeError):
+                self.last_error = "Ollama model unload failed"
+                raise
+
     async def generate(self, system: str, prompt: str, research_model: str | None = None,
                        *, output_tokens: Literal[1024, 3072] = 1024) -> tuple[str, str]:
         async with self.lock:

@@ -124,7 +124,16 @@ arbitrary URLs.
 
 ## Private knowledge documents
 
-The `/admin` page supports authenticated private document search, detail,
+The `/admin` page supports authenticated local-service monitoring and document
+management. It reports the Mr Smith process and local Ollama processes with
+memory usage and cumulative CPU time. From the page you can start a local
+Ollama server, gracefully unload models while keeping the service running, and
+gracefully stop only a server started by that page; stopping waits for active
+model work and unloads loaded models first. An Ollama process that was already
+running independently is visible but is not stopped by Smith.
+Service controls require the admin token and a loopback connection.
+
+The page also supports authenticated private document search, detail,
 revision-preserving edits and deletion. `/api/admin/documents` also supports
 bounded listing and full-text search; list/search results omit document text.
 Deleting a document also deletes its revision history. Updating a document

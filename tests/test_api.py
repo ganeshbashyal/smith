@@ -50,8 +50,11 @@ class Ollama:
 @pytest.fixture
 def app_client(tmp_path):
     fake = Ollama()
-    settings = Settings(tmp_path, "http://ollama", "daily", "research", "test-token", False)
-    with TestClient(create_app(settings, ollama_transport=httpx.MockTransport(fake))) as client:
+    settings = Settings(tmp_path, "http://127.0.0.1:11434", "daily", "research", "test-token", False)
+    with TestClient(
+        create_app(settings, ollama_transport=httpx.MockTransport(fake)),
+        client=("127.0.0.1", 12345),
+    ) as client:
         yield client, fake, settings
 
 
@@ -66,9 +69,143 @@ def test_interfaces_and_validation(app_client):
     assert 'id="history-refresh"' in admin_page
     assert "Download Markdown" in admin_page
     assert "localStorage" not in admin_page
+    assert "Gracefully stop Ollama" in admin_page
+    assert "resource use" in admin_page
     assert len(client.get("/api/personas").json()["personas"]) == 10
     for body in ({"question": ""}, {"question": "   "}, {"question": "Hi", "persona": "unknown"}):
         assert client.post("/api/chat", json=body).status_code == 422
+
+
+def test_admin_local_service_status_and_unmanaged_process_stop_guard(app_client, monkeypatch):
+    client, _, _ = app_client
+    from assistant_api.local_services import LocalServiceController
+
+    monkeypatch.setattr(LocalServiceController, "_resources", staticmethod(
+        lambda app_pid: {"status": "ok", "processes": [
+            {"pid": app_pid, "name": "python.exe", "role": "mr_smith",
+             "memory_mb": 123.4, "cpu_seconds": 5.6},
+        ]},
+    ))
+    headers = {"Authorization": "Bearer test-token"}
+    assert client.get("/api/admin/services").status_code == 401
+    status = client.get("/api/admin/services", headers=headers)
+    assert status.status_code == 200
+    assert status.json()["ollama"]["status"] == "running"
+    assert status.json()["ollama"]["installed_models"] == ["daily", "research", "alternate"]
+    assert status.json()["resources"]["processes"][0]["role"] == "mr_smith"
+    assert client.post("/api/admin/services/ollama/start", headers=headers).status_code == 409
+    assert client.post("/api/admin/services/ollama/stop", headers=headers).status_code == 409
+
+
+def test_admin_can_gracefully_unload_models_without_stopping_ollama(app_client):
+    client, fake, _ = app_client
+    headers = {"Authorization": "Bearer test-token"}
+
+    unloaded = client.post("/api/admin/services/models/unload", headers=headers)
+
+    assert unloaded.status_code == 200
+    assert unloaded.json() == {"status": "unloaded", "models": ["daily"]}
+    assert fake.loaded == []
+    assert client.get("/api/models").json()["selected_model"] == "daily"
+
+
+def test_admin_graceful_stop_unloads_models_then_stops_managed_service(app_client, monkeypatch):
+    import signal
+
+    client, fake, _ = app_client
+    controller = client.app.state.local_services
+    events = []
+
+    class ManagedProcess:
+        pid = 8765
+        returncode = None
+
+        def poll(self):
+            return self.returncode
+
+        def send_signal(self, received):
+            events.append(("shutdown_signal", received))
+            self.returncode = 0
+
+        def wait(self, timeout=None):
+            return self.returncode
+
+    monkeypatch.setattr(signal, "CTRL_BREAK_EVENT", 1, raising=False)
+    controller.process = ManagedProcess()
+    headers = {"Authorization": "Bearer test-token"}
+
+    response = client.post("/api/admin/services/ollama/stop", headers=headers)
+
+    assert response.status_code == 200
+    assert response.json()["graceful"] is True
+    assert response.json()["unloaded_models"] == ["daily"]
+    assert fake.loaded == []
+    assert events == [("shutdown_signal", 1)]
+
+
+def test_admin_stop_leaves_service_running_if_model_unload_fails(app_client, monkeypatch):
+    client, fake, _ = app_client
+    controller = client.app.state.local_services
+
+    class ManagedProcess:
+        pid = 8765
+        returncode = None
+
+        def poll(self):
+            return self.returncode
+
+        def send_signal(self, _):
+            raise AssertionError("Service must not stop if graceful model unload fails")
+
+    controller.process = ManagedProcess()
+    fake.fail_unload = True
+    response = client.post(
+        "/api/admin/services/ollama/stop",
+        headers={"Authorization": "Bearer test-token"},
+    )
+    assert response.status_code == 502
+    assert controller.can_stop
+
+
+def test_admin_service_control_requires_local_network_client(tmp_path):
+    fake = Ollama()
+    settings = Settings(tmp_path, "http://ollama", "daily", "research", "test-token", False)
+    with TestClient(
+        create_app(settings, ollama_transport=httpx.MockTransport(fake)),
+        client=("192.0.2.1", 12345),
+    ) as client:
+        response = client.get(
+            "/api/admin/services",
+            headers={"Authorization": "Bearer test-token"},
+        )
+        assert response.status_code == 403
+
+
+def test_model_manager_can_gracefully_unload_without_changing_saved_selection(tmp_path):
+    fake = Ollama()
+    store = Store(tmp_path)
+    store.set_model("daily")
+
+    async def run():
+        async with httpx.AsyncClient(
+            base_url="http://127.0.0.1:11434",
+            transport=httpx.MockTransport(fake),
+        ) as client:
+            manager = ModelManager(client, store, "daily")
+            unloaded = await manager.unload()
+            assert unloaded == ["daily"]
+            assert await manager.status() == {
+                "selected_model": "daily",
+                "active_model": None,
+                "loaded_models": [],
+                "installed_models": ["daily", "research", "alternate"],
+                "healthy": True,
+                "last_latency_ms": None,
+                "last_error": None,
+            }
+
+    asyncio.run(run())
+    assert store.get_model("fallback") == "daily"
 
 
 def test_knowledge_status_reports_runtime_and_document_counts(app_client):

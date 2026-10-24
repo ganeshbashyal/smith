@@ -11,6 +11,7 @@ textarea { box-sizing: border-box; width: 100%; min-height: 10rem; }
 pre { white-space: pre-wrap; overflow-wrap: anywhere; }
 .document { border: 1px solid #888; border-radius: .4rem; padding: .75rem; margin: .75rem 0; }
 .row { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
+.service { border: 1px solid #888; border-radius: .4rem; padding: .75rem; margin: .75rem 0; }
 </style>
 <h1>Model management</h1>
 <a href="/morning">Back to widget</a>
@@ -25,6 +26,21 @@ pre { white-space: pre-wrap; overflow-wrap: anywhere; }
 <button id="save">Activate and save model</button>
 </form>
 <p id="error" role="alert"></p>
+<hr>
+<h2>Local services and resource use</h2>
+<p>Controls are local-only. This page monitors the Mr Smith process and controls Ollama; stop or restart Mr Smith from its PowerShell window with Ctrl+C. Ollama started elsewhere is shown but never stopped by this page. Graceful stop waits for any active model request, unloads models, then asks the Ollama process started here to shut down. Force is used only if graceful shutdown times out.</p>
+<div class="service">
+<h3>Ollama</h3>
+<div class="row">
+<button id="service-refresh" type="button">Refresh services</button>
+<button id="ollama-start" type="button">Start Ollama</button>
+<button id="models-unload" type="button">Gracefully unload models</button>
+<button id="ollama-stop" type="button" disabled>Gracefully stop Ollama</button>
+</div>
+<p id="service-error" role="alert"></p>
+<p>Resource figures show process working-set memory and cumulative CPU time since process start, not an instantaneous CPU percentage.</p>
+<pre id="services" role="status">Enter the admin token and refresh to inspect local services.</pre>
+</div>
 <hr>
 <h2>Private knowledge documents</h2>
 <p>Documents and their contents are private. Use the same admin token; it stays in this page only and is not saved in browser storage.</p>
@@ -251,8 +267,59 @@ async function refresh() {
       el('models').append(option);
     });
   } catch (error) { el('error').textContent = error.message; }
+  await refreshServices();
+}
+async function refreshServices() {
+  el('service-error').textContent = '';
+  try {
+    const response = await fetch('/api/admin/services', { headers: authorization() });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.detail || 'Could not inspect local services');
+    el('services').textContent = JSON.stringify(data, null, 2);
+    el('ollama-start').disabled = !data.supported || data.ollama.status === 'running';
+    el('ollama-stop').disabled = !data.ollama.managed_by_mr_smith;
+  } catch (error) {
+    el('services').textContent = 'Service status unavailable.';
+    el('service-error').textContent = error.message;
+    el('ollama-start').disabled = false;
+    el('ollama-stop').disabled = true;
+  }
+}
+async function controlOllama(action) {
+  el('service-error').textContent = '';
+  el('ollama-start').disabled = true;
+  el('ollama-stop').disabled = true;
+  try {
+    const response = await fetch(`/api/admin/services/ollama/${action}`, {
+      method: 'POST', headers: authorization()
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.detail || `Could not ${action} Ollama`);
+    el('services').textContent = JSON.stringify(data, null, 2);
+  } catch (error) { el('service-error').textContent = error.message; }
+  finally { await refreshServices(); }
 }
 el('refresh').onclick = refresh;
+el('service-refresh').onclick = refreshServices;
+el('ollama-start').onclick = () => controlOllama('start');
+el('models-unload').onclick = async () => {
+  el('service-error').textContent = '';
+  el('models-unload').disabled = true;
+  try {
+    const response = await fetch('/api/admin/services/models/unload', {
+      method: 'POST', headers: authorization()
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.detail || 'Could not unload models');
+    el('services').textContent = JSON.stringify(data, null, 2);
+  } catch (error) { el('service-error').textContent = error.message; }
+  finally { el('models-unload').disabled = false; await refreshServices(); }
+};
+el('ollama-stop').onclick = () => {
+  if (window.confirm('Wait for active model work, unload loaded models, then gracefully stop the Ollama server started by this panel?')) {
+    controlOllama('stop');
+  }
+};
 el('selection').onsubmit = async event => {
   event.preventDefault(); el('save').disabled = true; el('error').textContent = '';
   try {

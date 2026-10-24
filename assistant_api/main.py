@@ -2,14 +2,16 @@ from contextlib import asynccontextmanager
 from datetime import datetime, timezone
 from html import escape
 import hmac
+import ipaddress
 import json
 import logging
+import os
 from pathlib import Path
 import sqlite3
 from typing import Literal
 from urllib.parse import quote, urlsplit
 
-from fastapi import Depends, FastAPI, File, Form, Header, HTTPException, Query, UploadFile
+from fastapi import Depends, FastAPI, File, Form, Header, HTTPException, Query, Request, UploadFile
 from fastapi.responses import HTMLResponse, PlainTextResponse
 import httpx
 from pydantic import BaseModel, Field, ValidationError, field_validator, model_validator
@@ -19,6 +21,7 @@ from assistant_api.finance.api import build_router as build_finance_router
 from assistant_api.finance.evidence import extract_pdf_text
 from assistant_api.finance.repository import FinanceStore
 from assistant_api.knowledge import inspect_knowledge_control_plane
+from assistant_api.local_services import LocalServiceController
 from assistant_api.models import ModelManager
 from assistant_api.personas import BASE_INSTRUCTION, PERSONAS
 from assistant_api.routing import conceptual_question, route_request
@@ -92,6 +95,7 @@ def create_app(settings: Settings | None = None, *, ollama_transport=None, feed_
             app.state.store = store
             app.state.finance_store = finance_store
             app.state.models = ModelManager(ollama, store, settings.daily_model)
+            app.state.local_services = LocalServiceController(settings.ollama_url)
             app.state.feeds = feeds
             yield
 
@@ -105,6 +109,14 @@ def create_app(settings: Settings | None = None, *, ollama_transport=None, feed_
         supplied = authorization.removeprefix("Bearer ")
         if not hmac.compare_digest(supplied.encode(), settings.admin_token.encode()):
             raise HTTPException(401, "Invalid admin token")
+
+    def require_loopback(request: Request):
+        host = request.client.host if request.client else ""
+        try:
+            if not ipaddress.ip_address(host).is_loopback:
+                raise HTTPException(403, "Local service controls are available only from this computer")
+        except ValueError as exc:
+            raise HTTPException(403, "Local service controls are available only from this computer") from exc
 
     async def ollama_operation(operation):
         try:
@@ -206,6 +218,46 @@ For mixed questions, also explain the stable concept from general knowledge."""
         return {"enabled": settings.external_feeds, "coverage": "Approved feeds only; no unrestricted browsing or universal live knowledge",
                 "sources": [{"tool": name, "source": url, "publisher": PUBLISHERS[name],
                              "last_result": status.get(name)} for name, url in SOURCES.items()]}
+
+    @app.get("/api/admin/services", dependencies=[Depends(admin), Depends(require_loopback)])
+    async def local_services():
+        return await app.state.local_services.status(
+            app.state.models.client, os.getpid(),
+        )
+
+    @app.post("/api/admin/services/ollama/start", dependencies=[Depends(admin), Depends(require_loopback)])
+    async def start_ollama():
+        try:
+            return await app.state.local_services.start(app.state.models.client)
+        except FileNotFoundError as exc:
+            raise HTTPException(503, str(exc)) from exc
+        except RuntimeError as exc:
+            raise HTTPException(409, str(exc)) from exc
+        except TimeoutError as exc:
+            raise HTTPException(504, str(exc)) from exc
+        except ValueError as exc:
+            raise HTTPException(422, str(exc)) from exc
+
+    @app.post("/api/admin/services/models/unload", dependencies=[Depends(admin), Depends(require_loopback)])
+    async def unload_models():
+        unloaded = await ollama_operation(app.state.models.unload())
+        return {"status": "unloaded", "models": unloaded}
+
+    @app.post("/api/admin/services/ollama/stop", dependencies=[Depends(admin), Depends(require_loopback)])
+    async def stop_ollama():
+        if not app.state.local_services.can_stop:
+            raise HTTPException(
+                409, "Only an Ollama server started by this Admin panel can be stopped here",
+            )
+        try:
+            unloaded = await ollama_operation(app.state.models.unload())
+        except HTTPException as exc:
+            raise HTTPException(502, "Could not gracefully unload Ollama models; service was left running") from exc
+        try:
+            result = await app.state.local_services.stop()
+        except RuntimeError as exc:
+            raise HTTPException(409, str(exc)) from exc
+        return {**result, "unloaded_models": unloaded}
 
     @app.get("/api/coverage/sports")
     async def sports_coverage():
