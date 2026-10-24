@@ -129,8 +129,10 @@ management. It reports the Mr Smith process and local Ollama processes with
 memory usage and cumulative CPU time. From the page you can start a local
 Ollama server, gracefully unload models while keeping the service running, and
 gracefully stop only a server started by that page; stopping waits for active
-model work and unloads loaded models first. An Ollama process that was already
-running independently is visible but is not stopped by Smith.
+model work and unloads loaded models first. It falls back to process termination
+only if the graceful signal cannot be delivered or shutdown times out. An
+Ollama process that was already running independently is visible but is not
+stopped by Smith.
 Service controls require the admin token and a loopback connection.
 
 The page also supports authenticated private document search, detail,

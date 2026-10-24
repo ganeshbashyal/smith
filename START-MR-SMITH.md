@@ -105,7 +105,8 @@ cumulative CPU time. It can start local Ollama. It can gracefully stop Ollama
 only when that server was started by the panel: active model requests finish,
 models are unloaded, and then a shutdown signal is sent. You can also unload
 models while leaving Ollama running. Independently started Ollama processes
-are shown but are never stopped by the panel.
+are shown but are never stopped by the panel. Process termination is a
+fallback only if the graceful signal cannot be delivered or shutdown times out.
 
 ## 4. Quick health checks
 

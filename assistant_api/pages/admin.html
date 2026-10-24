@@ -28,7 +28,7 @@ pre { white-space: pre-wrap; overflow-wrap: anywhere; }
 <p id="error" role="alert"></p>
 <hr>
 <h2>Local services and resource use</h2>
-<p>Controls are local-only. This page monitors the Mr Smith process and controls Ollama; stop or restart Mr Smith from its PowerShell window with Ctrl+C. Ollama started elsewhere is shown but never stopped by this page. Graceful stop waits for any active model request, unloads models, then asks the Ollama process started here to shut down. Force is used only if graceful shutdown times out.</p>
+<p>Controls are local-only. This page monitors the Mr Smith process and controls Ollama; stop or restart Mr Smith from its PowerShell window with Ctrl+C. Ollama started elsewhere is shown but never stopped by this page. Graceful stop waits for any active model request, unloads models, then asks the Ollama process started here to shut down. Process termination is used only if the graceful signal cannot be delivered or shutdown times out.</p>
 <div class="service">
 <h3>Ollama</h3>
 <div class="row">
