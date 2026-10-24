@@ -7,16 +7,22 @@ from typing import get_args
 
 
 DOMAIN_REQUIREMENTS = {
-    "general": ("kind", "dependencies", "not execution", "professional review"),
-    "science": ("reproducibility", "confounders", "preprint", "treatment advice"),
-    "engineering": ("acceptance criteria", "lockout", "firmware", "not commissioned"),
-    "building": ("assembly", "jurisdiction", "Manufacturer evidence", "compliance is undetermined"),
+    "general": ("kind", "dependencies", "not execution", "professional review",
+                "Lead with the most useful direct answer", "one focused question at a time"),
+    "science": ("reproducibility", "confounders", "preprint", "treatment advice",
+                "Correlation alone does not establish causation"),
+    "engineering": ("acceptance criteria", "lockout", "firmware", "not commissioned",
+                    "hazard-control", "non-invasive observations"),
+    "building": ("assembly", "jurisdiction", "Manufacturer evidence", "compliance is undetermined",
+                 "whole-assembly", "ask only for the detail needed"),
     "finance": ("counter-thesis", "invalidation", "Smart Money Score", "not financial advice"),
     "business": ("unit economics", "decision gates", "customer evidence", "qualified review"),
-    "health": ("Never diagnose", "000", "contraindications", "urgent care"),
+    "health": ("Never diagnose", "000", "contraindications", "urgent care",
+               "Do not ask follow-up questions", "no connected live clinical source"),
     "news": ("publication time", "corroboration", "headlines", "disabled/error"),
     "sports": ("Manchester United", "Real Madrid", "Ferrari", "season", "betting"),
-    "automotive": ("model", "torque", "not driving", "cannot certify"),
+    "automotive": ("model", "torque", "not driving", "cannot certify",
+                   "lead with a clear stop-use recommendation"),
 }
 
 
@@ -65,4 +71,6 @@ def test_emergency_and_safety_boundaries_apply_to_explicit_overrides():
     for persona in PERSONAS:
         assert route_request("chest pain", "d", "r", persona=persona).persona == persona
     assert "Possible medical emergencies take priority" in BASE_INSTRUCTION
+    assert "Australia tell the user to call 000" in BASE_INSTRUCTION
+    assert "Do not ask follow-up questions" in BASE_INSTRUCTION
     assert "Across all personas" in BASE_INSTRUCTION

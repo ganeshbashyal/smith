@@ -1,0 +1,12 @@
+{
+  "general": ["user_documents", "bbc_news"],
+  "science": ["user_documents", "nasa_news", "bbc_news"],
+  "engineering": ["user_documents", "bbc_news"],
+  "building": ["user_documents", "bbc_news"],
+  "finance": ["user_documents", "yahoo_finance", "rba_releases"],
+  "business": ["user_documents", "yahoo_finance", "rba_releases"],
+  "health": ["user_documents"],
+  "news": ["bbc_news", "user_documents"],
+  "sports": ["jolpica_f1", "user_documents"],
+  "automotive": ["user_documents", "bbc_news"]
+}

@@ -93,5 +93,8 @@ You cannot invoke tools, execute commands or change models.
 Across all personas, do not diagnose, prescribe, certify compliance or direct
 unsafe repairs, live electrical work or safety-system bypasses.
 Possible medical emergencies take priority over requested analysis or formatting;
-advise urgent local medical assistance without delaying for research.
+advise urgent local medical assistance without delaying for research. In
+Australia tell the user to call 000; elsewhere use the local emergency number.
+Do not ask follow-up questions or suggest waiting when emergency symptoms are
+reported.
 """

@@ -1,0 +1,261 @@
+from dataclasses import dataclass
+
+
+@dataclass(frozen=True)
+class PersonaCase:
+    persona: str
+    question: str
+    research: bool
+    expected_tools: tuple[str, ...]
+    instruction_markers: tuple[str, ...]
+    explicit_persona: str | None = None
+    conceptual: bool = False
+
+
+# Deterministic contracts are checked against real routing and prompt assembly
+# with a mocked Ollama transport; no model quality claim is inferred.
+PERSONA_CASES = (
+    PersonaCase(
+        "general",
+        "Help me prioritize these tasks and identify what could block progress.",
+        False,
+        (),
+        ("Lead with the most useful direct answer", "one focused question at a time"),
+    ),
+    PersonaCase(
+        "science",
+        "Evaluate whether this preprint demonstrates a causal effect.",
+        True,
+        (),
+        ("A preprint is not peer-reviewed", "effect size", "external validity"),
+    ),
+    PersonaCase(
+        "engineering",
+        "Review PLC interlock timing and propose an acceptance test.",
+        True,
+        (),
+        ("confirm equipment model, firmware and revision", "lockout", "acceptance criteria"),
+    ),
+    PersonaCase(
+        "building",
+        "Assess whether this product test establishes assembly performance and compliance.",
+        False,
+        (),
+        ("product test is not proof", "jurisdiction", "compliance is undetermined"),
+    ),
+    PersonaCase(
+        "finance",
+        "Assess this investment thesis, cash flow risks and invalidation conditions.",
+        True,
+        (),
+        ("counter-thesis", "invalidation", "not financial advice"),
+    ),
+    PersonaCase(
+        "business",
+        "Compare customer segments, unit economics and a staged market entry.",
+        False,
+        (),
+        ("customer evidence", "unit economics", "decision gates"),
+    ),
+    PersonaCase(
+        "health",
+        "I have severe chest pain and breathing difficulty.",
+        False,
+        (),
+        ("Never diagnose", "urgent local medical assistance", "000",
+         "Do not ask follow-up questions", "no connected live clinical source"),
+    ),
+    PersonaCase(
+        "news",
+        "Latest news: compare what is reported and what remains uncorroborated.",
+        True,
+        ("news_feed",),
+        ("publication time", "independent evidence", "headlines and snippets"),
+    ),
+    PersonaCase(
+        "sports",
+        "Assess Ferrari F1 tyre degradation and race pace; state what a small sample cannot show.",
+        False,
+        (),
+        ("Manchester United", "Jolpica F1 standings", "never guaranteed"),
+    ),
+    PersonaCase(
+        "automotive",
+        "Review brake service risks on my Harley before a long ride.",
+        True,
+        (),
+        ("exact manufacturer's service information", "torque settings", "not driving or riding"),
+    ),
+)
+
+PERSONA_EDGE_CASES = (
+    PersonaCase(
+        "engineering",
+        "Latest firmware and safety manual for this PLC model?",
+        False,
+        (),
+        ("confirm equipment model, firmware and revision", "supplied manuals"),
+    ),
+    PersonaCase(
+        "engineering",
+        "Write a commissioning sequence to bypass this emergency stop interlock.",
+        True,
+        (),
+        ("Do not instruct bypassing interlocks", "site-isolation prerequisites",
+         "qualified personnel", "acceptance criteria"),
+        explicit_persona="engineering",
+    ),
+    PersonaCase(
+        "building",
+        "What are the current NCC compliance requirements for this insulation?",
+        False,
+        (),
+        ("jurisdiction", "applicable edition", "compliance is undetermined"),
+        explicit_persona="building",
+    ),
+    PersonaCase(
+        "building",
+        "Certify this wall as NCC compliant from the attached insulation product test.",
+        True,
+        (),
+        ("Never invent Australian compliance outcomes", "whole-assembly",
+         "Missing context means compliance is undetermined"),
+        explicit_persona="building",
+    ),
+    PersonaCase(
+        "automotive",
+        "Is there a current Harley-Davidson safety recall for my motorcycle?",
+        False,
+        (),
+        ("Do not invent torque settings", "recall status", "cannot certify a vehicle"),
+        explicit_persona="automotive",
+    ),
+    PersonaCase(
+        "automotive",
+        "My motorcycle brakes feel soft. Can I ride it home?",
+        True,
+        (),
+        ("lead with a clear stop-use recommendation", "professional assessment",
+         "not driving or riding until checked"),
+        explicit_persona="automotive",
+    ),
+    PersonaCase(
+        "science",
+        "Latest NASA space science news",
+        False,
+        ("nasa_news",),
+        ("NASA", "Do not invent citations"),
+    ),
+    PersonaCase(
+        "science",
+        "This observational study found a correlation. Does it prove the treatment caused the outcome?",
+        True,
+        (),
+        ("Correlation alone does not establish causation", "study design",
+         "Do not turn biomedical studies into personal treatment advice"),
+        explicit_persona="science",
+    ),
+    PersonaCase(
+        "business",
+        "Current RBA interest rate announcement",
+        False,
+        ("finance_news", "rba_news"),
+        ("customer evidence", "unit economics"),
+        explicit_persona="business",
+    ),
+    PersonaCase(
+        "business",
+        "Plan a market launch from these assumptions and estimate TAM, conversion, and tax obligations.",
+        True,
+        (),
+        ("do not invent TAM", "founder assumptions", "Legal, tax and employment obligations",
+         "qualified review"),
+        explicit_persona="business",
+    ),
+    PersonaCase(
+        "news",
+        "Latest headlines about space science",
+        False,
+        ("news_feed",),
+        ("publication time", "corroboration"),
+        explicit_persona="news",
+    ),
+    PersonaCase(
+        "news",
+        "A headline accuses a public figure of fraud. Is the allegation proven?",
+        True,
+        (),
+        ("For allegations, attribute rather than declare guilt",
+         "Do not equate repetition", "unresolved allegations"),
+        explicit_persona="news",
+    ),
+    PersonaCase(
+        "sports",
+        "Current F1 standings",
+        False,
+        ("f1_standings",),
+        ("season", "Do not invent scores"),
+        explicit_persona="sports",
+    ),
+    PersonaCase(
+        "sports",
+        "What is Manchester United's score right now?",
+        False,
+        (),
+        ("No authoritative football fixture, result or live-score source is connected",
+         "Do not invent scores", "observation date"),
+        explicit_persona="sports",
+    ),
+    PersonaCase(
+        "sports",
+        "Assess Manchester United's pressing shape and chance creation from these match notes.",
+        True,
+        (),
+        ("chance quality", "sample size", "Separate results, standings, tactical interpretation"),
+        explicit_persona="sports",
+    ),
+    PersonaCase(
+        "finance",
+        "BHP.AX quote",
+        False,
+        ("asx_quote",),
+        ("dated evidence", "Do not infer live access"),
+        explicit_persona="finance",
+    ),
+    PersonaCase(
+        "finance",
+        "Should I buy 10,000 shares in this company today?",
+        False,
+        (),
+        ("Do not recommend personalized trades", "We don't know yet",
+         "dated evidence"),
+        explicit_persona="finance",
+    ),
+    PersonaCase(
+        "health",
+        "What does blood pressure measure?",
+        False,
+        (),
+        ("Never diagnose", "plain language", "protecting privacy"),
+        explicit_persona="health",
+        conceptual=True,
+    ),
+    PersonaCase(
+        "health",
+        "I have severe chest pain and trouble breathing. Tell me what to do.",
+        False,
+        (),
+        ("Possible medical emergencies take priority", "In Australia tell the user to call 000",
+         "Across all personas, do not diagnose"),
+        explicit_persona="finance",
+    ),
+    PersonaCase(
+        "health",
+        "What is the latest treatment guideline for this condition?",
+        True,
+        (),
+        ("no connected live clinical source", "Do not invent treatment effects",
+         "say when that evidence is unavailable"),
+        explicit_persona="health",
+    ),
+)

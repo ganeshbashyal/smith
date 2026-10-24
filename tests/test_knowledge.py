@@ -1,9 +1,12 @@
 import asyncio
+import json
 from datetime import datetime, timedelta, timezone
+from pathlib import Path
 
 import httpx
 import pytest
 
+from assistant_api.knowledge import inspect_knowledge_control_plane
 from assistant_api.personas import BASE_INSTRUCTION, PERSONAS
 from assistant_api.routing import conceptual_question, route_request
 from assistant_api.storage import Store
@@ -44,6 +47,7 @@ def test_current_routes_are_allowlisted_and_bounded():
 def test_conceptual_format_does_not_apply_to_current_or_compliance_questions():
     assert conceptual_question("Explain inflation")
     assert conceptual_question("What is a PLC scan cycle?")
+    assert conceptual_question("What does blood pressure measure?")
     assert not conceptual_question("Explain current inflation")
     assert not conceptual_question("How do I certify NCC compliant insulation?")
 
@@ -107,7 +111,7 @@ def test_invalid_or_irrelevant_feeds_are_explicit(body):
             result = (await execute_tools(("science_news",), "Quantum gravity news", client, True))[0]
             assert result["status"] in ("error", "no_results")
             assert result["source"] == SOURCES["science_news"]
-    asyncio.run(run())
+            asyncio.run(run())
 
 
 def test_timeout_has_no_success_shaped_fallback():
@@ -118,3 +122,87 @@ def test_timeout_has_no_success_shaped_fallback():
             result = (await execute_tools(("news_feed",), "news", client, True))[0]
             assert result["status"] == "error" and "data" not in result
     asyncio.run(run())
+def test_knowledge_control_plane_files_exist():
+    root = Path(__file__).parents[1] / "knowledge"
+    registry = json.loads((root / "source_registry.json").read_text(encoding="utf-8"))
+    persona_map = json.loads((root / "persona_source_map.json").read_text(encoding="utf-8"))
+    assert registry["version"] == 1
+    assert "finance" in persona_map
+    assert any(source["id"] == "user_documents" for source in registry["sources"])
+
+
+def _write_control_plane(root, registry, persona_map):
+    root.mkdir(parents=True, exist_ok=True)
+    (root / "source_registry.json").write_text(json.dumps(registry), encoding="utf-8")
+    (root / "persona_source_map.json").write_text(json.dumps(persona_map), encoding="utf-8")
+
+
+def _control_plane_data():
+    root = Path(__file__).parents[1] / "knowledge"
+    return (
+        json.loads((root / "source_registry.json").read_text(encoding="utf-8")),
+        json.loads((root / "persona_source_map.json").read_text(encoding="utf-8")),
+    )
+
+
+def test_control_plane_metadata_matches_runtime_capabilities():
+    root = Path(__file__).parents[1] / "knowledge"
+    result = inspect_knowledge_control_plane(root, PERSONAS)
+
+    assert result["validation"] == {"status": "ok", "drift": []}
+    assert set(result["runtime_personas"]) == set(PERSONAS)
+    assert "science" in result["runtime_personas"]["science"]["knowledge_categories"]
+    assert "nasa_news" in result["runtime_personas"]["science"]["mapped_sources"]
+
+
+def test_control_plane_rejects_duplicate_source_ids(tmp_path):
+    registry, persona_map = _control_plane_data()
+    registry["sources"].append(registry["sources"][0])
+    _write_control_plane(tmp_path, registry, persona_map)
+
+    with pytest.raises(ValueError, match="Duplicate source IDs"):
+        inspect_knowledge_control_plane(tmp_path, PERSONAS)
+
+
+def test_control_plane_rejects_invalid_registry_shape(tmp_path):
+    registry, persona_map = _control_plane_data()
+    registry["version"] = 99
+    _write_control_plane(tmp_path, registry, persona_map)
+
+    with pytest.raises(ValueError, match="Unsupported source registry version"):
+        inspect_knowledge_control_plane(tmp_path, PERSONAS)
+
+
+@pytest.mark.parametrize(("persona", "source_id", "message"), [
+    ("unknown_persona", "user_documents", "Unknown persona names"),
+    ("science", "unknown_source", "Unknown source IDs"),
+])
+def test_control_plane_rejects_unknown_map_references(tmp_path, persona, source_id, message):
+    registry, persona_map = _control_plane_data()
+    persona_map[persona] = [source_id]
+    _write_control_plane(tmp_path, registry, persona_map)
+
+    with pytest.raises(ValueError, match=message):
+        inspect_knowledge_control_plane(tmp_path, PERSONAS)
+
+
+def test_control_plane_reports_registry_map_and_runtime_drift(tmp_path):
+    registry, persona_map = _control_plane_data()
+    persona_map["general"] = ["user_documents", "nasa_news"]
+    _write_control_plane(tmp_path, registry, persona_map)
+
+    result = inspect_knowledge_control_plane(tmp_path, PERSONAS)
+    drift_kinds = {item["kind"] for item in result["validation"]["drift"]}
+    assert result["validation"]["status"] == "drift"
+    assert "registry_map_mismatch" in drift_kinds
+    assert "runtime_map_mismatch" in drift_kinds
+
+
+def test_control_plane_reports_persona_missing_from_map(tmp_path):
+    registry, persona_map = _control_plane_data()
+    del persona_map["automotive"]
+    _write_control_plane(tmp_path, registry, persona_map)
+
+    result = inspect_knowledge_control_plane(tmp_path, PERSONAS)
+    assert result["validation"]["status"] == "drift"
+    assert {"kind": "persona_missing_from_map", "persona": "automotive"} in result["validation"]["drift"]

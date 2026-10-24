@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "purpose": "Allowlisted source registry for persona routing and freshness review.",
+  "sources": [
+    {"id": "bbc_news", "publisher": "BBC", "personas": ["general", "science", "engineering", "building", "news", "automotive"], "type": "feed", "refresh": "daily", "tier": 2, "enabled_by_default": false},
+    {"id": "nasa_news", "publisher": "NASA", "personas": ["science"], "type": "official_feed", "refresh": "daily", "tier": 1, "enabled_by_default": false},
+    {"id": "rba_releases", "publisher": "Reserve Bank of Australia", "personas": ["finance", "business"], "type": "official_feed", "refresh": "daily", "tier": 1, "enabled_by_default": false},
+    {"id": "yahoo_finance", "publisher": "Yahoo Finance", "personas": ["finance", "business"], "type": "market_feed", "refresh": "on_demand", "tier": 3, "enabled_by_default": false},
+    {"id": "jolpica_f1", "publisher": "Jolpica F1", "personas": ["sports"], "type": "api", "refresh": "event_driven", "tier": 2, "enabled_by_default": false},
+    {"id": "user_documents", "publisher": "Mr Smith local knowledge", "personas": ["general", "science", "engineering", "building", "finance", "business", "health", "news", "sports", "automotive"], "type": "local_document", "refresh": "explicit_ingest", "tier": 1, "enabled_by_default": true}
+  ]
+}

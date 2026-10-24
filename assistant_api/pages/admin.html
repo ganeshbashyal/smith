@@ -5,9 +5,12 @@
 <title>Mr Smith Admin</title>
 <style>
 :root { color-scheme: light dark; font-family: system-ui; }
-body { max-width: 700px; margin: auto; padding: 1rem; }
-input, select, button { font: inherit; padding: .5rem; max-width: 100%; }
+body { max-width: 900px; margin: auto; padding: 1rem; }
+input, select, button, textarea { font: inherit; padding: .5rem; max-width: 100%; }
+textarea { box-sizing: border-box; width: 100%; min-height: 10rem; }
 pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+.document { border: 1px solid #888; border-radius: .4rem; padding: .75rem; margin: .75rem 0; }
+.row { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
 </style>
 <h1>Model management</h1>
 <a href="/morning">Back to widget</a>
@@ -22,8 +25,213 @@ pre { white-space: pre-wrap; overflow-wrap: anywhere; }
 <button id="save">Activate and save model</button>
 </form>
 <p id="error" role="alert"></p>
+<hr>
+<h2>Private knowledge documents</h2>
+<p>Documents and their contents are private. Use the same admin token; it stays in this page only and is not saved in browser storage.</p>
+<form id="document-form">
+<input id="document-id" type="hidden">
+<p><label>Title <input id="document-title" maxlength="300" required></label></p>
+<div class="row">
+<label>Category
+<select id="document-category">
+<option>user_context</option><option>general</option><option>science</option><option>engineering</option>
+<option>automation</option><option>building</option><option>manufacturer</option><option>regulatory</option>
+<option>finance</option><option>business</option><option>project_delivery</option><option>health</option>
+<option>news</option><option>sports</option><option>automotive</option>
+</select></label>
+<label>Evidence type
+<select id="document-type">
+<option>source_document</option><option>working_note</option><option>user_context</option>
+<option>manufacturer_evidence</option><option>regulatory_source</option>
+</select></label>
+</div>
+<p><label>Source or citation <input id="document-source" maxlength="2000" required></label></p>
+<p><label>Text <textarea id="document-content" maxlength="200000" required></textarea></label></p>
+<div class="row"><button id="document-submit">Add document</button><button id="document-cancel" type="button" hidden>Cancel edit</button></div>
+</form>
+<p id="document-error" role="alert"></p>
+<form id="pdf-form">
+<h3>Import PDF text</h3>
+<p>Text-layer PDFs only; maximum 25 MB, 500 pages and 1 MB extracted text. Scanned-image OCR is not supported. Each non-empty page is stored with its page number in the source citation.</p>
+<p><label>PDF file <input id="pdf-file" type="file" accept="application/pdf,.pdf" required></label></p>
+<p><label>Title <input id="pdf-title" maxlength="300" required></label></p>
+<div class="row">
+<label>Category
+<select id="pdf-category">
+<option>general</option><option>science</option><option>engineering</option><option>automation</option>
+<option>building</option><option>manufacturer</option><option>regulatory</option><option>finance</option>
+<option>business</option><option>project_delivery</option><option>health</option><option>news</option>
+<option>sports</option><option>automotive</option>
+</select></label>
+<label>Evidence type
+<select id="pdf-type"><option>source_document</option><option>working_note</option>
+<option>manufacturer_evidence</option><option>regulatory_source</option></select></label>
+</div>
+<p><label>Source/citation <input id="pdf-source" maxlength="1900" required></label></p>
+<button id="pdf-submit">Import PDF</button>
+</form>
+<p id="pdf-error" role="alert"></p>
+<div class="row"><label>Search documents <input id="document-search" maxlength="200"></label><button id="document-refresh" type="button">Search</button></div>
+<div id="documents" aria-live="polite"></div>
+<hr>
+<h2>Private conversation history</h2>
+<p>History is stored locally. Details are fetched only when opened, and deletion is permanent.</p>
+<div class="row">
+<button id="history-refresh" type="button">Load history</button>
+<button id="history-newer" type="button" disabled>Newer</button>
+<button id="history-older" type="button" disabled>Older</button>
+<span id="history-page" role="status"></span>
+</div>
+<p id="history-error" role="alert"></p>
+<div id="history" aria-live="polite"></div>
 <script>
 const el = id => document.getElementById(id);
+const authorization = () => ({ Authorization: 'Bearer ' + el('token').value });
+const historyLimit = 25;
+let historyOffset = 0;
+const documentFields = () => ({
+  title: el('document-title').value,
+  category: el('document-category').value,
+  source_type: el('document-type').value,
+  source: el('document-source').value,
+  content: el('document-content').value
+});
+function clearDocumentForm() {
+  el('document-form').reset();
+  el('document-id').value = '';
+  el('document-submit').textContent = 'Add document';
+  el('document-cancel').hidden = true;
+}
+async function loadDocuments() {
+  el('document-error').textContent = '';
+  el('documents').replaceChildren();
+  try {
+    const params = new URLSearchParams({ q: el('document-search').value, limit: '100' });
+    const response = await fetch('/api/admin/documents?' + params, { headers: authorization() });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.detail || 'Could not load private documents');
+    if (!data.documents.length) {
+      el('documents').textContent = 'No matching documents.';
+      return;
+    }
+    data.documents.forEach(item => {
+      const card = document.createElement('section');
+      card.className = 'document';
+      const details = document.createElement('p');
+      details.textContent = `${item.title} | ${item.category} | ${item.source_type} | rev ${item.revision} | ${item.content_length} chars`;
+      const citation = document.createElement('p');
+      citation.textContent = item.source;
+      const edit = document.createElement('button');
+      edit.type = 'button'; edit.textContent = 'Edit'; edit.onclick = () => editDocument(item.id);
+      const remove = document.createElement('button');
+      remove.type = 'button'; remove.textContent = 'Delete';
+      remove.onclick = async () => {
+        if (!window.confirm(`Permanently delete "${item.title}" and its revision history?`)) return;
+        try {
+          const result = await fetch(`/api/admin/documents/${item.id}`, { method: 'DELETE', headers: authorization() });
+          const payload = await result.json();
+          if (!result.ok) throw new Error(payload.detail || 'Could not delete document');
+          await loadDocuments();
+        } catch (error) { el('document-error').textContent = error.message; }
+      };
+      card.append(details, citation, edit, remove);
+      el('documents').append(card);
+    });
+  } catch (error) { el('document-error').textContent = error.message; }
+}
+async function loadHistory() {
+  el('history-error').textContent = '';
+  el('history').replaceChildren();
+  try {
+    const response = await fetch(`/api/admin/history?limit=${historyLimit}&offset=${historyOffset}`, {
+      headers: authorization()
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.detail || 'Could not load private conversation history');
+    el('history-page').textContent = data.history.length
+      ? `Showing ${historyOffset + 1}-${historyOffset + data.history.length}`
+      : (historyOffset ? 'No older entries' : 'No saved conversations');
+    el('history-newer').disabled = historyOffset === 0;
+    el('history-older').disabled = data.history.length < historyLimit;
+    data.history.forEach(item => {
+      const card = document.createElement('section');
+      card.className = 'document';
+      const heading = document.createElement('p');
+      heading.textContent = `${item.created_at} | ${item.persona} | ${item.model}`;
+      const question = document.createElement('p');
+      question.textContent = item.question;
+      const detail = document.createElement('button');
+      detail.type = 'button'; detail.textContent = 'Show answer';
+      detail.onclick = async () => {
+        detail.disabled = true;
+        try {
+          const result = await fetch(`/api/admin/history/${item.id}`, { headers: authorization() });
+          const entry = await result.json();
+          if (!result.ok) throw new Error(entry.detail || 'Could not load conversation');
+          const answer = document.createElement('pre');
+          answer.textContent = entry.answer;
+          if (entry.is_research) {
+            const exportButton = document.createElement('button');
+            exportButton.type = 'button'; exportButton.textContent = 'Download Markdown';
+            exportButton.onclick = async () => {
+              exportButton.disabled = true;
+              try {
+                const exported = await fetch(`/api/admin/history/${item.id}/export`, {
+                  headers: authorization()
+                });
+                if (!exported.ok) throw new Error('Could not export research answer');
+                const blob = await exported.blob();
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url; link.download = `mr-smith-research-${item.id}.md`;
+                document.body.append(link); link.click(); link.remove();
+                setTimeout(() => URL.revokeObjectURL(url), 1000);
+              } catch (error) { el('history-error').textContent = error.message; }
+              finally { exportButton.disabled = false; }
+            };
+            card.append(exportButton);
+          }
+          detail.replaceWith(answer);
+        } catch (error) {
+          el('history-error').textContent = error.message;
+          detail.disabled = false;
+        }
+      };
+      const remove = document.createElement('button');
+      remove.type = 'button'; remove.textContent = 'Delete';
+      remove.onclick = async () => {
+        if (!window.confirm('Permanently delete this conversation?')) return;
+        try {
+          const result = await fetch(`/api/admin/history/${item.id}`, {
+            method: 'DELETE', headers: authorization()
+          });
+          const payload = await result.json();
+          if (!result.ok) throw new Error(payload.detail || 'Could not delete conversation');
+          await loadHistory();
+        } catch (error) { el('history-error').textContent = error.message; }
+      };
+      card.append(heading, question, detail, remove);
+      el('history').append(card);
+    });
+  } catch (error) { el('history-error').textContent = error.message; }
+}
+async function editDocument(id) {
+  el('document-error').textContent = '';
+  try {
+    const response = await fetch(`/api/admin/documents/${id}`, { headers: authorization() });
+    const document = await response.json();
+    if (!response.ok) throw new Error(document.detail || 'Could not load document');
+    el('document-id').value = document.id;
+    el('document-title').value = document.title;
+    el('document-category').value = document.category;
+    el('document-type').value = document.source_type;
+    el('document-source').value = document.source;
+    el('document-content').value = document.content;
+    el('document-submit').textContent = 'Save new revision';
+    el('document-cancel').hidden = false;
+    el('document-title').focus();
+  } catch (error) { el('document-error').textContent = error.message; }
+}
 async function refresh() {
   el('error').textContent = '';
   try {
@@ -57,6 +265,45 @@ el('selection').onsubmit = async event => {
     await refresh();
   } catch (error) { el('error').textContent = error.message; }
   finally { el('save').disabled = false; }
+};
+el('document-form').onsubmit = async event => {
+  event.preventDefault(); el('document-submit').disabled = true; el('document-error').textContent = '';
+  const id = el('document-id').value;
+  try {
+    const response = await fetch(id ? `/api/admin/documents/${id}` : '/api/admin/documents', {
+      method: id ? 'PUT' : 'POST',
+      headers: { ...authorization(), 'Content-Type': 'application/json' },
+      body: JSON.stringify(documentFields())
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.detail || 'Could not save document');
+    clearDocumentForm();
+    await loadDocuments();
+  } catch (error) { el('document-error').textContent = error.message; }
+  finally { el('document-submit').disabled = false; }
+};
+el('document-cancel').onclick = clearDocumentForm;
+el('document-refresh').onclick = loadDocuments;
+el('history-refresh').onclick = () => { historyOffset = 0; loadHistory(); };
+el('history-newer').onclick = () => { historyOffset = Math.max(0, historyOffset - historyLimit); loadHistory(); };
+el('history-older').onclick = () => { historyOffset += historyLimit; loadHistory(); };
+el('pdf-form').onsubmit = async event => {
+  event.preventDefault(); el('pdf-submit').disabled = true; el('pdf-error').textContent = '';
+  const form = new FormData();
+  form.append('file', el('pdf-file').files[0]);
+  form.append('title', el('pdf-title').value);
+  form.append('category', el('pdf-category').value);
+  form.append('source_type', el('pdf-type').value);
+  form.append('source', el('pdf-source').value);
+  try {
+    const response = await fetch('/api/admin/documents/pdf', { method: 'POST', headers: authorization(), body: form });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.detail || 'Could not import PDF');
+    el('pdf-error').textContent = `Imported ${data.imported_pages} page(s) from ${data.pages}. ${data.limitations || ''}`;
+    el('pdf-form').reset();
+    await loadDocuments();
+  } catch (error) { el('pdf-error').textContent = error.message; }
+  finally { el('pdf-submit').disabled = false; }
 };
 refresh();
 </script>

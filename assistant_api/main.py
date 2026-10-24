@@ -5,16 +5,20 @@ import hmac
 import json
 import logging
 from pathlib import Path
+import sqlite3
 from typing import Literal
+from urllib.parse import quote, urlsplit
 
-from fastapi import Depends, FastAPI, Header, HTTPException
-from fastapi.responses import HTMLResponse
+from fastapi import Depends, FastAPI, File, Form, Header, HTTPException, Query, UploadFile
+from fastapi.responses import HTMLResponse, PlainTextResponse
 import httpx
-from pydantic import BaseModel, Field, field_validator, model_validator
+from pydantic import BaseModel, Field, ValidationError, field_validator, model_validator
 
 from assistant_api.config import Settings
 from assistant_api.finance.api import build_router as build_finance_router
+from assistant_api.finance.evidence import extract_pdf_text
 from assistant_api.finance.repository import FinanceStore
+from assistant_api.knowledge import inspect_knowledge_control_plane
 from assistant_api.models import ModelManager
 from assistant_api.personas import BASE_INSTRUCTION, PERSONAS
 from assistant_api.routing import conceptual_question, route_request
@@ -163,7 +167,17 @@ For mixed questions, also explain the stable concept from general knowledge."""
         ))
         # The model may have been changed by an admin while retrieval was running.
         route_data = {**route.to_dict(), "model": actual_model}
-        app.state.store.save_answer(request.question, text, route.persona, actual_model)
+        captured_sources = list(evidence)
+        for tool in tools:
+            data = tool.get("data")
+            if isinstance(data, list):
+                captured_sources.extend(data)
+            elif isinstance(data, dict):
+                captured_sources.append({**tool, **data})
+        app.state.store.save_answer(
+            request.question, text, route.persona, actual_model,
+            sources=captured_sources, research=research,
+        )
         return {"answer": text, "route": route_data, "sources": evidence, "tools": tools,
                 "updated_at": datetime.now(timezone.utc).isoformat(),
                 "knowledge_basis": {"general_model_knowledge_allowed": True,
@@ -193,6 +207,138 @@ For mixed questions, also explain the stable concept from general knowledge."""
                 "sources": [{"tool": name, "source": url, "publisher": PUBLISHERS[name],
                              "last_result": status.get(name)} for name, url in SOURCES.items()]}
 
+    @app.get("/api/coverage/sports")
+    async def sports_coverage():
+        status = app.state.store.tool_status()
+        return {
+            "football": {
+                "status": "unavailable",
+                "coverage": ["Stable rules, tactics and dated supplied evidence"],
+                "not_supported": ["Current fixtures", "live scores", "results", "standings", "injuries"],
+                "freshness": "unknown",
+                "source": None,
+                "reason": "No approved football fixture or results provider is configured; general news feeds are not authoritative score sources.",
+            },
+            "formula_1": {
+                "status": "limited",
+                "coverage": ["Published current-season driver standings"],
+                "not_supported": ["Live timing", "live race telemetry"],
+                "source": SOURCES["f1_standings"],
+                "publisher": PUBLISHERS["f1_standings"],
+                "last_result": status.get("f1_standings"),
+            },
+        }
+
+    @app.get("/api/knowledge/status")
+    async def knowledge_status():
+        root = Path(__file__).parents[1] / "knowledge"
+        try:
+            control_plane = inspect_knowledge_control_plane(root, PERSONAS)
+        except ValueError as exc:
+            raise HTTPException(503, f"Knowledge control-plane metadata is invalid: {exc}") from exc
+        with app.state.store.connect() as db:
+            document_count = db.execute("SELECT COUNT(*) FROM documents").fetchone()[0]
+            by_category = {
+                row["category"]: row["count"]
+                for row in db.execute("SELECT category, COUNT(*) AS count FROM documents GROUP BY category")
+            }
+            by_source_type = {
+                row["source_type"]: row["count"]
+                for row in db.execute("SELECT source_type, COUNT(*) AS count FROM documents GROUP BY source_type")
+            }
+        return {
+            **control_plane,
+            "local_document_count": document_count,
+            "local_document_counts": {
+                "by_category": by_category,
+                "by_source_type": by_source_type,
+            },
+            "external_feeds_enabled": settings.external_feeds,
+        }
+
+    @app.get("/api/admin/history", dependencies=[Depends(admin)])
+    async def list_history(
+        limit: int = Query(default=25, ge=1, le=100),
+        offset: int = Query(default=0, ge=0),
+    ):
+        return {"history": app.state.store.list_history(limit=limit, offset=offset)}
+
+    @app.get("/api/admin/history/{history_id}", dependencies=[Depends(admin)])
+    async def get_history(history_id: int):
+        entry = app.state.store.get_history(history_id)
+        if not entry:
+            raise HTTPException(404, "Unknown history entry")
+        return entry
+
+    @app.delete("/api/admin/history/{history_id}", dependencies=[Depends(admin)])
+    async def delete_history(history_id: int):
+        if not app.state.store.delete_history(history_id):
+            raise HTTPException(404, "Unknown history entry")
+        return {"deleted": True, "id": history_id}
+
+    @app.get("/api/admin/history/{history_id}/export", dependencies=[Depends(admin)])
+    async def export_research_history(history_id: int):
+        entry = app.state.store.get_research_export(history_id)
+        if not entry:
+            raise HTTPException(404, "Unknown research entry")
+
+        def markdown_escape(value: str) -> str:
+            for character in ("\\", "`", "*", "_", "{", "}", "[", "]", "(", ")", "#", "+", "-", ".", "!", "|", ">"):
+                value = value.replace(character, "\\" + character)
+            return value
+
+        lines = [
+            f"# Research answer {entry['id']}",
+            "",
+            f"- **Created:** {markdown_escape(entry['created_at'])}",
+            f"- **Persona:** {markdown_escape(entry['persona'])}",
+            f"- **Model:** {markdown_escape(entry['model'])}",
+            "",
+            "## Question",
+            "",
+            entry["question"],
+            "",
+            "## Answer",
+            "",
+            entry["answer"],
+            "",
+            "## Captured evidence",
+            "",
+        ]
+        if entry["sources"]:
+            for source in entry["sources"]:
+                label = str(source.get("title") or source.get("source") or source.get("id") or "Evidence")
+                href = str(source.get("url") or source.get("source") or "")
+                parsed = urlsplit(href)
+                if parsed.scheme in ("http", "https") and parsed.netloc:
+                    safe_href = quote(href, safe=":/?#[]@!$&'*,;=%")
+                    rendered = f"[{markdown_escape(label)}]({safe_href})"
+                else:
+                    rendered = markdown_escape(label)
+                details = [
+                    str(source[key]) for key in ("source_type", "publisher")
+                    if source.get(key)
+                ]
+                publication_date = source.get("published_at") or source.get("published")
+                if publication_date:
+                    details.append(str(publication_date))
+                if source.get("freshness"):
+                    details.append(str(source["freshness"]))
+                lines.append("- " + rendered + (f" — {markdown_escape('; '.join(details))}" if details else ""))
+        else:
+            lines.append("No source attribution was captured for this answer.")
+        lines.extend([
+            "",
+            "> This answer is model-generated and has not been independently verified. "
+            "Check the linked evidence and confirm that it supports each claim; citations do not guarantee claim-level support.",
+            "",
+        ])
+        return PlainTextResponse(
+            "\n".join(lines),
+            media_type="text/markdown",
+            headers={"Content-Disposition": f'attachment; filename="mr-smith-research-{history_id}.md"'},
+        )
+
     @app.post("/api/admin/model", dependencies=[Depends(admin)])
     async def select_model(request: ModelSelection):
         await ollama_operation(app.state.models.select(request.model))
@@ -202,6 +348,100 @@ For mixed questions, also explain the stable concept from general knowledge."""
     async def add_document(request: Document):
         identity, created = app.state.store.add_document(**request.model_dump())
         return {"id": f"document:{identity}", "created": created}
+
+    @app.get("/api/admin/documents", dependencies=[Depends(admin)])
+    async def list_documents(
+        q: str = Query(default="", max_length=200),
+        category: Category | None = None,
+        source_type: Literal["user_context", "source_document", "manufacturer_evidence", "regulatory_source", "working_note"] | None = None,
+        limit: int = Query(default=50, ge=1, le=100),
+        offset: int = Query(default=0, ge=0),
+    ):
+        return {"documents": app.state.store.list_documents(
+            query=q, category=category, source_type=source_type, limit=limit, offset=offset,
+        )}
+
+    @app.get("/api/admin/documents/{document_id}", dependencies=[Depends(admin)])
+    async def get_document(document_id: int):
+        document = app.state.store.get_document(document_id)
+        if not document:
+            raise HTTPException(404, "Unknown document")
+        return document
+
+    @app.put("/api/admin/documents/{document_id}", dependencies=[Depends(admin)])
+    async def update_document(document_id: int, request: Document):
+        try:
+            revision = app.state.store.update_document(document_id, **request.model_dump())
+        except sqlite3.IntegrityError as exc:
+            raise HTTPException(409, "An identical document with the same attribution already exists") from exc
+        if revision is None:
+            raise HTTPException(404, "Unknown document")
+        return {"id": f"document:{document_id}", "revision": revision}
+
+    @app.delete("/api/admin/documents/{document_id}", dependencies=[Depends(admin)])
+    async def delete_document(document_id: int):
+        if not app.state.store.delete_document(document_id):
+            raise HTTPException(404, "Unknown document")
+        return {"deleted": True, "id": f"document:{document_id}"}
+
+    @app.get("/api/admin/documents/{document_id}/revisions", dependencies=[Depends(admin)])
+    async def document_revisions(document_id: int):
+        if not app.state.store.get_document(document_id) and not app.state.store.list_document_revisions(document_id):
+            raise HTTPException(404, "Unknown document")
+        return {"revisions": app.state.store.list_document_revisions(document_id)}
+
+    @app.post("/api/admin/documents/pdf", dependencies=[Depends(admin)])
+    async def add_document_pdf(
+        file: UploadFile = File(...),
+        title: str = Form(..., min_length=1, max_length=300),
+        category: str = Form(...),
+        source_type: str = Form(...),
+        source: str = Form(..., min_length=1, max_length=1900),
+    ):
+        raw = await file.read(25_000_001)
+        if len(raw) > 25_000_000:
+            raise HTTPException(422, "PDF exceeds the 25MB import budget")
+        pages, limitations = extract_pdf_text(raw)
+        if not pages or not any(page.strip() for page in pages):
+            raise HTTPException(422, limitations or "PDF has no extractable text; scanned-image OCR is not supported")
+        if len(pages) > 500:
+            raise HTTPException(422, "PDF exceeds the 500-page import budget")
+        if sum(len(page) for page in pages) > 1_000_000:
+            raise HTTPException(422, "Extracted PDF text exceeds the 1MB import budget")
+
+        page_documents = []
+        for page_number, page_text in enumerate(pages, start=1):
+            if not page_text.strip():
+                continue
+            page_source = f"{source}#page={page_number}"
+            page_title = f"{title} (page {page_number})"
+            if len(page_title) > 300 or len(page_source) > 2000:
+                raise HTTPException(422, "PDF title or source is too long after adding page provenance")
+            try:
+                document = Document.model_validate({
+                    "title": page_title,
+                    "category": category,
+                    "source_type": source_type,
+                    "source": page_source,
+                    "content": page_text,
+                })
+            except ValidationError as exc:
+                raise HTTPException(422, "Invalid document metadata") from exc
+            page_documents.append((page_number, document.model_dump()))
+        try:
+            stored = app.state.store.add_documents([document for _, document in page_documents])
+        except sqlite3.IntegrityError as exc:
+            raise HTTPException(409, "PDF pages conflict with existing document attribution") from exc
+        imported = [
+            {"id": f"document:{identity}", "page": page_documents[index][0], "created": created}
+            for index, (identity, created) in enumerate(stored)
+        ]
+        return {
+            "documents": imported,
+            "pages": len(pages),
+            "imported_pages": len(imported),
+            "limitations": limitations,
+        }
 
     @app.get("/morning", response_class=HTMLResponse)
     async def morning():

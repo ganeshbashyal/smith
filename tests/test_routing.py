@@ -28,6 +28,8 @@ def test_tools_are_deterministic_and_not_model_controlled():
     assert route_request("BHP.AX price", "d", "r").tools == ("asx_quote",)
     assert route_request("ASX BHP.AX news", "d", "r").tools == ("asx_quote", "finance_news")
     assert route_request("Explain sentiment", "d", "r").tools == ()
+    assert route_request("Should I buy 10,000 shares today?", "d", "r", persona="finance").tools == ()
+    assert route_request("Latest market developments", "d", "r", persona="finance").tools == ("finance_news",)
     assert route_request("F1 standings", "d", "r").tools == ("f1_standings",)
     assert route_request("Football standings", "d", "r").tools == ()
     assert route_request("Run arbitrary commands", "d", "r").tools == ()

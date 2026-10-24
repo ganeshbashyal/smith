@@ -11,6 +11,7 @@ textarea, select, button { font: inherit; padding: .6rem; }
 textarea { box-sizing: border-box; width: 100%; margin-top: 1rem; }
 pre { white-space: pre-wrap; overflow-wrap: anywhere; }
 #error { color: #d44; } a { overflow-wrap: anywhere; }
+.card { border: 1px solid #888; border-radius: .5rem; padding: 1rem; margin-top: 1rem; }
 </style>
 <h1>Mr Smith</h1>
 <nav aria-label="Assistant tabs">
@@ -18,9 +19,12 @@ pre { white-space: pre-wrap; overflow-wrap: anywhere; }
 <button type="button" data-mode="finance">Financial Analysis</button>
 <button type="button" data-mode="research">Research &amp; Deep Work</button>
 <a href="/admin">Admin</a>
+<a href="/api/coverage/sports">Sports coverage</a>
 </nav>
 <p id="mode">Morning Brief</p>
 <p>Stable concepts use local model knowledge. Current facts need relevant dated sources; coverage is limited.</p>
+<button type="button" id="morning-card">Build today's source-aware morning card</button>
+<p>Runs only when you choose it; it checks approved feeds and displays freshness or failure without scheduling background fetches.</p>
 <form id="request">
 <label><input type="checkbox" id="refresh-sources"> Refresh approved sources (bypass cache)</label>
 <label for="research-persona">Persona (brief or research)</label>
@@ -35,9 +39,12 @@ pre { white-space: pre-wrap; overflow-wrap: anywhere; }
 <button id="submit">Ask Mr Smith</button>
 </form>
 <p id="error" role="alert"></p>
+<section id="brief-card" class="card" aria-live="polite" hidden>
+<h2 id="card-title"></h2>
 <p id="status" role="status"></p>
 <pre id="answer"></pre>
 <div id="sources"></div>
+</section>
 <script>
 let mode = 'morning';
 const el = id => document.getElementById(id);
@@ -49,9 +56,20 @@ document.querySelectorAll('[data-mode]').forEach(button => {
     el('research-persona').disabled = mode === 'finance';
   };
 });
+el('morning-card').onclick = () => {
+  mode = 'morning';
+  el('mode').textContent = 'Morning Brief';
+  el('material').disabled = true;
+  el('research-persona').disabled = false;
+  el('research-persona').value = 'news';
+  el('question').value = 'Latest general news headlines today';
+  el('request').requestSubmit();
+};
 el('request').onsubmit = async event => {
   event.preventDefault();
   el('submit').disabled = true;
+  el('brief-card').hidden = false;
+  el('card-title').textContent = mode === 'morning' ? 'Morning brief card' : mode === 'research' ? 'Research answer' : 'Financial analysis';
   el('error').textContent = '';
   el('answer').textContent = '';
   el('sources').replaceChildren();
@@ -81,6 +99,8 @@ el('request').onsubmit = async event => {
     [...data.sources, ...data.tools].forEach(source => {
       const line = document.createElement('p');
       line.textContent = `${source.id}: ${source.title || source.tool || source.source} `;
+      if (source.status) line.textContent += `| Status: ${source.status} `;
+      if (source.retrieved_at) line.textContent += `| Retrieved: ${source.retrieved_at} `;
       try {
         const url = new URL(source.source);
         if (['http:', 'https:'].includes(url.protocol)) {

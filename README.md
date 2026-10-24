@@ -110,11 +110,41 @@ rejects oversized requests with HTTP 422 instead of silently truncating them;
 shorten articles or narrow the question when this happens.
 
 The three widget tabs provide question-driven brief, finance and research views,
-with loading/error states, timestamps, source links and system dark mode.
-Scheduled morning cards, watchlists, football integration, PDF/URL ingestion,
-full-text indexing, research exports and history management UI remain future
-milestones. Plain-text ingestion is available through the admin documents API;
-the application does not automatically read private files from disk.
+with loading/error states, timestamps, source links and system dark mode. The
+Morning Brief tab also has a user-triggered source-aware card that checks the
+approved general-news feed and shows publication dates, freshness and
+disabled/error states. There is no background schedule; external feeds remain
+off unless explicitly enabled. `/api/coverage/sports` reports that no approved
+football fixtures/results source is connected; it does not substitute general
+headlines for scores. The existing Jolpica feed is limited to published F1
+driver standings, not live timing.
+Private document and history management are available from `/admin`; the
+application does not automatically read private files from disk or fetch
+arbitrary URLs.
+
+## Private knowledge documents
+
+The `/admin` page supports authenticated private document search, detail,
+revision-preserving edits and deletion. `/api/admin/documents` also supports
+bounded listing and full-text search; list/search results omit document text.
+Deleting a document also deletes its revision history. Updating a document
+retains the previous version as an immutable revision. Admin routes require
+`MR_SMITH_ADMIN_TOKEN`; the page holds the token only in its password input.
+
+The admin page can import text-layer PDFs (maximum 25 MB, 500 pages and 1 MB
+extracted text). Each non-empty page is stored separately with a page-number
+citation. Scanned-image OCR and arbitrary URL or filesystem ingestion are not
+supported. Before adding document revision or search schema to an existing
+database, Smith writes a timestamped SQLite backup and checks its integrity.
+Private data remains local and no document content is included in knowledge
+status diagnostics.
+
+The same page provides paginated private conversation history. Open an entry
+to view its answer; delete removes it locally. A user-triggered **Download
+Markdown** action is available for newly saved research answers and includes
+captured source links, attribution metadata and an explicit verification
+caveat. Older answers have no retroactively reconstructed evidence. History
+schema migrations are preceded by a verified SQLite backup.
 
 ## Financial market intelligence
 
@@ -151,9 +181,9 @@ dive)** below — not inferred by the chat persona itself.
 | Building | Australian climate, assemblies, moisture, thermal and lifecycle performance | Manufacturer versus regulatory evidence; jurisdiction/edition required for compliance |
 | Finance | Macro-to-company intelligence, counter-theses, valuation and invalidation | Dated sources and explicit assumptions; no invented live data or scores |
 | Business | Customer evidence, unit economics, strategy, execution and decision gates | Proposed metrics are not facts; legal/tax claims need qualified review |
-| Health | Evidence literacy, benefits/harms, clinician questions and urgent-care awareness | General information only; no diagnosis, prescribing or delay of emergency care |
+| Health | Evidence applicability, privacy, clinician questions and urgent-care-first handling | No diagnosis or prescribing; emergencies go to urgent local assistance (000 in Australia); no connected live clinical guidance |
 | News | Timelines, provenance, corroboration, disputed claims and context | Headlines are not full articles; no fabricated breaking updates |
-| Sports | Football tactics, F1 race strategy, season-aware performance analysis | Manchester United, Real Madrid and Ferrari context; no invented live scores or betting certainty |
+| Sports | Football tactics, F1 race strategy, season-aware performance analysis | Manchester United, Real Madrid and Ferrari context; no connected football scores/results or invented live facts |
 | Automotive | Vehicle-specific diagnosis, ownership trade-offs and safe verification | Exact model/year service evidence; no fabricated specifications or unsafe repairs |
 
 Choose any persona in **Morning Brief** or **Research & Deep Work**, or send its
@@ -176,6 +206,18 @@ device access, clinician service, vehicle diagnostic interface or autonomous
 action is enabled by selecting a personality. Domain retrieval remains isolated,
 with shared user context. Engineering, Building, Health and Automotive safety
 guidance does not replace site procedures or qualified professional assessment.
+
+Persona regression scenarios live in `tests/persona_eval_cases.py` and run via
+`python -m pytest tests/test_persona_evaluations.py`. They exercise all ten
+personas through the real API and routing with a mocked Ollama transport,
+checking selected persona, allowed tools, output format, key domain boundaries,
+shared safety instructions, current-source limitations, and separation of
+untrusted research material. Engineering-specific manuals, Australian building
+compliance, vehicle recalls, health guidance, football coverage and other
+unsupported current claims are deliberately not routed to generic feeds as if
+those feeds were authoritative. These deterministic checks verify the
+application contract, not the factual quality of a model's generated answer;
+they require no model download or live Ollama call.
 
 ## General knowledge and current updates
 

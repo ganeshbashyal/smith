@@ -18,8 +18,8 @@ RULES = (
 )
 
 def conceptual_question(question: str) -> bool:
-    return bool(re.search(r"\b(explain|what is|what are|how does|how do|why does|principles|concept|rules|definition)\b", question, re.IGNORECASE)) and not bool(
-        re.search(r"\b(latest|current|today|standings|certify|compliant|diagnose|prescribe|price now)\b|\b[A-Za-z0-9]{2,6}\.AX\b", question, re.IGNORECASE)
+    return bool(re.search(r"\b(explain|what is|what are|what does|how does|how do|why does|principles|concept|rules|definition)\b", question, re.IGNORECASE)) and not bool(
+        re.search(r"\b(latest|current|currently|today|standings|certify|compliant|diagnose|prescribe|live|price now)\b|right now|\b[A-Za-z0-9]{2,6}\.AX\b", question, re.IGNORECASE)
     )
 
 
@@ -50,8 +50,8 @@ def route_request(question: str, selected_model: str, research_model: str,
     profile = PERSONAS[persona]
     tools = []
     # Tool execution requires a matching intent, not just a persona assignment.
-    explicit_freshness = bool(re.search(r"\b(latest|current|today|updates|standings|price now)\b", question, re.IGNORECASE))
-    conceptual = bool(re.search(r"\b(explain|what is|what are|how does|how do|why does|principles|concept|rules|definition)\b", question, re.IGNORECASE))
+    explicit_freshness = bool(re.search(r"\b(latest|current|currently|today|updates|standings|live|price now)\b|right now", question, re.IGNORECASE))
+    conceptual = bool(re.search(r"\b(explain|what is|what are|what does|how does|how do|why does|principles|concept|rules|definition)\b", question, re.IGNORECASE))
     current = explicit_freshness or (not conceptual and bool(re.search(r"\b(news|headlines)\b", question, re.IGNORECASE)))
     if persona == "finance":
         if re.search(r"\b[A-Za-z0-9]{2,6}\.AX\b", question, re.IGNORECASE):
@@ -66,12 +66,29 @@ def route_request(question: str, selected_model: str, research_model: str,
             "engineering": ("technology_news",), "building": ("news_feed",),
             "business": ("finance_news",), "automotive": ("technology_news",),
         }.get(persona, ())
+        if persona == "engineering" and re.search(
+            r"\b(manual|firmware|model|part number|serial number|specification|standard)\b",
+            question, re.IGNORECASE,
+        ):
+            candidates = ()
+        if persona == "building" and re.search(
+            r"\b(ncc|compliance|compliant|code clause|certif(?:y|ication)|standard)\b",
+            question, re.IGNORECASE,
+        ):
+            candidates = ()
+        if persona == "automotive" and re.search(
+            r"\b(recall|service bulletin|torque|fluid specification|service interval|fault code)\b",
+            question, re.IGNORECASE,
+        ):
+            candidates = ()
         tools.extend(candidates)
         if persona == "science" and re.search(r"\b(nasa|space)\b", question, re.IGNORECASE):
             tools = ["nasa_news"] if re.search(r"\bnasa\b", question, re.IGNORECASE) else [*tools, "nasa_news"]
         if persona in ("finance", "business") and re.search(r"\b(rba|interest rates|monetary)\b", question, re.IGNORECASE):
             tools.append("rba_news")
-        elif persona == "finance" and "finance_news" not in tools and not tools:
+        elif persona == "finance" and not tools and re.search(
+            r"\b(market|markets|economy|financial|asx)\b", question, re.IGNORECASE,
+        ):
             tools.append("finance_news")
     if persona == "sports" and re.search(r"\b(f1|formula 1)\b.*\b(standings|ranking)\b", question, re.IGNORECASE):
         tools.append("f1_standings")
