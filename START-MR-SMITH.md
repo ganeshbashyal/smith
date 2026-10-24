@@ -39,9 +39,36 @@ Open a **second** PowerShell window and run:
 Set-Location D:\Mr_Smith
 ```
 
-To enable admin functions (model selection, documents and history), create a
-private token for this PowerShell session. It is not written into the
-application or browser storage:
+To enable admin functions (model selection, documents, history and private
+finance features), Mr Smith needs a private admin token. It is never written
+into the application or browser storage. Choose **one** option:
+
+**Option A — set it once (recommended).** Saves the token as a Windows
+user environment variable so every future PowerShell window and every Mr
+Smith start picks it up automatically. Run this once:
+
+```powershell
+$secure = Read-Host "Choose a private Mr Smith admin token" -AsSecureString
+[Environment]::SetEnvironmentVariable("MR_SMITH_ADMIN_TOKEN", (New-Object Net.NetworkCredential('', $secure)).Password, "User")
+```
+
+Optionally, keep the approved external news and market feeds always on:
+
+```powershell
+[Environment]::SetEnvironmentVariable("MR_SMITH_EXTERNAL_FEEDS", "1", "User")
+```
+
+Then **close and reopen PowerShell** (existing windows do not see the new
+value) and continue with `Set-Location D:\Mr_Smith`. The token is stored in
+plain text in your Windows user profile — fine for local use, but do not reuse
+a password from elsewhere. To change it, run the command again; to remove it:
+
+```powershell
+[Environment]::SetEnvironmentVariable("MR_SMITH_ADMIN_TOKEN", $null, "User")
+```
+
+**Option B — this PowerShell window only.** Nothing is saved; you must set it
+again each time you open a new window:
 
 ```powershell
 $secure = Read-Host "Choose a private Mr Smith admin token" -AsSecureString
@@ -67,8 +94,9 @@ checks whether Ollama is reachable, and serves Mr Smith on `127.0.0.1:8000`.
 Keep this PowerShell window open while using the app. Press **Ctrl+C** in this
 window to stop the foreground server.
 
-External news and market feeds are off by default. To enable the approved feeds
-for this server run, start it with:
+External news and market feeds are off by default (unless you saved
+`MR_SMITH_EXTERNAL_FEEDS=1` in Option A). To enable the approved feeds for
+this server run only, start it with:
 
 ```powershell
 .\scripts\start-mr-smith.ps1 -ExternalFeeds
@@ -95,9 +123,11 @@ Once the server is running, open any of these links:
 | Installed/selected model status | [http://127.0.0.1:8000/api/models](http://127.0.0.1:8000/api/models) |
 | Sports source coverage | [http://127.0.0.1:8000/api/coverage/sports](http://127.0.0.1:8000/api/coverage/sports) |
 
-The Admin page asks for the same token set in the server's PowerShell window.
-If that PowerShell window is closed, its token is cleared; set it again before
-restarting the app if you need Admin access.
+The Admin page asks for the same token the server was started with. The page
+does not remember it, so re-enter it after each page reload. If you used
+Option A, the server picks up the token automatically on every start. If you
+used Option B, closing that PowerShell window clears the token; set it again
+before restarting the app if you need Admin access.
 
 The Admin page's **Local services and resource use** panel shows the Ollama
 server and Mr Smith process, installed/loaded models, memory usage and
