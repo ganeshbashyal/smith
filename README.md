@@ -27,6 +27,33 @@ never hard-codes a token:
 
 Run `Get-Help .\scripts\start-mr-smith.ps1 -Full` for all parameters.
 
+To start only the required services, wait for Ollama/Mr Smith readiness, verify
+the selected model is installed, and open the combined chat/Morning Brief page:
+
+```powershell
+.\.venv\Scripts\python.exe .\scripts\start_mr_smith.py
+```
+
+The Python launcher reuses healthy local services and leaves unrelated
+processes untouched. It does not download models, send a chat prompt, fetch
+headlines, or set an admin token. Use `--no-browser` for service-only startup,
+`--port 8001` for an alternate local app port, or `--help` for timeout options.
+Chat and the user-triggered Morning Brief are modes on the same `/morning` page.
+
+To configure admin access and start a server that receives the token in its
+environment, use:
+
+```powershell
+.\.venv\Scripts\python.exe .\scripts\start_mr_smith_admin.py
+```
+
+This creates a random token, saves it in the current Windows user's environment
+registry, passes it directly to the server, verifies it against the local admin
+API, and opens `/admin`. The token is printed once for pasting into the page;
+keep it private. If port 8000 is occupied, the script leaves that service alone
+and starts Mr Smith on the next available local port. It does not stop or
+replace existing processes.
+
 Ollama must be running at `http://127.0.0.1:11434`. Open
 [the widget](http://127.0.0.1:8000/morning),
 [model admin](http://127.0.0.1:8000/admin), or
@@ -497,7 +524,126 @@ concurrency, a single retry on HTTP 429, raw vs. adjusted close kept
 distinct), records each bar's actual Sydney exchange date (via
 `exchangeTimezoneName`/`zoneinfo`, not naive UTC, so a late-session bar is
 never misdated), de-duplicates already-seen `(symbol, date)` observations,
-and rejects non-finite/negative bar values instead of recording them.
+and rejects non-finite/negative bar values instead of recording them. It also
+caches timestamped OHLC bars for technical structure. `/watchlists/import`
+accepts a user-selected CSV with a `Code` column (including the FOMO export
+format), registers company names/sectors where present without overwriting
+existing company records, and reports skipped rows. Each imported list can be
+reviewed with `GET /watchlists/{id}/analysis`; `GET
+/securities/{symbol}/analysis` returns the cached price, technical scenarios,
+latest confirmed statement, evidence, thesis, catalysts, alerts and valuation
+runs. The Finance page's **Deep dive with Smith** sends that packet to the
+local research model and asks it to distinguish facts from interpretation.
+Missing or stale inputs stay unavailable; the model may use only the supplied
+calculated technical levels for conditional entry/target scenarios.
+
+Daily pivots are calculated from the last completed daily OHLC bar: pivot,
+R1/S1/R2/S2 and ATR-based conditional pullback/breakout/bear-case references.
+They are technique-based scenarios, not fair value, forecasts or personalized
+trade advice. `GET /xauusd/levels` exposes them for gold; the Finance page also
+shows cached session range and the macro context. `GET /market/snapshot`
+summarizes cached ASX 200, S&P 500, NASDAQ, VIX, USD-index proxy and real-yield
+observations. Its risk-on/risk-off/mixed label follows an explicit index/VIX
+rule and is not a sentiment score or prediction.
+
+### Instrument research and batch runs
+
+The Finance page supports manual one-company jobs, sequential batches, and a
+separate Manual analysis tab. Each batch retrieves up to ten years of daily
+price history where the public quote source has data, calculates price-only
+context locally, writes a dated research report, and asks the selected local
+Ollama model to digest that report. Batch status records every company's result;
+source/model failures are recorded per ticker and do not stop the remaining
+queue. Batches support up to 200 unique instruments. Completed instruments are
+skipped by the resume operation. The default
+batch model is `llama3.2:latest`, checked against the locally installed models
+before the run starts. No external AI service is called.
+
+The authenticated one-instrument API is available at
+`POST /api/finance/research-jobs` with
+`{"instrument":"ASX:NCK","asset_type":"auto"}`, then
+`GET /api/finance/research-jobs/{job_id}` and
+`GET /api/finance/research-jobs/{job_id}/report`. A bare ticker is provisionally
+treated as an ASX equity; explicit forms such as `ASX:CSL`, `XAUUSD`, or
+`EUR/USD` select a method without forcing every instrument through ASX rules.
+Start a batch through `POST /api/finance/research-batches` with a list of
+`instruments` and optional installed local `model`. Poll
+`GET /api/finance/research-batches/{batch_id}`; retry unfinished/failed entries
+with `POST /api/finance/research-batches/{batch_id}/resume`. Batch reports,
+LLM analyses and status are saved beneath
+`<data_dir>/research_batches/`; they do not modify SQLite or automatically
+become trusted knowledge. Only one finance research job or batch runs at a time.
+Live Yahoo/RBA retrieval is gated by `MR_SMITH_EXTERNAL_FEEDS=1`.
+
+For the current ASX 200, first create a dated constituent snapshot and batch
+list, then start the independent local Python/Ollama worker from PowerShell.
+The preparation step does not fetch prices or call a model:
+
+```powershell
+$run = "asx200-10y-" + (Get-Date -Format "yyyyMMdd-HHmm")
+.\.venv\Scripts\python.exe .\scripts\download_asx200_dataset.py `
+  --prepare-only --output-dir ".\data\asx200_ingest\$run"
+.\.venv\Scripts\python.exe scripts\research_instrument.py `
+  --batch-file ".\data\asx200_ingest\$run\instruments.json" `
+  --batch-dir ".\data\research_jobs\$run" `
+  --data-dir .\data `
+  --model llama3.2:latest --allow-network
+```
+
+The research worker runs sequentially in that PowerShell process, retrieves up
+to ten years of Yahoo daily history per ticker, and sends each company report
+to the local Ollama model. Copilot is not part of execution. The constituent
+snapshot is sourced from Wikipedia and is current membership, not a
+historical/survivorship-free ASX 200 roster. Yahoo's public chart endpoint is
+unofficial and may be delayed; check source terms before redistribution.
+Ten-year price history does not mean ten years of issuer financial statements:
+those remain unavailable unless a company source manifest and reports exist.
+Expect a long run; status and per-company outputs are persisted under the batch
+directory, so use the same list path and exact same batch directory with
+`--resume` after interruption. Do not rerun preparation into that same
+non-empty output directory; keep the generated `instruments.json`.
+
+For a standalone price-data CSV instead of model reports, run
+`.\.venv\Scripts\python.exe .\scripts\download_asx200_dataset.py --output-dir .\data\asx200_ingest\asx200-price-snapshot`;
+it saves `daily_prices_10y.csv` and a run manifest. The script refuses to
+overwrite files in an existing non-empty output directory.
+
+For other resumable command-line batches, prepare a JSON list or CSV with a
+`Code` or `symbol` column and run:
+
+```powershell
+.\.venv\Scripts\python.exe scripts\research_instrument.py `
+  --batch-file .\data\research_lists\watchlist_and_holdings.json `
+  --batch-dir .\data\research_jobs\tonight `
+  --model llama3.2:latest --allow-network
+```
+
+If interrupted, rerun with the same paths plus `--resume`; already completed
+companies are not repeated. To regenerate local-model writeups from already
+saved evidence without re-downloading, add `--resume --reanalyze-completed`.
+The CLI reports a preflight error if Ollama or the requested model is
+unavailable. It never imports holding quantities, changes the finance
+database, or makes trade decisions.
+
+This supports growing a 300–500-company research set in bounded batches rather
+than launching an uncontrolled scrape. The worker currently uses a curated
+`<data_dir>/company_sources/<ASX_CODE>.json` manifest for issuer history,
+annual-report URLs, and verified corporate-action notes. If no manifest exists,
+it says the financial history and complete split/merger record are unavailable;
+it does not guess. Consequently, unmanifested small caps receive a price and
+market-structure review—not a fundamental company deep dive. The manifest-backed
+report parser and Yahoo chart are an initial workflow, not an automated
+discovery service for every small cap.
+Thin trading, stale quotes, incomplete announcements, and coverage gaps must
+remain visible; no ASX200 membership, market-cap tier, or liquidity class is
+assumed. Model output is a research draft, not verified evidence or advice.
+
+The dated broker "Share Holdings" CSV can be uploaded to the existing
+portfolio `holdings/preview` flow. The parser normalizes symbols and units,
+calculates total cost basis from units times the export's purchase price, and
+uses the dated snapshot's market value only as a dated manual valuation. The
+preview is non-mutating; importing requires the separate `holdings/confirm`
+action. Account identifiers, subtotal rows and report preamble are not saved.
 `POST /api/finance/alerts/evaluate` is a separate, user-initiated, idempotent
 check (re-running it twice creates no duplicate alerts) that raises material
 alerts for near-term catalysts and thesis-review alerts when evidence is
@@ -579,6 +725,44 @@ shared end date, so a multi-day return spanning a data gap in one symbol is
 never compared against a different-length interval in the other. The
 endpoint explicitly reports `available: false` with a reason (not a
 fabricated `0`) whenever aligned history is insufficient.
+
+### XAUUSD macro context and trading workflow
+
+The `/finance` page separates the ASX investor workflow from the XAUUSD
+trading workflow. Gold prices and the allowlisted Yahoo proxies (U.S. Dollar
+Index, EUR/USD, USD/JPY, and VIX) are timestamped, source-labeled and cached;
+all indicators and the macro context summary are calculated locally. The
+Yahoo `XAUUSD=X` series is an unofficial proxy, not an executable spot quote.
+The VIX label is only an equity-volatility/risk-mood proxy; Smith does not
+claim a universal fear/greed score or infer gold direction from it.
+
+`POST /api/finance/xauusd/macro/refresh` manually requests the official U.S.
+Treasury daily real-yield curve, Federal Reserve press-release RSS, GDELT
+headlines, and the allowlisted Yahoo macro series. Network access still
+requires `MR_SMITH_EXTERNAL_FEEDS=1`; each source reports its own failure,
+and headlines are stored as unverified, attributed links rather than copied
+article text. `GET /api/finance/xauusd/macro/context` reports dated cached
+observations, VIX risk-mood bands, and conditional real-yield/USD context.
+The UI's risk calculator withholds position size when contract inputs are
+missing, and the journal stores manual TradingView notes without scraping.
+These outputs describe evidence and scenarios; they are not trade
+recommendations.
+
+FXCM is a promising source candidate: its official ForexConnect SDK advertises
+live and historical price access, including XAU/USD in its symbol reference.
+However, FXCM's published Python package page lists support only through
+Python 3.7 and pins old dependencies; its official SDK also requires an FXCM
+account and signed EULA. It is catalogued but not connected or enabled until a
+Python 3.12-compatible official SDK/runtime and account-specific API access are
+verified. See [FXCM ForexConnect API](https://github.com/fxcm/ForexConnectAPI),
+[FXCM ForexConnect on PyPI](https://pypi.org/project/forexconnect/), and
+[FXCM's available-symbol list](https://github.com/fxcm/ForexConnectAPI/blob/master/AvailableSymbols.md).
+
+Market Index's published terms prohibit automated/script access to its data.
+There is deliberately no Market Index scraper or announcement connector.
+Use manual evidence entry/PDF upload or an authorized, licensed ASX/company
+data feed for announcements. The macro source registry reports which
+connectors exist, but does not enable them or authorize background refresh.
 
 ### Explicit exclusions
 

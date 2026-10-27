@@ -1,4 +1,5 @@
 import json
+from datetime import datetime, timedelta, timezone
 from decimal import Decimal
 
 import httpx
@@ -56,7 +57,307 @@ def test_finance_endpoints_require_admin_token(finance_client):
 
 
 def test_finance_page_served(finance_client):
-    assert finance_client.get("/finance").status_code == 200
+    response = finance_client.get("/finance")
+    assert response.status_code == 200
+    assert 'id="manual-tab"' in response.text
+    assert 'id="manual-analysis-form"' in response.text
+    assert 'id="research-batch-form"' in response.text
+
+
+def test_generic_instrument_model_does_not_force_non_asx_through_ax_rules(finance_client):
+    etf = finance_client.post("/api/finance/instruments", headers=AUTH, json={
+        "symbol": "SPY", "name": "S&P 500 ETF", "instrument_type": "etf", "currency": "USD",
+    })
+    assert etf.status_code == 200
+    assert etf.json()["symbol"] == "SPY"
+
+    gold = finance_client.post("/api/finance/instruments", headers=AUTH, json={
+        "symbol": "XAUUSD=X", "name": "Gold / US dollar", "instrument_type": "xauusd_spot_proxy",
+        "currency": "USD",
+    })
+    assert gold.status_code == 200
+    assert gold.json()["source_symbol"] == "XAUUSD=X"
+
+    invalid_asx = finance_client.post("/api/finance/instruments", headers=AUTH, json={
+        "symbol": "BHP", "name": "BHP Group", "instrument_type": "asx_equity", "currency": "AUD",
+    })
+    assert invalid_asx.status_code == 422
+
+
+def test_xauusd_manual_workflow_and_risk_contract(finance_client):
+    client = finance_client
+    timeframes = client.get("/api/finance/xauusd/timeframes", headers=AUTH)
+    assert timeframes.status_code == 200
+    assert timeframes.json()["timeframes"] == ["1m", "5m", "15m", "1h", "1d"]
+
+    disabled = client.post("/api/finance/xauusd/refresh", headers=AUTH)
+    assert disabled.status_code == 503
+
+    unavailable = client.post("/api/finance/xauusd/risk", headers=AUTH, json={
+        "account_equity": "5000", "risk_percent": "1",
+    })
+    assert unavailable.status_code == 200
+    assert unavailable.json()["status"] == "unavailable"
+    assert unavailable.json()["position_size_contracts"] is None
+
+    ready = client.post("/api/finance/xauusd/risk", headers=AUTH, json={
+        "account_equity": "10000", "risk_percent": "1",
+        "entry_price": "2400", "stop_price": "2390",
+        "pip_or_point_value": "100", "contract_size": "100",
+        "target_price": "2420",
+    })
+    assert ready.status_code == 200
+    assert ready.json()["position_size_contracts"] == "0.1"
+    assert ready.json()["risk_reward"] == "2"
+
+
+def test_xauusd_journal_macro_evidence_and_manual_chart_notes(finance_client):
+    client = finance_client
+    entry = client.post("/api/finance/xauusd/journal", headers=AUTH, json={
+        "instrument": "XAUUSD", "direction": "long", "timeframe": "1h",
+        "setup": "Breakout retest", "entry": "2400", "stop": "2390", "target": "2420",
+        "planned_risk": "100", "reasoning": "Conditional scenario",
+        "manual_chart_notes": "TradingView: range high near 2410; manually observed.",
+        "evidence": [{"source": "manual note", "observed_at": "2026-10-27T00:00:00Z"}],
+    })
+    assert entry.status_code == 200
+    entry_id = entry.json()["id"]
+    listed = client.get("/api/finance/xauusd/journal", headers=AUTH).json()["entries"]
+    assert listed[0]["instrument"] == "XAUUSD=X"
+    assert "TradingView" in listed[0]["manual_chart_notes"]
+    assert listed[0]["evidence"][0]["source"] == "manual note"
+
+    closed = client.post(
+        f"/api/finance/xauusd/journal/{entry_id}/close", headers=AUTH,
+        json={"actual_result": "125", "lessons": "Wait for confirmed retest"},
+    )
+    assert closed.status_code == 200
+    repeated = client.post(
+        f"/api/finance/xauusd/journal/{entry_id}/close", headers=AUTH, json={},
+    )
+    assert repeated.status_code == 404
+
+    sources = client.get("/api/finance/xauusd/macro/sources", headers=AUTH).json()
+    assert sources["category"] == "gold_macro"
+    assert all(source["enabled"] is False for source in sources["sources"])
+    added = client.post("/api/finance/xauusd/macro/evidence", headers=AUTH, json={
+        "topic": "real_yields", "title": "Example source note", "publisher": "Manual",
+        "observed_at": "2026-10-27T00:00:00Z", "summary": "User-entered context.",
+        "status": "unverified",
+    })
+    assert added.status_code == 200
+    listed_macro = client.get(
+        "/api/finance/xauusd/macro/evidence?topic=real_yields", headers=AUTH,
+    )
+    assert listed_macro.json()["evidence"][0]["category"] == "real_yields"
+
+
+def test_xauusd_refresh_caches_timestamped_bars_when_enabled(feeds_enabled_client):
+    client = feeds_enabled_client
+    timestamp = int(datetime.now(timezone.utc).timestamp())
+    payload = {"chart": {"result": [{
+        "meta": {"currency": "USD", "symbol": "XAUUSD=X"},
+        "timestamp": [timestamp],
+        "indicators": {"quote": [{
+            "open": [2400], "high": [2410], "low": [2390], "close": [2405], "volume": [10],
+        }]},
+    }]}}
+
+    def handler(request):
+        assert request.url.params["interval"] == "1h"
+        return httpx.Response(200, json=payload)
+
+    client.app.state.feeds = httpx.AsyncClient(transport=httpx.MockTransport(handler))
+    refreshed = client.post("/api/finance/xauusd/refresh?timeframe=1h", headers=AUTH)
+    assert refreshed.status_code == 200
+    assert refreshed.json()["status"] == "ok"
+    assert refreshed.json()["new_observations"] == 1
+
+    history = client.get("/api/finance/xauusd/history?timeframe=1h", headers=AUTH)
+    assert history.json()["bars"][0]["close"] == "2405"
+    analysis = client.get("/api/finance/xauusd/analysis?timeframe=1h", headers=AUTH)
+    assert analysis.json()["status"] == "ok"
+    assert analysis.json()["trend_state"] == "insufficient_history"
+    assert analysis.json()["macro_context"]["status"] == "unavailable"
+    levels = client.get("/api/finance/xauusd/levels", headers=AUTH)
+    assert levels.status_code == 200
+    assert levels.json()["status"] == "unavailable"
+
+
+def test_watchlist_analysis_has_cached_technical_levels_and_missing_evidence_warnings(finance_client):
+    client = finance_client
+    security = client.post("/api/finance/securities", headers=AUTH, json={
+        "symbol": "CSL.AX", "name": "CSL Limited",
+    })
+    assert security.status_code == 200
+    watchlist = client.post("/api/finance/watchlists", headers=AUTH, json={
+        "name": "High interest", "symbols": ["CSL.AX"],
+    })
+    watchlist_id = watchlist.json()["id"]
+    store = client.app.state.finance_store
+    now = datetime.now(timezone.utc)
+    store.save_market_observations([
+        {
+            "instrument": "CSL.AX", "instrument_type": "asx_equity", "timeframe": "1d",
+            "observed_at": (now - timedelta(days=days)).isoformat(),
+            "source": "Mock Yahoo", "currency": "AUD",
+            "open": open_, "high": high, "low": low, "close": close,
+            "volume": 1000, "retrieved_at": now.isoformat(), "freshness": "fresh",
+        }
+        for days, open_, high, low, close in (
+            (3, "95", "105", "85", "100"),
+            (2, "100", "110", "90", "100"),
+        )
+    ])
+
+    report = client.get(
+        f"/api/finance/watchlists/{watchlist_id}/analysis", headers=AUTH,
+    )
+    assert report.status_code == 200
+    company = report.json()["symbols"][0]
+    assert company["market_data"]["close"] == "100"
+    assert company["technical_levels"]["pivot_levels"]["pivot"] == "100.00"
+    assert company["latest_statement"] is None
+    assert "No automatic Market Index scraping" in company["limitations"][0]
+
+
+def test_market_snapshot_reports_transparent_risk_off_conditions(finance_client):
+    client = finance_client
+    store = client.app.state.finance_store
+    now = datetime.now(timezone.utc)
+    observations = []
+    for symbol, values, currency in (
+        ("^AXJO", ("7100", "7000"), "AUD"),
+        ("^GSPC", ("6000", "5900"), "USD"),
+        ("^IXIC", ("20000", "19800"), "USD"),
+        ("^VIX", ("18", "22"), "N/A"),
+    ):
+        for days, value in ((1, values[0]), (0, values[1])):
+            observed = now - timedelta(days=days)
+            observations.append({
+                "instrument": symbol, "instrument_type": "index", "timeframe": "1d",
+                "observed_at": observed.isoformat(), "source": "Mock market feed",
+                "currency": currency, "open": value, "high": value, "low": value,
+                "close": value, "volume": None, "retrieved_at": now.isoformat(),
+                "freshness": "fresh",
+            })
+    store.save_market_observations(observations)
+
+    snapshot = client.get("/api/finance/market/snapshot", headers=AUTH)
+    assert snapshot.status_code == 200
+    assert snapshot.json()["market_tone"]["label"] == "risk_off_conditions"
+    assert "not a forecast" in snapshot.json()["market_tone"]["method"]
+
+
+def test_fomo_watchlist_csv_import_registers_new_companies_and_skips_non_asx_rows(finance_client):
+    client = finance_client
+    client.post("/api/finance/securities", headers=AUTH, json={
+        "symbol": "CSL.AX", "name": "Existing CSL",
+    })
+    csv_text = (
+        "\ufeffCode,Name,Exch,Industry,Sector\n"
+        "CSL,CSL Limited,ASX,Pharmaceuticals,Health Care\n"
+        "DRO,DroneShield,ASX,Capital Goods,Industrials\n"
+        "BAD,Other company,NASDAQ,Software,Technology\n"
+        "ASM,,,,\n"
+    )
+    imported = client.post(
+        "/api/finance/watchlists/import", headers=AUTH,
+        data={"name": "FOMO high interest"},
+        files={"file": ("FOMO.csv", csv_text.encode("utf-8-sig"), "text/csv")},
+    )
+    assert imported.status_code == 200
+    result = imported.json()
+    assert result["imported_symbols"] == ["CSL.AX", "DRO.AX"]
+    assert result["registered_companies"] == 2
+    assert any("NASDAQ" in warning for warning in result["warnings"])
+    assert client.app.state.finance_store.get_security("CSL.AX")["name"] == "Existing CSL"
+    listing = client.get(
+        f"/api/finance/watchlists/{result['id']}/analysis", headers=AUTH,
+    )
+    assert listing.json()["symbols"][1]["company"]["name"] == "DroneShield"
+
+
+def test_broker_holdings_csv_preview_imports_dated_values_without_account_metadata(finance_client):
+    client = finance_client
+    portfolio_id = client.post(
+        "/api/finance/portfolios", headers=AUTH, json={"name": "Broker export"},
+    ).json()["id"]
+    csv_text = (
+        'Account Number: private\n'
+        '"Share Holdings As of 9:41 pm Sydney Time, 27 Oct. 2026"\n'
+        "Code,Avail Units,Purchase $,Last $,Mkt Value $\n"
+        "CHESS,,,,\n"
+        "ABC,10,2.50,3.00,30.00\n"
+        "Subtotal,,,,\n"
+    )
+    preview = client.post(
+        f"/api/finance/portfolios/{portfolio_id}/holdings/preview",
+        headers=AUTH,
+        files={"file": ("holdings.csv", csv_text.encode("utf-8"), "text/csv")},
+    )
+    assert preview.status_code == 200
+    row = preview.json()["rows"][0]
+    assert row["symbol"] == "ABC.AX"
+    assert row["cost_basis_total"] == "25.00"
+    assert row["manual_aud_value"] == "30.00"
+    assert row["valuation_date"] == "2026-10-27"
+    assert "private" not in preview.text
+    assert client.get(
+        f"/api/finance/portfolios/{portfolio_id}/holdings", headers=AUTH,
+    ).json()["holdings"] == []
+
+    confirmed = client.post(
+        f"/api/finance/portfolios/{portfolio_id}/holdings/confirm",
+        headers=AUTH,
+        files={"file": ("holdings.csv", csv_text.encode("utf-8"), "text/csv")},
+    )
+    assert confirmed.status_code == 200
+    assert confirmed.json()["imported"] == 1
+
+
+def test_xauusd_macro_refresh_caches_provenance_and_reports_feed_failures(feeds_enabled_client):
+    client = feeds_enabled_client
+    timestamp = int(datetime.now(timezone.utc).timestamp())
+    treasury_date = datetime.now(timezone.utc).date().isoformat()
+    treasury_xml = f"""<feed xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices">
+      <entry><m:properties xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
+        <d:NEW_DATE>{treasury_date}T00:00:00</d:NEW_DATE><d:TC_10YEAR>1.92</d:TC_10YEAR>
+      </m:properties></entry></feed>"""
+
+    def handler(request):
+        if "query1.finance.yahoo.com" in request.url.host:
+            symbol = request.url.path.rsplit("/", 1)[-1]
+            currency = None if symbol == "%5EVIX" else "USD"
+            payload = {"chart": {"result": [{
+                "meta": {"currency": currency, "symbol": symbol},
+                "timestamp": [timestamp],
+                "indicators": {"quote": [{
+                    "open": [20], "high": [21], "low": [19], "close": [20.5], "volume": [10],
+                }]},
+            }]}}
+            return httpx.Response(200, json=payload)
+        if "home.treasury.gov" in request.url.host:
+            return httpx.Response(200, text=treasury_xml)
+        if "federalreserve.gov" in request.url.host:
+            return httpx.Response(200, text="<rss><channel/></rss>")
+        if "gdeltproject.org" in request.url.host:
+            return httpx.Response(503)
+        raise AssertionError(request.url)
+
+    client.app.state.feeds = httpx.AsyncClient(transport=httpx.MockTransport(handler))
+    refreshed = client.post("/api/finance/xauusd/macro/refresh", headers=AUTH)
+    assert refreshed.status_code == 200
+    payload = refreshed.json()
+    assert payload["sources"]["GDELT DOC API"]["status"] == "error"
+    assert payload["new_observations"]["U.S. Treasury daily real yield curve"] == 1
+    assert payload["context"]["components"]["US10Y_REAL"]["observations"][0]["value"] == "1.92"
+    assert payload["context"]["risk_mood_proxy"]["status"] == "available"
+    assert payload["context"]["fear_greed_index"]["status"] == "unavailable"
+    evidence = client.get(
+        "/api/finance/xauusd/macro/evidence?topic=real_yields", headers=AUTH,
+    )
+    assert evidence.status_code == 200
 
 
 def test_security_create_and_list(finance_client):
@@ -573,7 +874,7 @@ def test_portfolio_correlation_window_bounds(finance_client):
 
 
 def test_alert_evaluation_is_on_demand_and_deterministic(finance_client):
-    from datetime import date, timedelta
+    from datetime import date, datetime, timezone, timedelta
     client = finance_client
     _create_bhp(client)
     soon = (date.today() + timedelta(days=3)).isoformat()

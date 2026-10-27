@@ -3,7 +3,10 @@ from datetime import datetime, timezone
 import httpx
 import pytest
 
-from assistant_api.finance.market_data import fetch_symbol_history, refresh_history
+from assistant_api.finance.market_data import (
+    fetch_symbol_history, fetch_xauusd_history, fetch_yahoo_market_history,
+    refresh_history, refresh_market_history,
+)
 
 
 def chart_payload(symbol: str, currency: str = "AUD"):
@@ -159,3 +162,107 @@ async def test_fetch_symbol_history_rejects_negative_or_nan_bars():
         result = await fetch_symbol_history(client, "BHP.AX")
     assert len(result["bars"]) == 1  # the negative-close bar is dropped
     assert result["bars"][0]["close"] == "46.0"
+
+
+@pytest.mark.asyncio
+async def test_xauusd_proxy_returns_timestamped_ohlc_and_source_metadata():
+    ts = int(datetime(2026, 10, 27, 8, 0, tzinfo=timezone.utc).timestamp())
+    payload = {
+        "chart": {"result": [{
+            "meta": {"currency": "USD", "symbol": "XAUUSD=X"},
+            "timestamp": [ts],
+            "indicators": {"quote": [{
+                "open": [2400.0], "high": [2410.0], "low": [2390.0],
+                "close": [2405.0], "volume": [20],
+            }]},
+        }]},
+    }
+
+    def handler(request):
+        assert request.url.params["interval"] == "1h"
+        assert request.url.params["range"] == "3mo"
+        assert "XAUUSD" in request.url.path
+        return httpx.Response(200, json=payload)
+
+    async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as client:
+        result = await fetch_xauusd_history(client, "1h")
+    assert result["instrument"] == "XAUUSD=X"
+    assert result["timeframe"] == "1h"
+    assert result["currency"] == "USD"
+    assert result["source"].startswith("Yahoo Finance")
+    assert result["bars"][0]["close"] == "2405.0"
+    assert result["bars"][0]["observed_at"].startswith("2026-10-27T08:00:00")
+    assert result["warning"].startswith("Yahoo Finance XAUUSD=X is an unofficial proxy")
+
+
+@pytest.mark.asyncio
+async def test_xauusd_provider_rejects_unsupported_timeframe_without_network():
+    calls = []
+
+    def handler(request):
+        calls.append(request)
+        return httpx.Response(200, json={})
+
+    async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as client:
+        result = await fetch_xauusd_history(client, "1w")
+    assert result["status"] == "invalid_timeframe"
+    assert calls == []
+
+
+@pytest.mark.asyncio
+async def test_yahoo_macro_adapter_allows_bounded_vix_and_fx_symbols():
+    ts = int(datetime.now(timezone.utc).timestamp())
+    payload = {"chart": {"result": [{
+        "meta": {"currency": None, "symbol": "^VIX"},
+        "timestamp": [ts],
+        "indicators": {"quote": [{
+            "open": [20], "high": [21], "low": [19], "close": [20.5], "volume": [100],
+        }]},
+    }]}}
+
+    def handler(request):
+        assert str(request.url).split("?", 1)[0].endswith("%5EVIX")
+        return httpx.Response(200, json=payload)
+
+    async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as client:
+        result = await fetch_yahoo_market_history(client, "^VIX", "1d")
+    assert result["instrument_type"] == "index"
+    assert result["freshness"] == "fresh"
+    assert result["bars"][0]["currency"] == "N/A"
+    assert "unofficial" in result["warning"]
+
+
+@pytest.mark.asyncio
+async def test_yahoo_macro_adapter_rejects_unallowlisted_symbols_without_network():
+    calls = []
+
+    def handler(request):
+        calls.append(request)
+        return httpx.Response(200, json={})
+
+    async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as client:
+        result = await fetch_yahoo_market_history(client, "AAPL")
+    assert result["status"] == "invalid_symbol"
+    assert calls == []
+
+
+@pytest.mark.asyncio
+async def test_yahoo_market_adapter_accepts_validated_asx_ohlc():
+    ts = int(datetime.now(timezone.utc).timestamp())
+    payload = {"chart": {"result": [{
+        "meta": {"currency": "AUD", "symbol": "CSL.AX"},
+        "timestamp": [ts],
+        "indicators": {"quote": [{
+            "open": [290], "high": [300], "low": [280], "close": [295], "volume": [100],
+        }]},
+    }]}}
+
+    def handler(request):
+        assert request.url.path.endswith("CSL.AX")
+        return httpx.Response(200, json=payload)
+
+    async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as client:
+        results = await refresh_market_history(client, ["CSL.AX"], "1d")
+    assert results[0]["instrument"] == "CSL.AX"
+    assert results[0]["instrument_type"] == "asx_equity"
+    assert results[0]["bars"][0]["close"] == "295"

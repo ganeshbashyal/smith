@@ -2,7 +2,10 @@ from decimal import Decimal
 
 import pytest
 
-from assistant_api.finance.calculators import compute_dcf_report, compute_dcf_scenario, compute_ratios
+from assistant_api.finance.calculators import (
+    analyze_ohlc, calculate_daily_level_scenarios, calculate_trade_risk,
+    compute_dcf_report, compute_dcf_scenario, compute_ratios,
+)
 
 
 def test_ratios_full_inputs():
@@ -65,3 +68,82 @@ def test_dcf_report_without_any_probability_has_no_expected_value():
     report = compute_dcf_report(scenarios, current_price=None)
     assert report.probability_weighted_value_per_share is None
     assert report.margin_of_safety is None
+
+
+def test_trade_risk_withholds_position_size_for_missing_inputs():
+    result = calculate_trade_risk({"account_equity": "10000", "risk_percent": "1"})
+    assert result["status"] == "unavailable"
+    assert result["position_size_contracts"] is None
+    assert {"entry_price", "stop_price", "pip_or_point_value", "contract_size"} <= set(
+        result["missing_inputs"]
+    )
+
+
+def test_trade_risk_calculates_only_with_complete_same_currency_inputs():
+    result = calculate_trade_risk({
+        "account_equity": "10000", "risk_percent": "1",
+        "entry_price": "2400", "stop_price": "2390",
+        "pip_or_point_value": "100", "contract_size": "100",
+        "target_price": "2420", "account_currency": "USD",
+    })
+    assert result["status"] == "ok"
+    assert result["maximum_loss"] == "100"
+    assert result["risk_distance"] == "10"
+    assert result["position_size_contracts"] == "0.1"
+    assert result["position_size_units"] == "10.0"
+    assert result["risk_reward"] == "2"
+
+
+def test_trade_risk_withholds_size_when_fx_conversion_would_be_required():
+    result = calculate_trade_risk({
+        "account_equity": "10000", "risk_percent": "1",
+        "entry_price": "2400", "stop_price": "2390",
+        "pip_or_point_value": "100", "contract_size": "100",
+        "account_currency": "AUD", "quote_currency": "USD",
+    })
+    assert result["status"] == "unavailable"
+    assert result["position_size_contracts"] is None
+    assert "no FX conversion" in result["reason"]
+
+
+def test_ohlc_analysis_is_local_and_reports_insufficient_trend_history():
+    bars = [
+        {
+            "instrument": "XAUUSD=X", "observed_at": f"2026-01-01T00:{i:02d}:00+00:00",
+            "source": "test", "currency": "USD", "timeframe": "1m",
+            "freshness": "fresh", "open": str(100 + i), "high": str(102 + i),
+            "low": str(99 + i), "close": str(101 + i),
+        }
+        for i in range(3)
+    ]
+    result = analyze_ohlc(bars)
+    assert result["status"] == "ok"
+    assert result["return_pct"] == str((Decimal(103) - Decimal(102)) / Decimal(102) * 100)
+    assert result["atr"] is not None
+    assert result["sma50"] is None
+    assert result["trend_state"] == "insufficient_history"
+    assert result["utc_session_high"] == "104"
+
+
+def test_daily_level_scenarios_use_ohlc_and_label_conditional_entries():
+    bars = [
+        {"instrument": "XAUUSD=X", "observed_at": "2026-10-25T00:00:00+00:00",
+         "source": "Mock", "currency": "USD", "freshness": "fresh",
+         "open": "95", "high": "105", "low": "85", "close": "100"},
+        {"instrument": "XAUUSD=X", "observed_at": "2026-10-26T00:00:00+00:00",
+         "source": "Mock", "currency": "USD", "freshness": "fresh",
+         "open": "100", "high": "110", "low": "90", "close": "100"},
+    ]
+    result = calculate_daily_level_scenarios(bars, session_date="2026-10-27")
+    assert result["status"] == "ok"
+    assert result["pivot_levels"] == {
+        "pivot": "100.00", "R1": "110.00", "S1": "90.00",
+        "R2": "120.00", "S2": "80.00",
+    }
+    assert result["atr14"] == "20.00"
+    assert result["entry_scenarios"][0]["entry_zone"] == ["98.00", "102.00"]
+    assert "not fair value" in result["method"]
+
+
+def test_daily_level_scenarios_withhold_when_history_is_insufficient():
+    assert calculate_daily_level_scenarios([])["status"] == "unavailable"

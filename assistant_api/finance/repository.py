@@ -12,7 +12,7 @@ import json
 import sqlite3
 from pathlib import Path
 
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS finance_schema_version (version INTEGER PRIMARY KEY, applied_at TEXT NOT NULL);
@@ -110,6 +110,43 @@ CREATE TABLE IF NOT EXISTS fin_holdings (
     manual_aud_value TEXT, valuation_date TEXT,
     created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE IF NOT EXISTS fin_instruments (
+    symbol TEXT PRIMARY KEY, name TEXT NOT NULL, instrument_type TEXT NOT NULL,
+    currency TEXT NOT NULL, source_symbol TEXT, created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS fin_market_observations (
+    id INTEGER PRIMARY KEY, instrument TEXT NOT NULL, instrument_type TEXT NOT NULL,
+    timeframe TEXT NOT NULL, observed_at TEXT NOT NULL, source TEXT NOT NULL,
+    currency TEXT NOT NULL, open TEXT NOT NULL, high TEXT NOT NULL, low TEXT NOT NULL,
+    close TEXT NOT NULL, volume INTEGER, retrieved_at TEXT NOT NULL, freshness TEXT NOT NULL,
+    UNIQUE(instrument, timeframe, observed_at, source)
+);
+
+CREATE INDEX IF NOT EXISTS idx_fin_market_observations_recent
+    ON fin_market_observations(instrument, timeframe, observed_at DESC);
+
+CREATE TABLE IF NOT EXISTS fin_trading_journal (
+    id INTEGER PRIMARY KEY, instrument TEXT NOT NULL, direction TEXT NOT NULL,
+    timeframe TEXT NOT NULL, setup TEXT NOT NULL, entry TEXT, stop TEXT, target TEXT,
+    planned_risk TEXT, actual_result TEXT, reasoning TEXT NOT NULL DEFAULT '',
+    evidence_json TEXT NOT NULL DEFAULT '[]', manual_chart_notes TEXT NOT NULL DEFAULT '',
+    created_at TEXT NOT NULL,
+    closed_at TEXT, lessons TEXT NOT NULL DEFAULT ''
+);
+
+CREATE INDEX IF NOT EXISTS idx_fin_trading_journal_recent
+    ON fin_trading_journal(instrument, created_at DESC);
+
+CREATE TABLE IF NOT EXISTS fin_gold_macro_evidence (
+    id INTEGER PRIMARY KEY, category TEXT NOT NULL, title TEXT NOT NULL,
+    publisher TEXT NOT NULL, source_url TEXT NOT NULL DEFAULT '',
+    published_at TEXT, observed_at TEXT NOT NULL, summary TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'unverified', evidence_ids_json TEXT NOT NULL DEFAULT '[]',
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
 """
 
 
@@ -188,6 +225,139 @@ class FinanceStore:
     def list_securities(self) -> list[dict]:
         with self.connect() as db:
             return [dict(row) for row in db.execute("SELECT * FROM fin_securities ORDER BY symbol")]
+
+    # -- Generic instruments / gold market data ------------------------------
+    def upsert_instrument(self, instrument: dict) -> dict:
+        with self.connect() as db:
+            db.execute(
+                """INSERT INTO fin_instruments(symbol, name, instrument_type, currency, source_symbol)
+                   VALUES (?,?,?,?,?)
+                   ON CONFLICT(symbol) DO UPDATE SET name=excluded.name,
+                     instrument_type=excluded.instrument_type, currency=excluded.currency,
+                     source_symbol=excluded.source_symbol, updated_at=CURRENT_TIMESTAMP""",
+                (instrument["symbol"], instrument["name"], instrument["instrument_type"],
+                 instrument["currency"], instrument.get("source_symbol")),
+            )
+            row = db.execute(
+                "SELECT * FROM fin_instruments WHERE symbol=?", (instrument["symbol"],)
+            ).fetchone()
+            return dict(row)
+
+    def get_instrument(self, symbol: str) -> dict | None:
+        with self.connect() as db:
+            row = db.execute("SELECT * FROM fin_instruments WHERE symbol=?", (symbol,)).fetchone()
+            return dict(row) if row else None
+
+    def list_instruments(self) -> list[dict]:
+        with self.connect() as db:
+            return [dict(row) for row in db.execute(
+                "SELECT * FROM fin_instruments ORDER BY symbol"
+            )]
+
+    def save_market_observations(self, bars: list[dict]) -> int:
+        saved = 0
+        with self.connect() as db:
+            for bar in bars:
+                cursor = db.execute(
+                    """INSERT OR IGNORE INTO fin_market_observations
+                       (instrument, instrument_type, timeframe, observed_at, source, currency,
+                        open, high, low, close, volume, retrieved_at, freshness)
+                       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)
+                       """,
+                    (bar["instrument"], bar["instrument_type"], bar["timeframe"],
+                     bar["observed_at"], bar["source"], bar["currency"], bar["open"],
+                     bar["high"], bar["low"], bar["close"], bar.get("volume"),
+                     bar["retrieved_at"], bar["freshness"]),
+                )
+                saved += cursor.rowcount
+        return saved
+
+    def market_history(self, instrument: str, timeframe: str, limit: int = 500) -> list[dict]:
+        with self.connect() as db:
+            rows = db.execute(
+                """SELECT * FROM fin_market_observations
+                   WHERE instrument=? AND timeframe=? ORDER BY observed_at DESC LIMIT ?""",
+                (instrument, timeframe, limit),
+            )
+            return [dict(row) for row in rows]
+
+    # -- XAUUSD journal and macro evidence -----------------------------------
+    def add_trading_journal_entry(self, entry: dict) -> int:
+        created_at = datetime.now(timezone.utc).isoformat()
+        with self.connect() as db:
+            cursor = db.execute(
+                """INSERT INTO fin_trading_journal
+                   (instrument, direction, timeframe, setup, entry, stop, target,
+                   planned_risk, actual_result, reasoning, evidence_json, manual_chart_notes, created_at,
+                    closed_at, lessons)
+                   VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+                (entry["instrument"], entry["direction"], entry["timeframe"], entry["setup"],
+                 entry.get("entry"), entry.get("stop"), entry.get("target"),
+                 entry.get("planned_risk"), entry.get("actual_result"),
+                 entry.get("reasoning", ""), json.dumps(entry.get("evidence", [])),
+                 entry.get("manual_chart_notes", ""), created_at,
+                 entry.get("closed_at"), entry.get("lessons", "")),
+            )
+            return cursor.lastrowid
+
+    def list_trading_journal(self, instrument: str | None = None, limit: int = 100) -> list[dict]:
+        with self.connect() as db:
+            if instrument:
+                rows = db.execute(
+                    """SELECT * FROM fin_trading_journal WHERE instrument=?
+                       ORDER BY created_at DESC, id DESC LIMIT ?""", (instrument, limit),
+                )
+            else:
+                rows = db.execute(
+                    """SELECT * FROM fin_trading_journal
+                       ORDER BY created_at DESC, id DESC LIMIT ?""", (limit,),
+                )
+            result = [dict(row) for row in rows]
+        for row in result:
+            row["evidence"] = json.loads(row.pop("evidence_json"))
+        return result
+
+    def close_trading_journal_entry(
+        self, entry_id: int, actual_result: str | None, closed_at: str, lessons: str,
+    ) -> bool:
+        with self.connect() as db:
+            cursor = db.execute(
+                """UPDATE fin_trading_journal SET actual_result=?, closed_at=?, lessons=?
+                   WHERE id=? AND closed_at IS NULL""",
+                (actual_result, closed_at, lessons, entry_id),
+            )
+            return cursor.rowcount == 1
+
+    def add_gold_macro_evidence(self, evidence: dict) -> int:
+        with self.connect() as db:
+            cursor = db.execute(
+                """INSERT INTO fin_gold_macro_evidence
+                   (category, title, publisher, source_url, published_at, observed_at,
+                    summary, status, evidence_ids_json)
+                   VALUES (?,?,?,?,?,?,?,?,?)""",
+                (evidence["topic"], evidence["title"], evidence["publisher"],
+                 evidence.get("source_url", ""), evidence.get("published_at"),
+                 evidence["observed_at"], evidence["summary"], evidence["status"],
+                 json.dumps(evidence.get("evidence_ids", []))),
+            )
+            return cursor.lastrowid
+
+    def list_gold_macro_evidence(self, topic: str | None = None, limit: int = 100) -> list[dict]:
+        with self.connect() as db:
+            if topic:
+                rows = db.execute(
+                    """SELECT * FROM fin_gold_macro_evidence WHERE category=?
+                       ORDER BY observed_at DESC, id DESC LIMIT ?""", (topic, limit),
+                )
+            else:
+                rows = db.execute(
+                    """SELECT * FROM fin_gold_macro_evidence
+                       ORDER BY observed_at DESC, id DESC LIMIT ?""", (limit,),
+                )
+            result = [dict(row) for row in rows]
+        for row in result:
+            row["evidence_ids"] = json.loads(row.pop("evidence_ids_json"))
+        return result
 
     # -- Evidence ---------------------------------------------------------
     def add_evidence(self, symbol: str, title: str, publisher: str, source_type: str,
@@ -374,6 +544,23 @@ class FinanceStore:
             cursor = db.execute(
                 "INSERT INTO fin_watchlists(name, symbols_json, price_alert_threshold_pct) VALUES (?,?,?)",
                 (name, json.dumps(symbols), threshold_pct),
+            )
+            return cursor.lastrowid
+
+    def import_watchlist(
+        self, name: str, symbols: list[str], companies: list[dict],
+    ) -> int:
+        """Create a watchlist and only missing company records atomically."""
+        with self.connect() as db:
+            for company in companies:
+                db.execute(
+                    """INSERT INTO fin_securities(symbol, name, sector)
+                       VALUES (?,?,?) ON CONFLICT(symbol) DO NOTHING""",
+                    (company["symbol"], company["name"], company.get("sector")),
+                )
+            cursor = db.execute(
+                "INSERT INTO fin_watchlists(name, symbols_json) VALUES (?,?)",
+                (name, json.dumps(symbols)),
             )
             return cursor.lastrowid
 

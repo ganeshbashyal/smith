@@ -71,6 +71,7 @@ def test_interfaces_and_validation(app_client):
     morning_page = client.get("/morning").text
     assert 'id="morning-card"' in morning_page
     assert "without scheduling background fetches" in morning_page
+    assert "Smith Chat does not need the admin token" in morning_page
     assert 'aria-label="Mr Smith pages"' in morning_page
     assert 'href="/finance">Finance</a>' in morning_page
     assert 'href="/admin">System / Admin</a>' in morning_page

@@ -46,6 +46,52 @@ label { display: block; margin: .4rem 0; }
 <input id="token" type="password" autocomplete="off" required></label></p>
 <p id="error" role="alert" class="warn"></p>
 
+<div role="tablist" aria-label="Finance workflows">
+  <button id="asx-tab" type="button" role="tab" aria-selected="true" aria-controls="asx-panel">ASX investor</button>
+  <button id="gold-tab" type="button" role="tab" aria-selected="false" aria-controls="gold-panel">XAUUSD trader</button>
+  <button id="manual-tab" type="button" role="tab" aria-selected="false" aria-controls="manual-panel">Manual analysis</button>
+</div>
+<div id="asx-panel" role="tabpanel" aria-labelledby="asx-tab">
+<section>
+<h2>Single-company research</h2>
+<p>Reports and progress are saved locally and accumulate by run. A bare ticker is treated as an ASX candidate. Live data is retrieved only when <code>MR_SMITH_EXTERNAL_FEEDS=1</code> is enabled.</p>
+<form id="instrument-research-form">
+  <label>Instrument <input id="research-instrument" required maxlength="40" placeholder="NCK, ASX:CSL, XAUUSD, EUR/USD"></label>
+  <label>Type
+    <select id="research-asset-type">
+      <option value="auto">Auto-detect (bare tickers default to ASX)</option>
+      <option value="asx_equity">ASX equity</option>
+      <option value="etf">ETF</option>
+      <option value="index">Index</option>
+      <option value="fx">FX</option>
+      <option value="commodity">Commodity</option>
+      <option value="crypto">Crypto</option>
+      <option value="other">Other</option>
+    </select>
+  </label>
+  <button id="research-start">Start background research</button>
+</form>
+<pre id="instrument-research-status" aria-live="polite"></pre>
+<pre id="instrument-research-report"></pre>
+</section>
+
+<section>
+<h2>Batch opportunity research</h2>
+<p>Runs one company at a time, saves each data report and local Llama analysis, records any company-specific failure, and continues through the entire queue. Completed companies are skipped if a batch is resumed. This does not load or change portfolio holdings in SQLite.</p>
+<button id="research-list-load" type="button">Load my supplied watchlist and holdings symbols</button>
+<form id="research-batch-form">
+  <label>ASX codes, one per line or comma-separated
+    <textarea id="research-batch-symbols" rows="8" required placeholder="Load the local list or paste ASX codes"></textarea>
+  </label>
+  <label>Local analysis model
+    <input id="research-batch-model" value="llama3.2:latest" required maxlength="200">
+  </label>
+  <button id="research-batch-start">Start full batch</button>
+</form>
+<pre id="research-batch-status" aria-live="polite"></pre>
+<div id="research-batch-artifacts"></div>
+</section>
+
 <section>
 <h2>Securities</h2>
 <form id="security-form">
@@ -103,6 +149,22 @@ label { display: block; margin: .4rem 0; }
   <label>Alert threshold % (optional) <input id="wl-threshold"></label>
   <button>Create watchlist</button>
 </form>
+<form id="watchlist-import-form">
+  <label>Watchlist name <input id="wl-import-name" value="High interest" required maxlength="120"></label>
+  <label>Broker/watchlist CSV with a Code column <input id="wl-import-file" type="file" accept=".csv,text/csv" required></label>
+  <button>Import ASX watchlist</button>
+</form>
+<button id="watchlist-load" type="button">Load watchlists</button>
+<label>Watchlist
+  <select id="analysis-watchlist"><option value="">Select a watchlist</option></select>
+</label>
+<label>Company
+  <select id="analysis-symbol"><option value="">Select a company</option></select>
+</label>
+<button id="company-deep-dive" type="button">Deep dive with Smith</button>
+<p>Smith uses the cached company packet and local research model. Technical entry areas and targets are conditional, mechanically calculated levels—not personalized recommendations or fair value.</p>
+<pre id="company-analysis"></pre>
+<pre id="company-deep-dive-result"></pre>
 <pre id="wl-result"></pre>
 </section>
 
@@ -125,13 +187,84 @@ label { display: block; margin: .4rem 0; }
 </form>
 <form id="portfolio-import-form">
   <label>Portfolio ID <input id="pf-id" type="number" required></label>
-  <label>Holdings CSV/JSON file <input id="pf-file" type="file" required></label>
+  <label>Holdings CSV/JSON file (dated broker "Share Holdings" exports are supported)
+    <input id="pf-file" type="file" required></label>
   <button id="pf-preview" type="submit">Preview import</button>
   <button id="pf-confirm" type="button">Confirm import</button>
 </form>
 <button id="pf-analyze" type="button">Analyze portfolio</button>
 <pre id="pf-result"></pre>
 </section>
+</div>
+
+<div id="gold-panel" role="tabpanel" aria-labelledby="gold-tab" hidden>
+<section>
+  <h2>XAUUSD market context</h2>
+  <p>Yahoo XAUUSD is an unofficial proxy, not an executable spot quote. Macro refreshes are manual and require external feeds to be enabled.</p>
+  <button id="macro-refresh" type="button">Refresh dated market and macro sources</button>
+  <button id="macro-context" type="button">Show cached context</button>
+  <button id="market-snapshot" type="button">Show broad market snapshot</button>
+  <button id="gold-levels" type="button">Show today's conditional gold levels</button>
+  <button id="gold-analysis" type="button">Show gold technical and macro analysis</button>
+  <pre id="macro-result"></pre>
+</section>
+
+<section>
+  <h2>Conditional risk calculation</h2>
+  <p>Missing contract or currency inputs withhold position size; this is not a buy/sell signal.</p>
+  <form id="gold-risk-form">
+    <label>Account equity <input id="risk-equity" type="number" min="0" step="any"></label>
+    <label>Risk percent <input id="risk-percent" type="number" min="0" max="100" step="any"></label>
+    <label>Entry price <input id="risk-entry" type="number" min="0" step="any"></label>
+    <label>Stop price <input id="risk-stop" type="number" min="0" step="any"></label>
+    <label>Value per price-unit move per contract <input id="risk-point-value" type="number" min="0" step="any"></label>
+    <label>Underlying units per contract <input id="risk-contract-size" type="number" min="0" step="any"></label>
+    <label>Optional target price <input id="risk-target" type="number" min="0" step="any"></label>
+    <button>Calculate conditional risk</button>
+  </form>
+  <pre id="gold-risk-result"></pre>
+</section>
+
+<section>
+  <h2>Trading journal</h2>
+  <form id="gold-journal-form">
+    <label>Direction
+      <select id="journal-direction"><option value="long">Long scenario</option><option value="short">Short scenario</option></select>
+    </label>
+    <label>Timeframe
+      <select id="journal-timeframe"><option>1m</option><option>5m</option><option>15m</option><option selected>1h</option><option>1d</option></select>
+    </label>
+    <label>Setup <input id="journal-setup" required maxlength="200"></label>
+    <label>Entry <input id="journal-entry" type="number" min="0" step="any"></label>
+    <label>Stop <input id="journal-stop" type="number" min="0" step="any"></label>
+    <label>Target <input id="journal-target" type="number" min="0" step="any"></label>
+    <label>Reasoning / manual chart notes
+      <textarea id="journal-notes" rows="4" maxlength="10000" placeholder="Manual observations only; no TradingView scraping"></textarea>
+    </label>
+    <button>Save journal entry</button>
+  </form>
+  <button id="gold-journal-list" type="button">List journal entries</button>
+  <pre id="gold-journal-result"></pre>
+</section>
+</div>
+
+<div id="manual-panel" role="tabpanel" aria-labelledby="manual-tab" hidden>
+<section>
+  <h2>Manual company analysis</h2>
+  <p>Enter an instrument and your own question or notes. Smith uses the configured local research model; unsupported claims and missing company evidence should be called out, not filled in.</p>
+  <form id="manual-analysis-form">
+    <label>Instrument <input id="manual-instrument" maxlength="40" placeholder="ASX:CSL" required></label>
+    <label>What should Smith examine?
+      <textarea id="manual-question" rows="4" required>Assess the evidence for a potential opportunity and the strongest counter-case. Identify missing financial and valuation evidence. Do not give a buy or sell instruction.</textarea>
+    </label>
+    <label>Source notes / evidence to analyze (optional)
+      <textarea id="manual-material" rows="10" maxlength="60000" placeholder="Paste dated source notes or a short company packet. Do not paste passwords or account details."></textarea>
+    </label>
+    <button id="manual-analysis-start">Analyze with local model</button>
+  </form>
+  <pre id="manual-analysis-result" aria-live="polite"></pre>
+</section>
+</div>
 
 <script>
 const el = id => document.getElementById(id);
@@ -148,6 +281,233 @@ async function callJson(url, options, outId) {
     return data;
   } catch (error) { showError(error); throw error; }
 }
+
+function tabTo(panel) {
+  for (const [tab, content] of [
+    ['asx-tab', 'asx-panel'],
+    ['gold-tab', 'gold-panel'],
+    ['manual-tab', 'manual-panel'],
+  ]) {
+    const active = content === panel;
+    el(content).hidden = !active;
+    el(tab).setAttribute('aria-selected', String(active));
+  }
+}
+el('asx-tab').onclick = () => tabTo('asx-panel');
+el('gold-tab').onclick = () => tabTo('gold-panel');
+el('manual-tab').onclick = () => tabTo('manual-panel');
+
+let researchPoll;
+let batchPoll;
+async function pollInstrumentResearch(jobId) {
+  const status = await callJson(`/api/finance/research-jobs/${encodeURIComponent(jobId)}`, { headers: headers() });
+  el('instrument-research-status').textContent = JSON.stringify(status, null, 2);
+  if (status.status === 'completed' || status.status === 'failed') {
+    clearInterval(researchPoll);
+    researchPoll = null;
+    if (status.status === 'completed') {
+      const response = await fetch(status.report_url, { headers: headers() });
+      if (!response.ok) throw new Error(`Research report request failed (${response.status})`);
+      el('instrument-research-report').textContent = await response.text();
+    }
+    return true;
+  }
+  return false;
+}
+el('instrument-research-form').onsubmit = async event => {
+  event.preventDefault();
+  clearInterval(researchPoll);
+  el('instrument-research-report').textContent = '';
+  try {
+    const job = await callJson('/api/finance/research-jobs', {
+      method: 'POST', headers: jsonHeaders(),
+      body: JSON.stringify({
+        instrument: el('research-instrument').value,
+        asset_type: el('research-asset-type').value,
+      }),
+    });
+    el('instrument-research-status').textContent = JSON.stringify(job, null, 2);
+    const finished = await pollInstrumentResearch(job.job_id);
+    if (!finished) {
+      researchPoll = setInterval(() => {
+        pollInstrumentResearch(job.job_id).catch(error => {
+          clearInterval(researchPoll);
+          researchPoll = null;
+          showError(error);
+        });
+      }, 2000);
+    }
+  } catch (error) {
+    showError(error);
+  }
+};
+
+el('macro-refresh').onclick = () => callJson(
+  '/api/finance/xauusd/macro/refresh',
+  { method: 'POST', headers: headers() },
+  'macro-result',
+);
+el('macro-context').onclick = () => callJson(
+  '/api/finance/xauusd/macro/context', { headers: headers() }, 'macro-result',
+);
+el('market-snapshot').onclick = () => callJson(
+  '/api/finance/market/snapshot', { headers: headers() }, 'macro-result',
+);
+el('gold-levels').onclick = () => callJson(
+  '/api/finance/xauusd/levels', { headers: headers() }, 'macro-result',
+);
+el('gold-analysis').onclick = () => callJson(
+  '/api/finance/xauusd/analysis?timeframe=1h', { headers: headers() }, 'macro-result',
+);
+function stopBatchPoll() {
+  if (batchPoll) clearInterval(batchPoll);
+  batchPoll = null;
+}
+function showBatchArtifacts(batchId, items) {
+  const container = el('research-batch-artifacts');
+  container.replaceChildren();
+  const status = batchStatusCache.get(batchId);
+  if (status && status.status !== 'completed') {
+    const resume = document.createElement('button');
+    resume.type = 'button';
+    resume.textContent = 'Resume failed or unfinished companies';
+    resume.onclick = async () => {
+      try {
+        await callJson(`/api/finance/research-batches/${encodeURIComponent(batchId)}/resume`, {
+          method: 'POST', headers: jsonHeaders(), body: JSON.stringify({}),
+        }, 'research-batch-status');
+        if (!await pollResearchBatch(batchId)) {
+          stopBatchPoll();
+          batchPoll = setInterval(() => {
+            pollResearchBatch(batchId).catch(error => {
+              stopBatchPoll();
+              showError(error);
+            });
+          }, 3000);
+        }
+      } catch (error) { showError(error); }
+    };
+    container.append(resume, document.createTextNode(' '));
+  }
+  for (const item of items) {
+    if (item.status !== 'completed') continue;
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.textContent = `View Smith analysis: ${item.instrument}`;
+    button.onclick = async () => {
+      try {
+        const response = await fetch(
+          `/api/finance/research-batches/${encodeURIComponent(batchId)}/items/${item.index}/analysis`,
+          { headers: headers() },
+        );
+        if (!response.ok) throw new Error(`Analysis request failed (${response.status})`);
+        el('research-batch-status').textContent = await response.text();
+      } catch (error) { showError(error); }
+    };
+    container.append(button, document.createTextNode(' '));
+  }
+}
+const batchStatusCache = new Map();
+async function pollResearchBatch(batchId) {
+  const status = await callJson(`/api/finance/research-batches/${encodeURIComponent(batchId)}`, { headers: headers() });
+  batchStatusCache.set(batchId, status);
+  el('research-batch-status').textContent = JSON.stringify(status, null, 2);
+  if (status.status === 'completed' || status.status === 'completed_with_errors' || status.status === 'failed') {
+    stopBatchPoll();
+    showBatchArtifacts(batchId, status.items || []);
+    return true;
+  }
+  return false;
+}
+el('research-list-load').onclick = async () => {
+  try {
+    const seed = await callJson('/api/finance/research-batches/seed', { headers: headers() });
+    const symbols = [...new Set(Object.values(seed.lists || {}).flat().map(symbol => String(symbol).trim()).filter(Boolean))];
+    if (!symbols.length) throw new Error('The saved local list has no symbols.');
+    el('research-batch-symbols').value = symbols.join('\n');
+    el('research-batch-status').textContent = `${symbols.length} unique symbols loaded.`;
+  } catch (error) { showError(error); }
+};
+el('research-batch-form').onsubmit = async event => {
+  event.preventDefault();
+  stopBatchPoll();
+  el('research-batch-artifacts').replaceChildren();
+  try {
+    const instruments = [...new Set(
+      el('research-batch-symbols').value.split(/[\s,;]+/).map(symbol => symbol.trim()).filter(Boolean),
+    )];
+    const job = await callJson('/api/finance/research-batches', {
+      method: 'POST', headers: jsonHeaders(),
+      body: JSON.stringify({
+        model: el('research-batch-model').value.trim(),
+        instruments: instruments.map(instrument => ({ instrument, asset_type: 'auto' })),
+      }),
+    });
+    el('research-batch-status').textContent = JSON.stringify(job, null, 2);
+    if (!await pollResearchBatch(job.batch_id)) {
+      batchPoll = setInterval(() => {
+        pollResearchBatch(job.batch_id).catch(error => {
+          stopBatchPoll();
+          showError(error);
+        });
+      }, 3000);
+    }
+  } catch (error) { showError(error); }
+};
+
+el('manual-analysis-form').onsubmit = async event => {
+  event.preventDefault();
+  el('manual-analysis-result').textContent = 'Smith is analyzing the supplied notes with the configured local research model...';
+  try {
+    const response = await fetch('/api/research', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        persona: 'finance',
+        question: `${el('manual-instrument').value.trim()}: ${el('manual-question').value.trim()}`,
+        material: el('manual-material').value,
+      }),
+    });
+    const result = await response.json();
+    if (!response.ok) throw new Error(typeof result.detail === 'string' ? result.detail : 'Manual analysis failed');
+    el('manual-analysis-result').textContent =
+      result.answer + '\n\nModel: ' + result.route.model + '\n\n' + (result.warnings || []).join('\n');
+  } catch (error) {
+    showError(error);
+    el('manual-analysis-result').textContent = 'Analysis failed: ' + (error.message || String(error));
+  }
+};
+
+el('gold-risk-form').onsubmit = async event => {
+  event.preventDefault();
+  const optional = id => el(id).value || null;
+  await callJson('/api/finance/xauusd/risk', {
+    method: 'POST', headers: jsonHeaders(),
+    body: JSON.stringify({
+      account_equity: optional('risk-equity'), risk_percent: optional('risk-percent'),
+      entry_price: optional('risk-entry'), stop_price: optional('risk-stop'),
+      pip_or_point_value: optional('risk-point-value'),
+      contract_size: optional('risk-contract-size'), target_price: optional('risk-target'),
+    }),
+  }, 'gold-risk-result');
+};
+el('gold-journal-form').onsubmit = async event => {
+  event.preventDefault();
+  const optional = id => el(id).value || null;
+  await callJson('/api/finance/xauusd/journal', {
+    method: 'POST', headers: jsonHeaders(),
+    body: JSON.stringify({
+      instrument: 'XAUUSD=X', direction: el('journal-direction').value,
+      timeframe: el('journal-timeframe').value, setup: el('journal-setup').value,
+      entry: optional('journal-entry'), stop: optional('journal-stop'),
+      target: optional('journal-target'), reasoning: el('journal-notes').value,
+      manual_chart_notes: el('journal-notes').value,
+    }),
+  }, 'gold-journal-result');
+};
+el('gold-journal-list').onclick = () => callJson(
+  '/api/finance/xauusd/journal', { headers: headers() }, 'gold-journal-result',
+);
 
 el('security-form').onsubmit = async event => {
   event.preventDefault();
@@ -191,6 +551,69 @@ el('watchlist-form').onsubmit = async event => {
     method: 'POST', headers: jsonHeaders(),
     body: JSON.stringify({ name: el('wl-name').value, symbols, price_alert_threshold_pct: el('wl-threshold').value || null }),
   }, 'wl-result');
+};
+el('watchlist-import-form').onsubmit = async event => {
+  event.preventDefault();
+  const file = el('wl-import-file').files[0];
+  if (!file) return showError(new Error('Choose a watchlist CSV first.'));
+  const form = new FormData();
+  form.append('name', el('wl-import-name').value);
+  form.append('file', file);
+  const imported = await callJson('/api/finance/watchlists/import', {
+    method: 'POST', headers: headers(), body: form,
+  }, 'wl-result');
+  if (imported) await el('watchlist-load').onclick();
+};
+el('watchlist-load').onclick = async () => {
+  const data = await callJson('/api/finance/watchlists', { headers: headers() });
+  const selectedBefore = el('analysis-watchlist').value;
+  el('analysis-watchlist').replaceChildren(new Option('Select a watchlist', ''));
+  data.watchlists.forEach(item => {
+    el('analysis-watchlist').add(new Option(item.name, String(item.id)));
+  });
+  if ([...el('analysis-watchlist').options].some(option => option.value === selectedBefore)) {
+    el('analysis-watchlist').value = selectedBefore;
+  }
+  el('analysis-watchlist').dispatchEvent(new Event('change'));
+};
+el('analysis-watchlist').onchange = async () => {
+  const id = el('analysis-watchlist').value;
+  el('analysis-symbol').replaceChildren(new Option('Select a company', ''));
+  if (!id) return;
+  const data = await callJson(`/api/finance/watchlists/${encodeURIComponent(id)}/analysis`, { headers: headers() });
+  data.symbols.forEach(item => el('analysis-symbol').add(new Option(item.symbol, item.symbol)));
+  el('company-analysis').textContent = JSON.stringify(data, null, 2);
+};
+el('company-deep-dive').onclick = async () => {
+  const symbol = el('analysis-symbol').value;
+  const watchlistId = el('analysis-watchlist').value;
+  if (!symbol || !watchlistId) {
+    showError(new Error('Choose a watchlist and company first.'));
+    return;
+  }
+  const packet = await callJson(
+    `/api/finance/securities/${encodeURIComponent(symbol)}/analysis`,
+    { headers: headers() }, 'company-analysis',
+  );
+  el('company-deep-dive-result').textContent = 'Smith is preparing the evidence-led deep dive...';
+  try {
+    const response = await fetch('/api/research', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        persona: 'finance',
+        question: `Prepare a deep dive on ${symbol} using only the supplied company packet and clearly identified general concepts. State evidence dates and source links; separate facts from interpretation. Do not invent missing fundamentals or valuation. For entry areas and targets, use only the supplied conditional technical levels and explicitly call them technical scenarios, not a buy/sell recommendation.`,
+        material: JSON.stringify(packet),
+      }),
+    });
+    const result = await response.json();
+    if (!response.ok) throw new Error(typeof result.detail === 'string' ? result.detail : 'Smith research request failed');
+    el('company-deep-dive-result').textContent =
+      result.answer + '\n\n' + (result.warnings || []).join('\n');
+  } catch (error) {
+    showError(error);
+    el('company-deep-dive-result').textContent = 'Deep dive failed; see the error above.';
+  }
 };
 
 el('ratios-form').onsubmit = async event => {

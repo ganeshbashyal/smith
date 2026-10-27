@@ -153,6 +153,50 @@ def test_single_row_holding_crud(tmp_path):
     assert store.delete_holding(portfolio_id, holding_id) is False
 
 
+def test_generic_instrument_market_cache_journal_and_macro_storage(tmp_path):
+    store = FinanceStore(tmp_path / "finance.sqlite3")
+    instrument = store.upsert_instrument({
+        "symbol": "XAUUSD=X", "name": "Gold / US dollar", "instrument_type": "xauusd_spot_proxy",
+        "currency": "USD", "source_symbol": "XAUUSD=X",
+    })
+    assert instrument["instrument_type"] == "xauusd_spot_proxy"
+
+    bar = {
+        "instrument": "XAUUSD=X", "instrument_type": "xauusd_spot_proxy", "timeframe": "1h",
+        "observed_at": "2026-10-27T12:00:00+00:00", "source": "Yahoo Finance test proxy",
+        "currency": "USD", "open": "2400", "high": "2410", "low": "2390",
+        "close": "2405", "volume": 10, "retrieved_at": "2026-10-27T12:01:00+00:00",
+        "freshness": "fresh",
+    }
+    assert store.save_market_observations([bar]) == 1
+    assert store.save_market_observations([bar]) == 0
+    assert store.market_history("XAUUSD=X", "1h")[0]["close"] == "2405"
+
+    entry_id = store.add_trading_journal_entry({
+        "instrument": "XAUUSD=X", "direction": "long", "timeframe": "1h",
+        "setup": "Breakout retest", "manual_chart_notes": "Manually observed range",
+        "evidence": [{"source": "manual"}],
+    })
+    entry = store.list_trading_journal("XAUUSD=X")[0]
+    assert entry["id"] == entry_id
+    assert entry["evidence"] == [{"source": "manual"}]
+    assert store.close_trading_journal_entry(
+        entry_id, "50", "2026-10-27T13:00:00+00:00", "Wait for close",
+    )
+    assert not store.close_trading_journal_entry(
+        entry_id, "50", "2026-10-27T13:00:00+00:00", "Duplicate close",
+    )
+
+    macro_id = store.add_gold_macro_evidence({
+        "topic": "real_yields", "title": "Rates note", "publisher": "Manual",
+        "observed_at": "2026-10-27T12:00:00+00:00", "summary": "Unverified observation",
+        "status": "unverified", "evidence_ids": [1],
+    })
+    macro = store.list_gold_macro_evidence("real_yields")[0]
+    assert macro["id"] == macro_id
+    assert macro["evidence_ids"] == [1]
+
+
 def test_verified_backup_created_before_first_finance_migration(tmp_path):
     from assistant_api.storage import Store
     data_dir = tmp_path

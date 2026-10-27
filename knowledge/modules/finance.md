@@ -57,6 +57,14 @@ live prices without dated market data.
 
 Prefer dated issuer/ASX filings and reports for company claims; RBA and ABS for
 Australian macro data; ASIC MoneySmart for general investor education; and
-documented market data for prices. Record source date, retrieval date,
-currency, units, and coverage gaps. This foundation is not a personal
-suitability assessment or financial advice.
+documented market data for prices. U.S. Treasury daily real-yield data and
+Federal Reserve releases can supply dated U.S. macro context; news-index
+headlines such as GDELT results are leads that must be checked against the
+publisher's article, not confirmed evidence. Yahoo XAUUSD, FX, dollar-index,
+and VIX series are unofficial proxies and may be delayed. VIX is an equity
+volatility measure, not a universal fear/greed score or a gold-direction
+signal. Market Index prohibits automated/script access under its published
+terms; use manual evidence import or an authorized licensed feed for ASX
+announcements. Record source date, retrieval date, currency, units, and
+coverage gaps. This foundation is not a personal suitability assessment or
+financial advice.

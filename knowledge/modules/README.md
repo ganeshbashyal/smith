@@ -9,7 +9,7 @@ working notes. Until reviewed, every imported module remains
 ## What is included
 
 | Persona | Foundation | Important unresolved evidence |
-|---|---|---|
+| --- | --- | --- |
 | General | Decisions, assumptions, priorities, and action planning | User-specific preferences must come from explicit local context |
 | Science | Study quality, uncertainty, causality, and reproducibility | Current consensus and individual papers need dated primary/review sources |
 | Engineering | Requirements, systems, hazards, failure analysis, verification | Equipment-, revision-, standards-, and site-specific details |
@@ -45,7 +45,6 @@ Run a no-write validation first, then import into the active local database:
 The importer validates all modules before changing the database, uses stable
 source identifiers, is safe to repeat, and preserves prior content as document
 revisions when a module changes.
-
 ## Criteria for calling a domain module ready
 
 - A named human reviewer has checked factual claims against identified,

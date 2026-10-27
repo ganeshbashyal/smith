@@ -581,11 +581,42 @@ missing, say so rather than inventing a match or compliance determination."""
     async def finance_page():
         return (Path(__file__).parent / "pages" / "finance.html").read_text(encoding="utf-8")
 
+    async def generate_finance_batch_analysis(instrument: str, report: str, model: str):
+        profile = PERSONAS["finance"]
+        system = BASE_INSTRUCTION + "\n" + profile.instruction + "\n" + profile.research_format + """
+For this batch task, treat the attached dated research report as the complete
+evidence packet. Do not invent missing company information, current events,
+financial figures, citations, price targets, or entry levels. Clearly separate
+reported facts, calculated observations and your interpretation. Assess the
+potential opportunity and counter-case only to the extent supported by the
+packet. This is general research, not personalized advice or an instruction to
+buy or sell. If issuer financials or valuation inputs are absent, do not imply
+that a price-only trend establishes fundamental value; name the missing data
+and next source needed. Do not assert specific customers, suppliers, market
+share, competitive conditions, expansion plans, or future growth unless the
+packet explicitly documents them. For every company-specific fact, name the
+report section and cite the exact supporting figure or short quote; otherwise
+write "not established by this packet." Do not describe a price trend without
+the measurement period and reported return. Cite only links present in the
+packet."""
+        prompt = json.dumps({
+            "question": f"Prepare an evidence-led opportunity and risk review for {instrument}.",
+            "material": report,
+        })
+        if len(prompt) > 60000:
+            raise HTTPException(422, "Research report exceeds the local model context budget")
+        return await ollama_operation(app.state.models.generate(
+            system, prompt, model, output_tokens=3072,
+        ))
+
     app.include_router(build_finance_router(
         get_store=lambda: app.state.finance_store,
         admin_dependency=admin,
         feeds_client_getter=lambda: app.state.feeds,
         external_feeds_enabled=lambda: settings.external_feeds,
+        data_dir=settings.data_dir,
+        model_status_getter=lambda: app.state.models.status(),
+        model_analysis_generator=generate_finance_batch_analysis,
     ))
 
     return app

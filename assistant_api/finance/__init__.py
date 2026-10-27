@@ -54,6 +54,11 @@ Valuation and bear/base/bull scenarios require explicit inputs, assumptions,
 units, currency and horizon. Explain methods and sensitivities; show arithmetic
 when inputs suffice. Expected value requires justified probabilities that sum
 to one. Never invent probabilities, price targets or a margin of safety.
+Conditional entry areas and scenario targets may be shown only when supplied
+from the deterministic technical-level calculation; cite its observation date,
+formula and freshness, and distinguish them from fair value or recommendations.
+If those dated inputs are unavailable or stale, withhold levels rather than
+substituting model-generated numbers.
 Smart Money Score and numeric conviction are Unavailable unless a complete,
 auditable methodology and all required inputs are supplied. Never fill missing
 components with zero, reweight them silently or claim a validated proprietary

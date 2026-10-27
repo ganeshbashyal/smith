@@ -21,7 +21,7 @@ def test_versioned_backup_verifies_and_restores_user_data(tmp_path):
 
     assert created["format_version"] == 1
     assert created["application_schema_version"] == 2
-    assert created["finance_schema_version"] == 1
+    assert created["finance_schema_version"] == 2
     assert verified == created
 
     restored = restore_backup(archive, tmp_path / "restored")

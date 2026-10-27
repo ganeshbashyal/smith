@@ -7,10 +7,11 @@ membership file. Yahoo data is retained for internal local research only.
 from __future__ import annotations
 
 import asyncio
+import argparse
 import csv
 import json
 import re
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 import httpx
@@ -40,12 +41,15 @@ def extract_constituents(page_path: Path) -> list[dict]:
             "membership_basis": "current constituent snapshot; historical membership not established",
             "source": PAGE_URL,
         })
+    codes = [row["code"] for row in rows]
+    if len(codes) != 200 or any(not code for code in codes) or len(set(codes)) != 200:
+        raise ValueError("The constituent source did not contain 200 unique non-empty ASX codes")
     return rows
 
 
 async def fetch_history(client: httpx.AsyncClient, symbol: str, start: str, end: str) -> dict:
     try:
-        response = await client.get(YAHOO_URL.format(symbol=symbol), params={"range": "5y", "interval": "1d"})
+        response = await client.get(YAHOO_URL.format(symbol=symbol), params={"range": "10y", "interval": "1d"})
         response.raise_for_status()
         result = response.json()["chart"]["result"][0]
         meta = result.get("meta", {})
@@ -57,7 +61,7 @@ async def fetch_history(client: httpx.AsyncClient, symbol: str, start: str, end:
             close = (quote.get("close") or [None] * len(timestamps))[i]
             if close is None:
                 continue
-            day = date.fromtimestamp(timestamp).isoformat()
+            day = datetime.fromtimestamp(timestamp, timezone.utc).date().isoformat()
             if not (start <= day <= end):
                 continue
             rows.append({
@@ -90,23 +94,59 @@ def write_csv(path: Path, rows: list[dict], fields: list[str]) -> None:
 
 
 def main() -> None:
-    OUT.mkdir(parents=True, exist_ok=True)
-    page_path = OUT / "constituent_source.html"
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--prepare-only", action="store_true",
+        help="Save a current constituent snapshot and batch JSON without downloading prices",
+    )
+    parser.add_argument(
+        "--output-dir", type=Path, default=OUT,
+        help="New or empty destination directory (existing files are never overwritten)",
+    )
+    args = parser.parse_args()
+    output_dir = args.output_dir.resolve()
+    if output_dir.exists() and any(output_dir.iterdir()):
+        parser.error(f"Output directory is not empty; choose a new directory: {output_dir}")
+    output_dir.mkdir(parents=True, exist_ok=True)
+    page_path = output_dir / "constituent_source.html"
     import urllib.request
     request = urllib.request.Request(PAGE_URL, headers={"User-Agent": "MrSmith-local-research/0.1"})
     page_path.write_bytes(urllib.request.urlopen(request, timeout=20).read())
     constituents = extract_constituents(page_path)
-    write_csv(OUT / "constituents_snapshot.csv", constituents, list(constituents[0]))
+    write_csv(output_dir / "constituents_snapshot.csv", constituents, list(constituents[0]))
+    instruments = {
+        "instruments": [
+            {
+                "instrument": f"ASX:{row['code']}",
+                "asset_type": "auto",
+                "list_name": f"S&P/ASX 200 snapshot ({row['snapshot_date']})",
+            }
+            for row in constituents
+        ],
+        "source": PAGE_URL,
+        "snapshot_date": date.today().isoformat(),
+        "membership_basis": "Current constituent snapshot only; not historical index membership.",
+    }
+    instruments_path = output_dir / "instruments.json"
+    instruments_path.write_text(json.dumps(instruments, indent=2), encoding="utf-8")
+    if args.prepare_only:
+        print(json.dumps({
+            "constituent_count": len(constituents),
+            "snapshot_date": date.today().isoformat(),
+            "instruments_file": str(instruments_path),
+            "constituent_source": PAGE_URL,
+        }, indent=2))
+        return
 
     end = date.today()
-    start = end - timedelta(days=365 * 5)
+    start = end - timedelta(days=365 * 10)
     results = asyncio.run(fetch_all([row["symbol"] for row in constituents], start.isoformat(), end.isoformat()))
     price_rows = [item for result in results for item in result["rows"]]
-    write_csv(OUT / "daily_prices_5y.csv", price_rows, ["symbol", "observed_on", "close", "adjusted_close", "volume", "currency", "exchange_timezone"])
+    write_csv(output_dir / "daily_prices_10y.csv", price_rows, ["symbol", "observed_on", "close", "adjusted_close", "volume", "currency", "exchange_timezone"])
     failures = [{"symbol": result["symbol"], "status": result["status"], "error": result["error"]} for result in results if result["status"] != "ok"]
-    write_csv(OUT / "failures.csv", failures, ["symbol", "status", "error"])
+    write_csv(output_dir / "failures.csv", failures, ["symbol", "status", "error"])
     manifest = {
-        "dataset": "ASX 200 current-membership snapshot with five-year Yahoo daily prices",
+        "dataset": "ASX 200 current-membership snapshot with ten-year Yahoo daily prices",
         "created_at": date.today().isoformat(), "start": start.isoformat(), "end": end.isoformat(),
         "constituent_count": len(constituents), "successful_symbols": len(results) - len(failures),
         "failed_symbols": len(failures), "price_row_count": len(price_rows), "concurrency": CONCURRENCY,
@@ -114,7 +154,7 @@ def main() -> None:
         "price_source": "Yahoo Finance chart endpoint; internal research only; verify terms and licensing before redistribution.",
         "constituent_source": PAGE_URL,
     }
-    (OUT / "manifest.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+    (output_dir / "manifest.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")
     print(json.dumps(manifest, indent=2))
 
 
