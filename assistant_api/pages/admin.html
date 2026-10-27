@@ -4,31 +4,64 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Mr Smith Admin</title>
 <style>
-:root { color-scheme: light dark; font-family: system-ui; }
-body { max-width: 900px; margin: auto; padding: 1rem; }
-input, select, button, textarea { font: inherit; padding: .5rem; max-width: 100%; }
+:root {
+  color-scheme: light;
+  font-family: system-ui, "Segoe UI", sans-serif;
+  font-size: 17px;
+  line-height: 1.6;
+  color: #17212f;
+  background: #f3f6fa;
+}
+body { max-width: 900px; margin: auto; padding: 1.25rem; }
+input, select, button, textarea {
+  font: inherit;
+  padding: .55rem .7rem;
+  max-width: 100%;
+  border: 1px solid #65758b;
+  border-radius: .35rem;
+  background: #fff;
+  color: #17212f;
+}
+nav { display: flex; flex-wrap: wrap; gap: .5rem; margin: 1rem 0; }
+nav a { font: inherit; padding: .6rem .9rem; border: 1px solid #65758b; border-radius: .4rem; background: #fff; color: #124b91; }
+nav a[aria-current="page"] { background: #174ea6; border-color: #174ea6; color: white; }
+button { background: #e8eef6; cursor: pointer; }
+button:hover, nav a:hover { background: #dbe7f6; }
+nav a[aria-current="page"]:hover { background: #123f87; }
+button:disabled, input:disabled, select:disabled, textarea:disabled { color: #5a6472; background: #e4e8ee; cursor: not-allowed; }
+:focus-visible { outline: 3px solid #b54708; outline-offset: 2px; }
 textarea { box-sizing: border-box; width: 100%; min-height: 10rem; }
-pre { white-space: pre-wrap; overflow-wrap: anywhere; }
-.document { border: 1px solid #888; border-radius: .4rem; padding: .75rem; margin: .75rem 0; }
+pre { white-space: pre-wrap; overflow-wrap: anywhere; padding: .75rem; border: 1px solid #a8b3c2; border-radius: .35rem; background: #fff; color: #17212f; }
+.document { border: 1px solid #65758b; border-radius: .4rem; padding: .75rem; margin: .75rem 0; background: #fff; }
 .row { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
-.service { border: 1px solid #888; border-radius: .4rem; padding: .75rem; margin: .75rem 0; }
+.service { border: 1px solid #65758b; border-radius: .4rem; padding: .75rem; margin: .75rem 0; background: #fff; }
+table { border-collapse: collapse; width: 100%; margin-top: .75rem; }
+th, td { border: 1px solid #65758b; padding: .5rem; text-align: left; }
+td { overflow-wrap: anywhere; }
+th { background: #e8eef6; }
+#error, #service-error, #document-error, #pdf-error, #history-error { color: #a32118; font-weight: 600; }
 </style>
 <h1>Model management</h1>
-<a href="/morning">Back to widget</a>
+<nav aria-label="Mr Smith pages">
+<a href="/morning">Chat &amp; Brief</a>
+<a href="/finance">Finance</a>
+<a aria-current="page" href="/admin">System / Admin</a>
+</nav>
 <p>Research uses the configured research model. Daily requests use your saved selection.</p>
+<p><label>Admin token (used for service controls and admin actions; held only in this page)
+<input id="token" type="password" autocomplete="off" required></label></p>
 <button id="refresh">Refresh model health</button>
 <pre id="status" role="status"></pre>
 <h2>Approved current sources</h2>
 <pre id="sources" role="status"></pre>
 <form id="selection">
-<p><label>Admin token <input id="token" type="password" required autocomplete="off"></label></p>
 <p><label>Daily model <select id="models" required></select></label></p>
 <button id="save">Activate and save model</button>
 </form>
 <p id="error" role="alert"></p>
 <hr>
 <h2>Local services and resource use</h2>
-<p>Controls are local-only. This page monitors the Mr Smith process and controls Ollama; stop or restart Mr Smith from its PowerShell window with Ctrl+C. Ollama started elsewhere is shown but never stopped by this page. Graceful stop waits for any active model request, unloads models, then asks the Ollama process started here to shut down. Process termination is used only if the graceful signal cannot be delivered or shutdown times out.</p>
+<p>Controls are local-only. The task list shows Mr Smith and Ollama process IDs and resource use. Ollama started outside this panel is monitored but never stopped here; this panel only gracefully stops the Ollama process it started. Mr Smith itself is launched by your PowerShell/app host, so stop or restart it there rather than terminating a PID from the browser.</p>
 <div class="service">
 <h3>Ollama</h3>
 <div class="row">
@@ -38,8 +71,14 @@ pre { white-space: pre-wrap; overflow-wrap: anywhere; }
 <button id="ollama-stop" type="button" disabled>Gracefully stop Ollama</button>
 </div>
 <p id="service-error" role="alert"></p>
-<p>Resource figures show process working-set memory and cumulative CPU time since process start, not an instantaneous CPU percentage.</p>
-<pre id="services" role="status">Enter the admin token and refresh to inspect local services.</pre>
+<p id="service-summary" role="status">Enter the admin token and refresh to inspect local services.</p>
+<p>Resource figures show process working-set memory and cumulative CPU time since process start, not an instantaneous CPU percentage. PID entries are informational; arbitrary process termination is deliberately not available here.</p>
+<div style="overflow-x:auto">
+<table aria-label="Current local service processes">
+<thead><tr><th>Task / service</th><th>Process</th><th>PID</th><th>Memory (MB)</th><th>CPU time (s)</th></tr></thead>
+<tbody id="service-processes"><tr><td colspan="5">Service status not loaded.</td></tr></tbody>
+</table>
+</div>
 </div>
 <hr>
 <h2>Private knowledge documents</h2>
@@ -62,6 +101,23 @@ pre { white-space: pre-wrap; overflow-wrap: anywhere; }
 </select></label>
 </div>
 <p><label>Source or citation <input id="document-source" maxlength="2000" required></label></p>
+<div class="row">
+<label>Authority <input id="document-authority" maxlength="300"></label>
+<label>Jurisdiction <input id="document-jurisdiction" maxlength="200" placeholder="e.g. Australia / Victoria"></label>
+</div>
+<div class="row">
+<label>Issue date <input id="document-date-created" type="date"></label>
+<label>Human review date <input id="document-date-reviewed" type="date"></label>
+<label>Evidence confidence (0-1) <input id="document-confidence" type="number" min="0" max="1" step="0.01"></label>
+</div>
+<div class="row">
+<label>Supersedes <input id="document-supersedes" maxlength="2000"></label>
+<label>Review status
+<select id="document-review-status">
+<option>pending_human_review</option><option>candidate</option><option>reviewed</option>
+<option>rejected</option><option>retired</option>
+</select></label>
+</div>
 <p><label>Text <textarea id="document-content" maxlength="200000" required></textarea></label></p>
 <div class="row"><button id="document-submit">Add document</button><button id="document-cancel" type="button" hidden>Cancel edit</button></div>
 </form>
@@ -110,7 +166,14 @@ const documentFields = () => ({
   category: el('document-category').value,
   source_type: el('document-type').value,
   source: el('document-source').value,
-  content: el('document-content').value
+  content: el('document-content').value,
+  authority: el('document-authority').value || null,
+  jurisdiction: el('document-jurisdiction').value || null,
+  date_created: el('document-date-created').value || null,
+  date_reviewed: el('document-date-reviewed').value || null,
+  confidence: el('document-confidence').value === '' ? null : Number(el('document-confidence').value),
+  supersedes: el('document-supersedes').value || null,
+  review_status: el('document-review-status').value
 });
 function clearDocumentForm() {
   el('document-form').reset();
@@ -134,7 +197,7 @@ async function loadDocuments() {
       const card = document.createElement('section');
       card.className = 'document';
       const details = document.createElement('p');
-      details.textContent = `${item.title} | ${item.category} | ${item.source_type} | rev ${item.revision} | ${item.content_length} chars`;
+      details.textContent = `${item.title} | ${item.category} | ${item.source_type} | ${item.review_status} | rev ${item.revision} | ${item.content_length} chars`;
       const citation = document.createElement('p');
       citation.textContent = item.source;
       const edit = document.createElement('button');
@@ -243,6 +306,13 @@ async function editDocument(id) {
     el('document-type').value = document.source_type;
     el('document-source').value = document.source;
     el('document-content').value = document.content;
+    el('document-authority').value = document.authority || '';
+    el('document-jurisdiction').value = document.jurisdiction || '';
+    el('document-date-created').value = document.date_created || '';
+    el('document-date-reviewed').value = document.date_reviewed || '';
+    el('document-confidence').value = document.confidence ?? '';
+    el('document-supersedes').value = document.supersedes || '';
+    el('document-review-status').value = document.review_status || 'pending_human_review';
     el('document-submit').textContent = 'Save new revision';
     el('document-cancel').hidden = false;
     el('document-title').focus();
@@ -275,14 +345,51 @@ async function refreshServices() {
     const response = await fetch('/api/admin/services', { headers: authorization() });
     const data = await response.json();
     if (!response.ok) throw new Error(data.detail || 'Could not inspect local services');
-    el('services').textContent = JSON.stringify(data, null, 2);
+    const ollama = data.ollama;
+    el('service-summary').textContent =
+      `Ollama: ${ollama.status} | Managed by this panel: ${ollama.managed_by_mr_smith ? `yes (PID ${ollama.managed_pid})` : 'no'} | ` +
+      `Loaded models: ${ollama.loaded_models.length ? ollama.loaded_models.join(', ') : 'none'} | ` +
+      `Installed models: ${ollama.installed_models.length}`;
+    const processes = data.resources?.processes || [];
+    const body = el('service-processes');
+    body.replaceChildren();
+    if (!processes.length) {
+      const row = document.createElement('tr');
+      const cell = document.createElement('td');
+      cell.colSpan = 5;
+      cell.textContent = data.resources?.error || 'No matching local service processes found.';
+      row.append(cell);
+      body.append(row);
+    } else {
+      processes.forEach(process => {
+        const row = document.createElement('tr');
+        [
+          process.role === 'mr_smith' ? 'Mr Smith web app' : 'Ollama model server',
+          process.name, process.pid, process.memory_mb ?? '—', process.cpu_seconds ?? '—'
+        ].forEach(value => {
+          const cell = document.createElement('td');
+          cell.textContent = String(value);
+          row.append(cell);
+        });
+        body.append(row);
+      });
+    }
     el('ollama-start').disabled = !data.supported || data.ollama.status === 'running';
     el('ollama-stop').disabled = !data.ollama.managed_by_mr_smith;
+    el('models-unload').disabled = ollama.loaded_models.length === 0;
   } catch (error) {
-    el('services').textContent = 'Service status unavailable.';
+    el('service-summary').textContent = 'Service status unavailable.';
+    el('service-processes').replaceChildren();
+    const row = document.createElement('tr');
+    const cell = document.createElement('td');
+    cell.colSpan = 5;
+    cell.textContent = 'Could not load the local process list.';
+    row.append(cell);
+    el('service-processes').append(row);
     el('service-error').textContent = error.message;
-    el('ollama-start').disabled = false;
+    el('ollama-start').disabled = true;
     el('ollama-stop').disabled = true;
+    el('models-unload').disabled = true;
   }
 }
 async function controlOllama(action) {
@@ -295,7 +402,7 @@ async function controlOllama(action) {
     });
     const data = await response.json();
     if (!response.ok) throw new Error(data.detail || `Could not ${action} Ollama`);
-    el('services').textContent = JSON.stringify(data, null, 2);
+    el('service-summary').textContent = `Ollama ${data.status}.`;
   } catch (error) { el('service-error').textContent = error.message; }
   finally { await refreshServices(); }
 }
@@ -311,7 +418,7 @@ el('models-unload').onclick = async () => {
     });
     const data = await response.json();
     if (!response.ok) throw new Error(data.detail || 'Could not unload models');
-    el('services').textContent = JSON.stringify(data, null, 2);
+    el('service-summary').textContent = `Models unloaded: ${data.models.join(', ') || 'none'}.`;
   } catch (error) { el('service-error').textContent = error.message; }
   finally { el('models-unload').disabled = false; await refreshServices(); }
 };
@@ -354,6 +461,10 @@ el('document-refresh').onclick = loadDocuments;
 el('history-refresh').onclick = () => { historyOffset = 0; loadHistory(); };
 el('history-newer').onclick = () => { historyOffset = Math.max(0, historyOffset - historyLimit); loadHistory(); };
 el('history-older').onclick = () => { historyOffset += historyLimit; loadHistory(); };
+el('token').addEventListener('change', refreshServices);
+window.setInterval(() => {
+  if (el('token').value) refreshServices();
+}, 15000);
 el('pdf-form').onsubmit = async event => {
   event.preventDefault(); el('pdf-submit').disabled = true; el('pdf-error').textContent = '';
   const form = new FormData();

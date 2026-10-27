@@ -45,11 +45,17 @@ into the application or browser storage. Choose **one** option:
 
 **Option A — set it once (recommended).** Saves the token as a Windows
 user environment variable so every future PowerShell window and every Mr
-Smith start picks it up automatically. Run this once:
+Smith start picks it up automatically. Generate a private random token of
+more than 32 characters and save it with this command:
 
 ```powershell
-$secure = Read-Host "Choose a private Mr Smith admin token" -AsSecureString
-[Environment]::SetEnvironmentVariable("MR_SMITH_ADMIN_TOKEN", (New-Object Net.NetworkCredential('', $secure)).Password, "User")
+$bytes = New-Object byte[] 32
+$rng = [Security.Cryptography.RandomNumberGenerator]::Create()
+$rng.GetBytes($bytes)
+$token = [Convert]::ToBase64String($bytes)
+$rng.Dispose()
+[Environment]::SetEnvironmentVariable("MR_SMITH_ADMIN_TOKEN", $token, "User")
+$env:MR_SMITH_ADMIN_TOKEN = $token
 ```
 
 Optionally, keep the approved external news and market feeds always on:
@@ -60,19 +66,23 @@ Optionally, keep the approved external news and market feeds always on:
 
 Then **close and reopen PowerShell** (existing windows do not see the new
 value) and continue with `Set-Location D:\Mr_Smith`. The token is stored in
-plain text in your Windows user profile — fine for local use, but do not reuse
-a password from elsewhere. To change it, run the command again; to remove it:
+plain text in your Windows user profile — do not reuse a password from
+elsewhere or commit/share the token. To change it, run the command again; to
+remove it:
 
 ```powershell
 [Environment]::SetEnvironmentVariable("MR_SMITH_ADMIN_TOKEN", $null, "User")
 ```
 
 **Option B — this PowerShell window only.** Nothing is saved; you must set it
-again each time you open a new window:
+again each time you open a new window. Generate a fresh private token:
 
 ```powershell
-$secure = Read-Host "Choose a private Mr Smith admin token" -AsSecureString
-$env:MR_SMITH_ADMIN_TOKEN = (New-Object Net.NetworkCredential('', $secure)).Password
+$bytes = New-Object byte[] 32
+$rng = [Security.Cryptography.RandomNumberGenerator]::Create()
+$rng.GetBytes($bytes)
+$env:MR_SMITH_ADMIN_TOKEN = [Convert]::ToBase64String($bytes)
+$rng.Dispose()
 ```
 
 Start the app in the foreground:

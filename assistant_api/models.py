@@ -1,33 +1,60 @@
 import asyncio
+from contextlib import asynccontextmanager
 import time
 from typing import Literal
 
 import httpx
 
+from assistant_api.provider import ModelProvider, OllamaProvider, ProviderError
 from assistant_api.storage import Store
 
 
 class ModelManager:
     """Serialize every model load, unload, selection and generation in this process."""
 
-    def __init__(self, client: httpx.AsyncClient, store: Store, daily_model: str):
-        self.client, self.store, self.daily_model = client, store, daily_model
+    def __init__(self, client: httpx.AsyncClient, store: Store, daily_model: str,
+                 provider: ModelProvider | None = None):
+        self.client, self.provider, self.store, self.daily_model = (
+            client, provider or OllamaProvider(client), store, daily_model,
+        )
         self.lock = asyncio.Lock()
+        self._waiting = 0
+        self._operation: str | None = None
         self.active_model: str | None = None
         self.last_latency_ms: float | None = None
         self.last_error: str | None = None
+
+    @property
+    def operation_status(self) -> dict:
+        return {
+            "in_flight": self._operation is not None,
+            "operation": self._operation,
+            "queued_requests": self._waiting,
+        }
+
+    @asynccontextmanager
+    async def _serialized(self, operation: str):
+        self._waiting += 1
+        waiting = True
+        try:
+            async with self.lock:
+                self._waiting -= 1
+                waiting = False
+                self._operation = operation
+                try:
+                    yield
+                finally:
+                    self._operation = None
+        finally:
+            if waiting:
+                self._waiting -= 1
 
     @property
     def selected_model(self) -> str:
         return self.store.get_model(self.daily_model)
 
     async def _request(self, method: str, path: str, **kwargs) -> dict:
-        response = await self.client.request(method, path, **kwargs)
-        response.raise_for_status()
-        result = response.json()
-        if not isinstance(result, dict):
-            raise ValueError("Ollama response must be an object")
-        return result
+        return await self.provider.request(method, path, **kwargs)
 
     @staticmethod
     def _names(result: dict) -> list[str]:
@@ -66,18 +93,18 @@ class ModelManager:
         self.active_model = model
 
     async def select(self, model: str):
-        async with self.lock:
+        async with self._serialized("select_model"):
             try:
                 await self._activate(model)
                 self.store.set_model(model)
                 self.last_error = None
-            except (httpx.HTTPError, ValueError, KeyError, TypeError):
+            except (ProviderError, httpx.HTTPError, ValueError, KeyError, TypeError):
                 self.last_error = "Ollama model selection failed"
                 raise
 
     async def unload(self) -> list[str]:
         """Gracefully unload every currently loaded model without changing preference."""
-        async with self.lock:
+        async with self._serialized("unload_models"):
             try:
                 loaded = self._names(await self._request("GET", "/api/ps"))
                 for name in loaded:
@@ -92,13 +119,13 @@ class ModelManager:
                 self.active_model = None
                 self.last_error = None
                 return loaded
-            except (httpx.HTTPError, ValueError, KeyError, TypeError):
+            except (ProviderError, httpx.HTTPError, ValueError, KeyError, TypeError):
                 self.last_error = "Ollama model unload failed"
                 raise
 
     async def generate(self, system: str, prompt: str, research_model: str | None = None,
                        *, output_tokens: Literal[1024, 3072] = 1024) -> tuple[str, str]:
-        async with self.lock:
+        async with self._serialized("generate"):
             model = research_model or self.selected_model
             started = time.perf_counter()
             try:
@@ -113,14 +140,15 @@ class ModelManager:
                     raise ValueError("Ollama returned an empty answer")
                 self.last_error = None
                 return answer, model
-            except (httpx.HTTPError, ValueError, KeyError, TypeError):
+            except (ProviderError, httpx.HTTPError, ValueError, KeyError, TypeError):
                 self.last_error = "Ollama request failed"
                 raise
             finally:
                 self.last_latency_ms = round((time.perf_counter() - started) * 1000, 1)
 
     async def status(self) -> dict:
-        async with self.lock:
+        queue_at_request = self.operation_status
+        async with self._serialized("status"):
             tags = await self._request("GET", "/api/tags")
             loaded = await self._request("GET", "/api/ps")
             names = self._names(loaded)
@@ -129,5 +157,5 @@ class ModelManager:
                 "selected_model": self.selected_model, "active_model": self.active_model,
                 "loaded_models": names, "installed_models": self._names(tags),
                 "healthy": len(names) <= 1, "last_latency_ms": self.last_latency_ms,
-                "last_error": self.last_error,
+                "last_error": self.last_error, "operation_queue": queue_at_request,
             }

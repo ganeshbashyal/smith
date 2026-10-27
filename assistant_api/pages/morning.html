@@ -4,23 +4,53 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Mr Smith</title>
 <style>
-:root { color-scheme: light dark; font-family: system-ui; }
-body { max-width: 850px; margin: auto; padding: 1rem; }
-nav { display: flex; flex-wrap: wrap; gap: .5rem; }
-textarea, select, button { font: inherit; padding: .6rem; }
-textarea { box-sizing: border-box; width: 100%; margin-top: 1rem; }
+:root {
+  color-scheme: light;
+  font-family: system-ui, "Segoe UI", sans-serif;
+  font-size: 17px;
+  line-height: 1.6;
+  color: #17212f;
+  background: #f3f6fa;
+}
+body { max-width: 850px; margin: auto; padding: 1.25rem; }
+nav, .mode-tabs { display: flex; flex-wrap: wrap; gap: .5rem; margin: 1rem 0; }
+nav a { color: #124b91; }
+nav a, .mode-tabs button, textarea, select, button {
+  font: inherit;
+  padding: .65rem .9rem;
+  border: 1px solid #65758b;
+  border-radius: .4rem;
+}
+nav a, .mode-tabs button { background: #fff; }
+nav a[aria-current="page"], .mode-tabs button[aria-pressed="true"] {
+  background: #174ea6;
+  border-color: #174ea6;
+  color: #fff;
+}
+textarea, select { background: #fff; color: #17212f; }
+textarea { box-sizing: border-box; width: 100%; margin-top: .5rem; }
+button { color: #17212f; background: #e8eef6; cursor: pointer; }
+button:hover, nav a:hover { background: #dbe7f6; }
+nav a[aria-current="page"]:hover, .mode-tabs button[aria-pressed="true"]:hover { background: #123f87; }
+button:disabled, textarea:disabled, select:disabled { color: #5a6472; background: #e4e8ee; cursor: not-allowed; }
+:focus-visible { outline: 3px solid #b54708; outline-offset: 2px; }
 pre { white-space: pre-wrap; overflow-wrap: anywhere; }
-#error { color: #d44; } a { overflow-wrap: anywhere; }
-.card { border: 1px solid #888; border-radius: .5rem; padding: 1rem; margin-top: 1rem; }
+#error { color: #a32118; font-weight: 600; }
+a { overflow-wrap: anywhere; }
+.card { border: 1px solid #65758b; border-radius: .5rem; padding: 1rem; margin-top: 1rem; background: #fff; }
 </style>
 <h1>Mr Smith</h1>
-<nav aria-label="Assistant tabs">
-<button type="button" data-mode="morning">Morning Brief</button>
-<button type="button" data-mode="finance">Financial Analysis</button>
-<button type="button" data-mode="research">Research &amp; Deep Work</button>
-<a href="/admin">Admin</a>
-<a href="/api/coverage/sports">Sports coverage</a>
+<nav aria-label="Mr Smith pages">
+<a aria-current="page" href="/morning">Chat &amp; Brief</a>
+<a href="/finance">Finance</a>
+<a href="/admin">System / Admin</a>
 </nav>
+<div class="mode-tabs" role="group" aria-label="Chat modes">
+<button type="button" aria-pressed="true" data-mode="morning">Morning Brief</button>
+<button type="button" aria-pressed="false" data-mode="finance">Financial Analysis</button>
+<button type="button" aria-pressed="false" data-mode="research">Research &amp; Deep Work</button>
+</div>
+<p><a href="/api/coverage/sports">Sports coverage</a></p>
 <p id="mode">Morning Brief</p>
 <p>Stable concepts use local model knowledge. Current facts need relevant dated sources; coverage is limited.</p>
 <button type="button" id="morning-card">Build today's source-aware morning card</button>
@@ -51,6 +81,9 @@ const el = id => document.getElementById(id);
 document.querySelectorAll('[data-mode]').forEach(button => {
   button.onclick = () => {
     mode = button.dataset.mode;
+    document.querySelectorAll('[data-mode]').forEach(tab => {
+      tab.setAttribute('aria-pressed', String(tab === button));
+    });
     el('mode').textContent = button.textContent;
     el('material').disabled = mode !== 'research';
     el('research-persona').disabled = mode === 'finance';
@@ -58,6 +91,9 @@ document.querySelectorAll('[data-mode]').forEach(button => {
 });
 el('morning-card').onclick = () => {
   mode = 'morning';
+  document.querySelectorAll('[data-mode]').forEach(tab => {
+    tab.setAttribute('aria-pressed', String(tab.dataset.mode === mode));
+  });
   el('mode').textContent = 'Morning Brief';
   el('material').disabled = true;
   el('research-persona').disabled = false;

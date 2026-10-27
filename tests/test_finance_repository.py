@@ -1,4 +1,6 @@
 from datetime import date
+from pathlib import Path
+import sqlite3
 
 from assistant_api.finance.evidence import passages_with_page_numbers, plain_text_passages
 from assistant_api.finance.repository import FinanceStore
@@ -166,3 +168,29 @@ def test_verified_backup_created_before_first_finance_migration(tmp_path):
     # A second FinanceStore attach against the same (already-migrated) file must not re-backup.
     FinanceStore(db_path)
     assert len(list(data_dir.glob("mr_smith.pre-finance-migration-*.sqlite3.bak"))) == 1
+
+
+def test_finance_migration_backup_includes_committed_wal_data(tmp_path):
+    from assistant_api.storage import Store
+
+    Store(tmp_path)
+    db_path = tmp_path / "mr_smith.sqlite3"
+    live_connection = sqlite3.connect(db_path)
+    try:
+        assert live_connection.execute("PRAGMA journal_mode=WAL").fetchone()[0] == "wal"
+        live_connection.execute("CREATE TABLE wal_probe (value TEXT NOT NULL)")
+        live_connection.execute("INSERT INTO wal_probe VALUES ('preserve committed WAL data')")
+        live_connection.commit()
+        assert Path(str(db_path) + "-wal").exists()
+
+        FinanceStore(db_path)
+
+        backups = list(tmp_path.glob("mr_smith.pre-finance-migration-*.sqlite3.bak"))
+        assert len(backups) == 1
+        with sqlite3.connect(backups[0]) as backup:
+            assert backup.execute("PRAGMA integrity_check").fetchone()[0] == "ok"
+            assert backup.execute("SELECT value FROM wal_probe").fetchone()[0] == (
+                "preserve committed WAL data"
+            )
+    finally:
+        live_connection.close()

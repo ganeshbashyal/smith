@@ -12,6 +12,7 @@ from assistant_api.config import Settings
 from assistant_api.main import create_app
 from assistant_api.models import ModelManager
 from assistant_api.personas import BASE_INSTRUCTION, PERSONAS
+from assistant_api.provider import ProviderError
 from assistant_api.storage import Store
 
 
@@ -50,7 +51,7 @@ class Ollama:
 @pytest.fixture
 def app_client(tmp_path):
     fake = Ollama()
-    settings = Settings(tmp_path, "http://127.0.0.1:11434", "daily", "research", "test-token", False)
+    settings = Settings(tmp_path, "http://127.0.0.1:11434", "daily", "research", "test-admin-token-for-local-test-only", False)
     with TestClient(
         create_app(settings, ollama_transport=httpx.MockTransport(fake)),
         client=("127.0.0.1", 12345),
@@ -61,19 +62,40 @@ def app_client(tmp_path):
 def test_interfaces_and_validation(app_client):
     client, _, _ = app_client
     for path in ("/morning", "/admin", "/docs"):
-        assert client.get(path).status_code == 200
+        response = client.get(path)
+        assert response.status_code == 200
+        assert response.headers["x-content-type-options"] == "nosniff"
+        assert response.headers["x-frame-options"] == "DENY"
+        assert response.headers["referrer-policy"] == "no-referrer"
+        assert response.headers["permissions-policy"] == "camera=(), microphone=(), geolocation=()"
     morning_page = client.get("/morning").text
     assert 'id="morning-card"' in morning_page
     assert "without scheduling background fetches" in morning_page
+    assert 'aria-label="Mr Smith pages"' in morning_page
+    assert 'href="/finance">Finance</a>' in morning_page
+    assert 'href="/admin">System / Admin</a>' in morning_page
+    assert 'data-mode="research"' in morning_page
+    assert "color-scheme: light;" in morning_page
+    assert ":focus-visible" in morning_page
     admin_page = client.get("/admin").text
     assert 'id="history-refresh"' in admin_page
     assert "Download Markdown" in admin_page
     assert "localStorage" not in admin_page
     assert "Gracefully stop Ollama" in admin_page
     assert "resource use" in admin_page
+    assert 'id="service-processes"' in admin_page
+    assert "arbitrary process termination" in admin_page
+    assert "color-scheme: light;" in admin_page
+    finance_page = client.get("/finance").text
+    assert 'href="/morning">Chat &amp; Brief</a>' in finance_page
+    assert 'aria-current="page" href="/finance"' in finance_page
+    assert "color-scheme: light;" in finance_page
     assert len(client.get("/api/personas").json()["personas"]) == 10
     for body in ({"question": ""}, {"question": "   "}, {"question": "Hi", "persona": "unknown"}):
         assert client.post("/api/chat", json=body).status_code == 422
+    private_response = client.get("/api/admin/history")
+    assert private_response.status_code == 401
+    assert private_response.headers["cache-control"] == "no-store"
 
 
 def test_admin_local_service_status_and_unmanaged_process_stop_guard(app_client, monkeypatch):
@@ -86,7 +108,7 @@ def test_admin_local_service_status_and_unmanaged_process_stop_guard(app_client,
              "memory_mb": 123.4, "cpu_seconds": 5.6},
         ]},
     ))
-    headers = {"Authorization": "Bearer test-token"}
+    headers = {"Authorization": "Bearer test-admin-token-for-local-test-only"}
     assert client.get("/api/admin/services").status_code == 401
     status = client.get("/api/admin/services", headers=headers)
     assert status.status_code == 200
@@ -99,7 +121,7 @@ def test_admin_local_service_status_and_unmanaged_process_stop_guard(app_client,
 
 def test_admin_can_gracefully_unload_models_without_stopping_ollama(app_client):
     client, fake, _ = app_client
-    headers = {"Authorization": "Bearer test-token"}
+    headers = {"Authorization": "Bearer test-admin-token-for-local-test-only"}
 
     unloaded = client.post("/api/admin/services/models/unload", headers=headers)
 
@@ -132,7 +154,7 @@ def test_admin_graceful_stop_unloads_models_then_stops_managed_service(app_clien
 
     monkeypatch.setattr(signal, "CTRL_BREAK_EVENT", 1, raising=False)
     controller.process = ManagedProcess()
-    headers = {"Authorization": "Bearer test-token"}
+    headers = {"Authorization": "Bearer test-admin-token-for-local-test-only"}
 
     response = client.post("/api/admin/services/ollama/stop", headers=headers)
 
@@ -161,7 +183,7 @@ def test_admin_stop_leaves_service_running_if_model_unload_fails(app_client, mon
     fake.fail_unload = True
     response = client.post(
         "/api/admin/services/ollama/stop",
-        headers={"Authorization": "Bearer test-token"},
+        headers={"Authorization": "Bearer test-admin-token-for-local-test-only"},
     )
     assert response.status_code == 502
     assert controller.can_stop
@@ -169,16 +191,19 @@ def test_admin_stop_leaves_service_running_if_model_unload_fails(app_client, mon
 
 def test_admin_service_control_requires_local_network_client(tmp_path):
     fake = Ollama()
-    settings = Settings(tmp_path, "http://ollama", "daily", "research", "test-token", False)
+    settings = Settings(tmp_path, "http://ollama", "daily", "research", "test-admin-token-for-local-test-only", False)
     with TestClient(
         create_app(settings, ollama_transport=httpx.MockTransport(fake)),
         client=("192.0.2.1", 12345),
     ) as client:
         response = client.get(
             "/api/admin/services",
-            headers={"Authorization": "Bearer test-token"},
+            headers={"Authorization": "Bearer test-admin-token-for-local-test-only"},
         )
         assert response.status_code == 403
+        assert client.get("/api/admin/history", headers={
+            "Authorization": "Bearer test-admin-token-for-local-test-only",
+        }).status_code == 403
 
 
 def test_model_manager_can_gracefully_unload_without_changing_saved_selection(tmp_path):
@@ -202,6 +227,9 @@ def test_model_manager_can_gracefully_unload_without_changing_saved_selection(tm
                 "healthy": True,
                 "last_latency_ms": None,
                 "last_error": None,
+                "operation_queue": {
+                    "in_flight": False, "operation": None, "queued_requests": 0,
+                },
             }
 
     asyncio.run(run())
@@ -210,7 +238,7 @@ def test_model_manager_can_gracefully_unload_without_changing_saved_selection(tm
 
 def test_knowledge_status_reports_runtime_and_document_counts(app_client):
     client, _, _ = app_client
-    added = client.post("/api/admin/documents", headers={"Authorization": "Bearer test-token"}, json={
+    added = client.post("/api/admin/documents", headers={"Authorization": "Bearer test-admin-token-for-local-test-only"}, json={
         "title": "Local science note",
         "category": "science",
         "source_type": "working_note",
@@ -262,7 +290,7 @@ def test_research_shape_and_return_to_daily(app_client):
 def test_admin_selection_auth_and_persistence(app_client):
     client, fake, settings = app_client
     assert client.post("/api/admin/model", json={"model": "alternate"}).status_code == 401
-    headers = {"Authorization": "Bearer test-token"}
+    headers = {"Authorization": "Bearer test-admin-token-for-local-test-only"}
     assert client.post("/api/admin/model", headers=headers, json={"model": "alternate"}).status_code == 200
     assert Store(settings.data_dir).get_model("daily") == "alternate"
     assert client.post("/api/chat", json={"question": "Hi"}).json()["route"]["model"] == "alternate"
@@ -272,7 +300,7 @@ def test_admin_selection_auth_and_persistence(app_client):
 
 def test_document_attribution_duplicates_and_domain_isolation(app_client):
     client, fake, _ = app_client
-    headers = {"Authorization": "Bearer test-token"}
+    headers = {"Authorization": "Bearer test-admin-token-for-local-test-only"}
     document = {"title": "Insulation evidence", "category": "manufacturer",
                 "source_type": "manufacturer_evidence", "source": "https://example.org/product",
                 "content": "Insulation thermal test evidence"}
@@ -289,6 +317,64 @@ def test_document_attribution_duplicates_and_domain_isolation(app_client):
     assert evidence[0]["source"] == document["source"]
     assert "Never invent Australian compliance" in fake.last_prompt["messages"][0]["content"]
     assert client.post("/api/chat", json={"question": "ASX evidence"}).json()["sources"] == []
+
+
+def test_document_review_metadata_is_validated_and_versioned(app_client):
+    client, _, _ = app_client
+    headers = {"Authorization": "Bearer test-admin-token-for-local-test-only"}
+    payload = {
+        "title": "Victorian wall system test",
+        "category": "building",
+        "source_type": "source_document",
+        "source": "local:test-report",
+        "content": "The reported result applies to the tested assembly only.",
+        "authority": "Independent testing laboratory",
+        "date_created": "2025-04-10",
+        "date_reviewed": "2025-05-01",
+        "jurisdiction": "Victoria, Australia",
+        "confidence": 0.8,
+        "supersedes": "local:older-report",
+        "review_status": "reviewed",
+    }
+    created = client.post("/api/admin/documents", headers=headers, json=payload)
+    assert created.status_code == 200
+    identity = int(created.json()["id"].split(":")[1])
+    stored = client.get(f"/api/admin/documents/{identity}", headers=headers).json()
+    assert stored["authority"] == "Independent testing laboratory"
+    assert stored["date_created"] == "2025-04-10"
+    assert stored["date_reviewed"] == "2025-05-01"
+    assert stored["jurisdiction"] == "Victoria, Australia"
+    assert stored["confidence"] == 0.8
+    assert stored["supersedes"] == "local:older-report"
+    assert stored["review_status"] == "reviewed"
+
+    invalid_date_order = client.post(
+        "/api/admin/documents",
+        headers=headers,
+        json={**payload, "source": "local:invalid-date", "date_reviewed": "2025-03-01"},
+    )
+    invalid_confidence = client.post(
+        "/api/admin/documents",
+        headers=headers,
+        json={**payload, "source": "local:invalid-confidence", "confidence": 1.2},
+    )
+    assert invalid_date_order.status_code == 422
+    assert invalid_confidence.status_code == 422
+
+    revised = client.put(
+        f"/api/admin/documents/{identity}",
+        headers=headers,
+        json={**payload, "content": "The result remains limited to the tested assembly.",
+              "date_reviewed": "2025-06-01", "review_status": "pending_human_review"},
+    )
+    assert revised.status_code == 200 and revised.json()["revision"] == 2
+    previous = client.get(
+        f"/api/admin/documents/{identity}/revisions", headers=headers,
+    ).json()["revisions"][0]
+    assert previous["authority"] == payload["authority"]
+    assert previous["date_reviewed"] == payload["date_reviewed"]
+    assert previous["confidence"] == payload["confidence"]
+    assert previous["review_status"] == "reviewed"
 
 
 def _text_pdf(*pages):
@@ -314,7 +400,7 @@ def _text_pdf(*pages):
 
 def test_private_document_lifecycle_fts_revision_and_delete(app_client):
     client, _, _ = app_client
-    headers = {"Authorization": "Bearer test-token"}
+    headers = {"Authorization": "Bearer test-admin-token-for-local-test-only"}
     payload = {
         "title": "Control system notes",
         "category": "engineering",
@@ -349,7 +435,7 @@ def test_private_document_lifecycle_fts_revision_and_delete(app_client):
 
 def test_pdf_document_upload_is_bounded_page_attributed_and_deduplicated(app_client):
     client, _, _ = app_client
-    headers = {"Authorization": "Bearer test-token"}
+    headers = {"Authorization": "Bearer test-admin-token-for-local-test-only"}
     pdf = _text_pdf("first page evidence", "second page evidence")
     form = {
         "title": "Equipment guide",
@@ -387,7 +473,7 @@ def test_pdf_upload_rejects_non_text_scanned_document(app_client):
     writer.write(output)
     response = client.post(
         "/api/admin/documents/pdf",
-        headers={"Authorization": "Bearer test-token"},
+        headers={"Authorization": "Bearer test-admin-token-for-local-test-only"},
         data={"title": "Scanned report", "category": "science", "source_type": "source_document",
               "source": "uploads/scanned.pdf"},
         files={"file": ("scanned.pdf", output.getvalue(), "application/pdf")},
@@ -401,14 +487,14 @@ def test_pdf_metadata_failure_does_not_import_earlier_pages(app_client):
     pdf = _text_pdf(*(["page evidence"] * 10))
     response = client.post(
         "/api/admin/documents/pdf",
-        headers={"Authorization": "Bearer test-token"},
+        headers={"Authorization": "Bearer test-admin-token-for-local-test-only"},
         data={"title": "x" * 291, "category": "engineering", "source_type": "source_document",
               "source": "uploads/large-title.pdf"},
         files={"file": ("guide.pdf", pdf, "application/pdf")},
     )
 
     assert response.status_code == 422
-    assert client.get("/api/admin/documents", headers={"Authorization": "Bearer test-token"}).json()["documents"] == []
+    assert client.get("/api/admin/documents", headers={"Authorization": "Bearer test-admin-token-for-local-test-only"}).json()["documents"] == []
 
 
 def test_private_history_listing_detail_pagination_and_delete(app_client):
@@ -474,7 +560,7 @@ def test_research_markdown_export_has_attributed_links_and_limitations(app_clien
 
 def test_research_export_captures_mocked_feed_item_attributions(tmp_path):
     ollama = Ollama()
-    settings = Settings(tmp_path, "http://ollama", "daily", "research", "test-token", True)
+    settings = Settings(tmp_path, "http://ollama", "daily", "research", "test-admin-token-for-local-test-only", True)
 
     def feed_handler(request):
         assert request.url.host == "www.nasa.gov"
@@ -488,7 +574,7 @@ def test_research_export_captures_mocked_feed_item_attributions(tmp_path):
     with TestClient(create_app(
         settings, ollama_transport=httpx.MockTransport(ollama),
         feed_transport=httpx.MockTransport(feed_handler),
-    )) as client:
+    ), client=("127.0.0.1", 12345)) as client:
         response = client.post("/api/research", json={
             "question": "Latest NASA space news",
             "persona": "science",
@@ -544,7 +630,7 @@ def test_sports_coverage_reports_football_unavailable_without_fabricating_live_d
 def test_failure_does_not_load_second_model_or_save_selection(app_client):
     client, fake, settings = app_client
     fake.fail_unload = True
-    assert client.post("/api/admin/model", headers={"Authorization": "Bearer test-token"}, json={"model": "research"}).status_code == 502
+    assert client.post("/api/admin/model", headers={"Authorization": "Bearer test-admin-token-for-local-test-only"}, json={"model": "research"}).status_code == 502
     assert fake.loaded == ["daily"]
     assert Store(settings.data_dir).get_model("daily") == "daily"
 
@@ -558,8 +644,34 @@ def test_generation_error_is_explicit(app_client):
 
 def test_missing_admin_token_disables_mutations(tmp_path):
     settings = Settings(tmp_path, "http://ollama", "daily", "research", "", False)
-    with TestClient(create_app(settings, ollama_transport=httpx.MockTransport(Ollama()))) as client:
+    with TestClient(
+        create_app(settings, ollama_transport=httpx.MockTransport(Ollama())),
+        client=("127.0.0.1", 12345),
+    ) as client:
         assert client.post("/api/admin/model", json={"model": "research"}).status_code == 503
+
+
+def test_short_admin_token_disables_mutations(tmp_path):
+    settings = Settings(tmp_path, "http://ollama", "daily", "research", "too-short", False)
+    with TestClient(
+        create_app(settings, ollama_transport=httpx.MockTransport(Ollama())),
+        client=("127.0.0.1", 12345),
+    ) as client:
+        response = client.post("/api/admin/model", json={"model": "research"})
+        assert response.status_code == 503
+        assert "at least 32 characters" in response.json()["detail"]
+
+
+def test_admin_auth_throttles_failures_and_allows_valid_token(app_client):
+    client, _, _ = app_client
+    for _ in range(10):
+        response = client.get("/api/admin/history", headers={"Authorization": "Bearer wrong-token"})
+        assert response.status_code == 401
+
+    limited = client.get("/api/admin/history", headers={"Authorization": "Bearer wrong-token"})
+    assert limited.status_code == 429
+    assert limited.headers["cache-control"] == "no-store"
+    assert client.get("/api/admin/history", headers={"Authorization": "Bearer test-admin-token-for-local-test-only"}).status_code == 200
 
 
 def test_concurrent_requests_serialize_models(tmp_path):
@@ -578,6 +690,39 @@ def test_concurrent_requests_serialize_models(tmp_path):
     asyncio.run(run())
 
 
+def test_model_queue_status_reports_in_flight_and_waiting_requests(tmp_path):
+    async def run():
+        entered_chat = asyncio.Event()
+        release_chat = asyncio.Event()
+
+        async def handler(request):
+            if request.url.path == "/api/chat":
+                entered_chat.set()
+                await release_chat.wait()
+            return Ollama()(request)
+
+        async with httpx.AsyncClient(
+            base_url="http://ollama", transport=httpx.MockTransport(handler),
+        ) as client:
+            manager = ModelManager(client, Store(tmp_path), "daily")
+            first = asyncio.create_task(manager.generate("system", "first"))
+            await entered_chat.wait()
+            second = asyncio.create_task(manager.generate("system", "second"))
+            await asyncio.sleep(0)
+
+            assert manager.operation_status == {
+                "in_flight": True, "operation": "generate", "queued_requests": 1,
+            }
+
+            release_chat.set()
+            await asyncio.gather(first, second)
+            assert manager.operation_status == {
+                "in_flight": False, "operation": None, "queued_requests": 0,
+            }
+
+    asyncio.run(run())
+
+
 @pytest.mark.parametrize("failure", ["unacknowledged", "still_loaded", "malformed"])
 def test_invalid_unload_aborts_before_load(tmp_path, failure):
     fake = Ollama()
@@ -593,7 +738,7 @@ def test_invalid_unload_aborts_before_load(tmp_path, failure):
     async def run():
         async with httpx.AsyncClient(base_url="http://ollama", transport=httpx.MockTransport(handler)) as client:
             manager = ModelManager(client, Store(tmp_path), "daily")
-            with pytest.raises(ValueError):
+            with pytest.raises((ProviderError, ValueError)):
                 await manager.select("research")
             assert manager.selected_model == "daily"
             assert fake.loaded == ["daily"]

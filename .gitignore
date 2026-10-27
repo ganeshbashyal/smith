@@ -2,6 +2,9 @@
 __pycache__/
 .pytest_cache/
 .pytest_basetemp/
+.pytest-tmp/
+.smoke-tmp/
+_pytest_*/
 *.py[cod]
 .env
 .env.*

@@ -1,0 +1,28 @@
+name: Windows tests
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Create project virtual environment
+        run: python -m venv .venv
+      - name: Install project and test dependencies
+        run: .\.venv\Scripts\python.exe -m pip install -e ".[test]"
+      - name: Run test suite with writable workspace temp directory
+        shell: pwsh
+        run: .\scripts\test-mr-smith.ps1 -q
+      - name: Run mock-only startup smoke check
+        run: .\.venv\Scripts\python.exe scripts\smoke_mr_smith.py

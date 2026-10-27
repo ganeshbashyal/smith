@@ -86,6 +86,9 @@ if ($AdminToken) {
 } else {
     Write-Host "No admin token set - /admin dashboard model switch and finance mutations will return HTTP 503 until you set one." -ForegroundColor Yellow
 }
+if ($env:MR_SMITH_ADMIN_TOKEN -and $env:MR_SMITH_ADMIN_TOKEN.Length -lt 32) {
+    throw "MR_SMITH_ADMIN_TOKEN must be at least 32 characters. Generate a private random token before starting."
+}
 
 if ($ExternalFeeds) {
     $env:MR_SMITH_EXTERNAL_FEEDS = "1"

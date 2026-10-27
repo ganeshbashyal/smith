@@ -23,8 +23,11 @@ class Ollama:
 
 
 def _make_client(tmp_path, external_feeds=False):
-    settings = Settings(tmp_path, "http://ollama", "daily", "research", "test-token", external_feeds)
-    return TestClient(create_app(settings, ollama_transport=httpx.MockTransport(Ollama())))
+    settings = Settings(tmp_path, "http://ollama", "daily", "research", "test-admin-token-for-local-test-only", external_feeds)
+    return TestClient(
+        create_app(settings, ollama_transport=httpx.MockTransport(Ollama())),
+        client=("127.0.0.1", 12345),
+    )
 
 
 @pytest.fixture
@@ -39,7 +42,7 @@ def feeds_enabled_client(tmp_path):
         yield client
 
 
-AUTH = {"Authorization": "Bearer test-token"}
+AUTH = {"Authorization": "Bearer test-admin-token-for-local-test-only"}
 
 
 def _create_bhp(client):

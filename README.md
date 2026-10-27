@@ -13,7 +13,7 @@ python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -e ".[test]"
 ollama pull llama3.1:8b
 ollama pull gemma4:26b
-$env:MR_SMITH_ADMIN_TOKEN = "choose-a-private-local-token"
+$env:MR_SMITH_ADMIN_TOKEN = (& python -c "import secrets; print(secrets.token_urlsafe(32))")
 .\.venv\Scripts\python.exe -m uvicorn assistant_api.main:app --reload
 ```
 
@@ -22,7 +22,7 @@ never hard-codes a token:
 
 ```powershell
 .\scripts\start-mr-smith.ps1                                    # foreground dev mode, no admin features
-.\scripts\start-mr-smith.ps1 -AdminToken "choose-a-private-local-token" -ExternalFeeds -Detached
+.\scripts\start-mr-smith.ps1 -ExternalFeeds -Detached
 ```
 
 Run `Get-Help .\scripts\start-mr-smith.ps1 -Full` for all parameters.
@@ -33,7 +33,115 @@ Ollama must be running at `http://127.0.0.1:11434`. Open
 [API docs](http://127.0.0.1:8000/docs).
 Do not expose the server to a network: chat, model status and source evidence
 are intended for trusted local use. Admin mutations require the environment
-token; no token or secret is embedded in the application or browser storage.
+token; use a unique, randomly generated token and do not commit or share it.
+No token or secret is embedded in the application or browser storage. Responses
+include browser security headers, and private admin/finance API responses are
+marked `no-store`.
+
+### Test and smoke checks (Windows PowerShell)
+
+The project test wrapper creates a unique pytest base under the system temp
+directory, not inside the checkout. Override its writable parent with
+`-TempDirectory` or `MR_SMITH_TEST_TEMP`:
+
+```powershell
+.\scripts\test-mr-smith.ps1 -q
+.\scripts\test-mr-smith.ps1 -TempDirectory "$env:LOCALAPPDATA\MrSmith\tests" -q
+.\.venv\Scripts\python.exe scripts\smoke_mr_smith.py --temp-dir "$env:LOCALAPPDATA\MrSmith\smoke"
+```
+
+The smoke script uses a disposable SQLite database and mocked Ollama transport;
+it does not contact a live model, alter `data\mr_smith.sqlite3`, or start a
+network server. It uses the system temporary directory by default and accepts
+`--temp-dir` or `MR_SMITH_SMOKE_TEMP` overrides. Its unique temporary files are
+removed automatically.
+
+Admin document metadata includes authority, issue/review dates, jurisdiction,
+human-assessed confidence, supersession and review status. Existing documents
+migrate additively with `pending_human_review`; setting `reviewed` requires a
+source authority and human review date. Pending/candidate evidence remains
+explicitly unverified in persona prompts.
+
+### Governed knowledge and semantic evaluation
+
+The admin document workflow is the curated corpus entry point: ingest only
+attributed material, keep personal context separate from authoritative sources,
+set jurisdiction and dates when relevant, and leave new material
+`pending_human_review` until a person verifies it. Do not upload personal
+background or business information unless it is intended to be stored in the
+local SQLite database. Product/SKU mappings and compliance conclusions remain
+human-reviewed; absence of a reliable match is not permission to infer one.
+Fine-tuning is deferred until retrieval and measured answer quality demonstrate
+a specific need.
+
+`tests/semantic_eval_cases.jsonl` is an initial set of synthetic, human-labelled
+behavioral expectations spanning all ten personas. It is not a complete 160
+case release set, and it does not claim model-quality results. Review real
+answers locally against each case and save one JSONL annotation per case with
+these fields:
+
+```json
+{"case_id":"building-r-value-rw","corpus_version":"corpus-1","model":"llama3.2:latest","reviewer":"reviewer-id","ratings":{"routing_correct":true,"source_accuracy":true,"citation_completeness":true,"unsupported_claim_count":0,"refusal_quality":2,"answer_usefulness":2}}
+```
+
+Add `stale_detection` for freshness cases and `retrieval_relevance` for cases
+with evidence. Boolean ratings use `true`/`false`; quality ratings use 0
+(miss), 1 (partial), or 2 (meets expectation). Compare two manually reviewed
+corpus/model runs without sending data to an external evaluator:
+
+```powershell
+.\.venv\Scripts\python.exe scripts\score_semantic_eval.py --annotations .\evaluation\candidate.jsonl --baseline .\evaluation\baseline.jsonl
+```
+
+The scorer reports routing/source/citation/freshness accuracy, unsupported
+claim rate, retrieval relevance, answer quality, and paired-case regression.
+Annotation JSONL may contain private prompts or responses; keep it local and
+out of version control. Keep the model fixed between corpus versions when
+measuring corpus regression; the scorer rejects a mixed-model run and requires
+matching models for baseline comparisons.
+
+The user-provided public-source list is cataloged in
+[`knowledge/source_candidates.json`](knowledge/source_candidates.json) as
+reference-only candidates. The catalog does not enable fetching. Verify each
+source's official API/feed, current terms, licensing, attribution and rate
+limits before creating a bounded runtime connector.
+
+### Offline database backup and recovery
+
+Create a consistent, versioned archive from SQLite's online backup API, verify
+it without changing the database, or restore it into a directory where
+`mr_smith.sqlite3` does not already exist:
+
+```powershell
+.\.venv\Scripts\python.exe scripts\recover_mr_smith.py export --output .\backups\mr-smith-backup.zip
+.\.venv\Scripts\python.exe scripts\recover_mr_smith.py verify --backup .\backups\mr-smith-backup.zip
+.\.venv\Scripts\python.exe scripts\recover_mr_smith.py restore --backup .\backups\mr-smith-backup.zip --data-dir .\recovered-data
+```
+
+Exports include the application/finance schema versions, a SHA-256 checksum
+and an SQLite integrity check. Restore refuses to replace an existing
+database; restore to a separate directory first, verify the recovered data,
+then follow a deliberate application cutover procedure. Treat backup archives
+as private user data.
+The database records an application schema version separately from the
+finance migration version; future persistent schema changes must advance the
+appropriate version and include an additive migration and recovery regression
+test.
+
+### Opt-in live acceptance (Windows PowerShell)
+
+With Mr Smith and Ollama already running locally, use the read-only checks:
+
+```powershell
+.\scripts\accept-mr-smith.ps1
+.\scripts\accept-mr-smith.ps1 -OpenBrowser
+```
+
+The script never starts or stops services and does not load a model. Its
+explicit `-RunInference` option sends one local chat request, which can load
+the selected model and save a history entry. If the admin token is present in
+the current PowerShell process, the script also reads local service/resource
+status; it does not print or persist the token.
 
 ## Architecture
 
@@ -77,8 +185,9 @@ allowlisted HTTP tools -> serialized Ollama generation -> SQLite history`
 Run **one Uvicorn worker** and use a dedicated Ollama instance. Other applications
 or multiple server processes can bypass the in-process lock. Models expire
 after five idle minutes; `/api/models` queries Ollama for actual loaded models,
-health and last generation latency. First requests can be slow on CPU. Missing
-models or Ollama failures return an explicit HTTP 502, never a fabricated answer.
+health, last generation latency and a snapshot of in-flight/queued model
+operations. First requests can be slow on CPU. Missing models or Ollama failures
+return an explicit HTTP 502, never a fabricated answer.
 
 Configuration: `MR_SMITH_DATA_DIR` (default `data`), `OLLAMA_URL`,
 `MR_SMITH_DAILY_MODEL` (default `llama3.1:8b`),
@@ -109,8 +218,10 @@ for all research personas). A conservative
 rejects oversized requests with HTTP 422 instead of silently truncating them;
 shorten articles or narrow the question when this happens.
 
-The three widget tabs provide question-driven brief, finance and research views,
-with loading/error states, timestamps, source links and system dark mode. The
+The morning page has quick links to Chat & Brief, Finance and System/Admin, plus
+question-driven Morning Brief, Financial Analysis and Research & Deep Work mode
+tabs. Views include loading/error states, timestamps, source links and system
+dark mode. The
 Morning Brief tab also has a user-triggered source-aware card that checks the
 approved general-news feed and shows publication dates, freshness and
 disabled/error states. There is no background schedule; external feeds remain
@@ -125,8 +236,9 @@ arbitrary URLs.
 ## Private knowledge documents
 
 The `/admin` page supports authenticated local-service monitoring and document
-management. It reports the Mr Smith process and local Ollama processes with
-memory usage and cumulative CPU time. From the page you can start a local
+management. Its current-process table reports each Mr Smith/Ollama task, PID,
+memory usage and cumulative CPU time, and refreshes while the admin token is
+entered. From the page you can start a local
 Ollama server, gracefully unload models while keeping the service running, and
 gracefully stop only a server started by that page; stopping waits for active
 model work and unloads loaded models first. It falls back to process termination
@@ -134,6 +246,8 @@ only if the graceful signal cannot be delivered or shutdown times out. An
 Ollama process that was already running independently is visible but is not
 stopped by Smith.
 Service controls require the admin token and a loopback connection.
+The UI does not terminate arbitrary PIDs; stop/restart Mr Smith from the
+PowerShell window or process manager that launched it.
 
 The page also supports authenticated private document search, detail,
 revision-preserving edits and deletion. `/api/admin/documents` also supports
@@ -319,7 +433,6 @@ like the existing admin endpoints; set the environment variable to a private
 value before relying on any finance mutation.
 
 ```powershell
-$env:MR_SMITH_ADMIN_TOKEN = "choose-a-private-local-token"
 $headers = @{ Authorization = "******" }
 Invoke-RestMethod http://127.0.0.1:8000/api/finance/securities -Method Post -Headers $headers -ContentType "application/json" -Body '{"symbol":"BHP","name":"BHP Group","sector":"Materials"}'
 ```
@@ -335,7 +448,8 @@ versioned investment theses (`fin_thesis_revisions`), watchlists/price
 history/alerts/catalysts, immutable valuation runs, and long-only portfolios/
 holdings are stored additively in the existing `mr_smith.sqlite3`. The first
 time the finance tables are created against a pre-existing database, a
-timestamped, size- and `PRAGMA integrity_check`-verified backup
+timestamped SQLite online backup (including committed WAL data) with a passing
+`PRAGMA integrity_check`
 (`mr_smith.pre-finance-migration-<UTC timestamp>.sqlite3.bak`) is written next
 to it before any new table is created; personal history/settings tables are
 untouched. Every statement figure (via single-entry or CSV/JSON

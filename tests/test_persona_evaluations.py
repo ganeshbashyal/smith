@@ -31,8 +31,11 @@ def persona_eval_client(tmp_path):
             return httpx.Response(200, json={"message": {"content": "Deterministic test response."}})
         raise AssertionError(f"Unexpected Ollama request: {request.url}")
 
-    settings = Settings(tmp_path, "http://ollama", "daily", "research", "test-token", False)
-    with TestClient(create_app(settings, ollama_transport=httpx.MockTransport(ollama))) as client:
+    settings = Settings(tmp_path, "http://ollama", "daily", "research", "test-admin-token-for-local-test-only", False)
+    with TestClient(
+        create_app(settings, ollama_transport=httpx.MockTransport(ollama)),
+        client=("127.0.0.1", 12345),
+    ) as client:
         yield client, captured_chats
 
 

@@ -1,10 +1,22 @@
-from contextlib import contextmanager
+from contextlib import closing, contextmanager
 from datetime import datetime, timezone
 import hashlib
 import json
 from pathlib import Path
 import re
 import sqlite3
+
+SCHEMA_VERSION = 2
+DOCUMENT_METADATA_COLUMNS = {
+    "authority": "TEXT",
+    "date_created": "TEXT",
+    "date_reviewed": "TEXT",
+    "jurisdiction": "TEXT",
+    "confidence": "REAL",
+    "supersedes": "TEXT",
+    "review_status": "TEXT NOT NULL DEFAULT 'pending_human_review'",
+}
+DOCUMENT_METADATA_FIELDS = tuple(DOCUMENT_METADATA_COLUMNS)
 
 
 class Store:
@@ -36,14 +48,28 @@ class Store:
                 CREATE TABLE IF NOT EXISTS tool_status (
                     name TEXT PRIMARY KEY, payload TEXT NOT NULL
                 );
+                CREATE TABLE IF NOT EXISTS app_schema_version (
+                    version INTEGER NOT NULL,
+                    applied_at TEXT NOT NULL
+                );
             """)
+            db.execute(
+                "INSERT INTO app_schema_version(version, applied_at) "
+                "SELECT ?, ? WHERE NOT EXISTS (SELECT 1 FROM app_schema_version)",
+                (SCHEMA_VERSION, datetime.now(timezone.utc).isoformat()),
+            )
             self._migrate_documents(db)
             self._migrate_history(db)
+            self._migrate_document_metadata(db)
+            db.execute(
+                "UPDATE app_schema_version SET version=?, applied_at=?",
+                (SCHEMA_VERSION, datetime.now(timezone.utc).isoformat()),
+            )
 
     def _backup_before_schema_migration(self) -> None:
         if not self.path.exists():
             return
-        with sqlite3.connect(self.path) as db:
+        with closing(sqlite3.connect(self.path)) as db:
             tables = {
                 row[0] for row in db.execute(
                     "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'"
@@ -61,14 +87,28 @@ class Store:
                 "SELECT 1 FROM sqlite_master WHERE type='table' AND name='documents_fts'"
             ).fetchone()
             revisions_exist = "document_revisions" in tables
-        document_migration_needed = (
-            "documents" in tables
-            and (not {"revision", "updated_at"} <= columns or not fts_exists or not revisions_exist)
-        )
-        history_migration_needed = (
-            "history" in tables and not {"sources_json", "is_research"} <= history_columns
-        )
-        if not document_migration_needed and not history_migration_needed:
+            document_migration_needed = (
+                "documents" in tables
+                and (not {"revision", "updated_at"} <= columns or not fts_exists or not revisions_exist)
+            )
+            history_migration_needed = (
+                "history" in tables and not {"sources_json", "is_research"} <= history_columns
+            )
+            document_revision_columns = (
+                {row[1] for row in db.execute("PRAGMA table_info(document_revisions)")}
+                if "document_revisions" in tables else set()
+            )
+            metadata_migration_needed = (
+                "documents" in tables
+                and not set(DOCUMENT_METADATA_COLUMNS) <= columns
+            ) or (
+                "document_revisions" in tables
+                and not set(DOCUMENT_METADATA_COLUMNS) <= document_revision_columns
+            )
+            app_version_missing = "app_schema_version" not in tables or not db.execute(
+                "SELECT 1 FROM app_schema_version LIMIT 1"
+            ).fetchone()
+        if not document_migration_needed and not history_migration_needed and not metadata_migration_needed and not app_version_missing:
             return
         stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
         backup_path = self.path.with_name(f"mr_smith.pre-storage-migration-{stamp}.sqlite3.bak")
@@ -104,9 +144,22 @@ class Store:
                 content TEXT NOT NULL,
                 digest TEXT NOT NULL,
                 changed_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                authority TEXT,
+                date_created TEXT,
+                date_reviewed TEXT,
+                jurisdiction TEXT,
+                confidence REAL,
+                supersedes TEXT,
+                review_status TEXT NOT NULL DEFAULT 'pending_human_review',
                 UNIQUE(document_id, revision)
             )
         """)
+        existing_revision_columns = {
+            row[1] for row in db.execute("PRAGMA table_info(document_revisions)")
+        }
+        for column, definition in DOCUMENT_METADATA_COLUMNS.items():
+            if column not in existing_revision_columns:
+                db.execute(f"ALTER TABLE document_revisions ADD COLUMN {column} {definition}")
         fts_exists = db.execute(
             "SELECT 1 FROM sqlite_master WHERE type='table' AND name='documents_fts'"
         ).fetchone()
@@ -144,6 +197,13 @@ class Store:
         if "is_research" not in columns:
             db.execute("ALTER TABLE history ADD COLUMN is_research INTEGER NOT NULL DEFAULT 0")
 
+    @staticmethod
+    def _migrate_document_metadata(db: sqlite3.Connection) -> None:
+        existing_columns = {row[1] for row in db.execute("PRAGMA table_info(documents)")}
+        for column, definition in DOCUMENT_METADATA_COLUMNS.items():
+            if column not in existing_columns:
+                db.execute(f"ALTER TABLE documents ADD COLUMN {column} {definition}")
+
     @contextmanager
     def connect(self):
         db = sqlite3.connect(self.path, timeout=10)
@@ -163,23 +223,31 @@ class Store:
         with self.connect() as db:
             db.execute("INSERT INTO settings VALUES ('selected_model', ?) ON CONFLICT(key) DO UPDATE SET value=excluded.value", (model,))
 
-    def add_document(self, title: str, category: str, source_type: str, source: str, content: str) -> tuple[int, bool]:
+    def add_document(self, title: str, category: str, source_type: str, source: str,
+                     content: str, **metadata) -> tuple[int, bool]:
         return self.add_documents([{
             "title": title, "category": category, "source_type": source_type,
-            "source": source, "content": content,
+            "source": source, "content": content, **metadata,
         }])[0]
 
-    def add_documents(self, documents: list[dict[str, str]]) -> list[tuple[int, bool]]:
+    def add_documents(self, documents: list[dict]) -> list[tuple[int, bool]]:
         with self.connect() as db:
             results = []
             for document in documents:
                 content = document["content"].strip()
                 digest = hashlib.sha256(content.encode()).hexdigest()
+                metadata_values = [
+                    document.get(field, "pending_human_review" if field == "review_status" else None)
+                    for field in DOCUMENT_METADATA_FIELDS
+                ]
+                metadata_columns = ", ".join(DOCUMENT_METADATA_FIELDS)
+                metadata_placeholders = ", ".join("?" for _ in DOCUMENT_METADATA_FIELDS)
                 cursor = db.execute(
-                    """INSERT OR IGNORE INTO documents
-                       (title,category,source_type,source,content,digest) VALUES (?,?,?,?,?,?)""",
+                    f"""INSERT OR IGNORE INTO documents
+                       (title,category,source_type,source,content,digest,{metadata_columns})
+                       VALUES (?,?,?,?,?, ?, {metadata_placeholders})""",
                     (document["title"], document["category"], document["source_type"],
-                     document["source"], content, digest),
+                     document["source"], content, digest, *metadata_values),
                 )
                 row = db.execute(
                     """SELECT id FROM documents WHERE digest=? AND category=?
@@ -215,7 +283,8 @@ class Store:
         with self.connect() as db:
             rows = db.execute(
                 f"""SELECT d.id, d.title, d.category, d.source_type, d.source, d.digest,
-                           d.created_at, d.updated_at, d.revision, length(d.content) AS content_length
+                           d.created_at, d.updated_at, d.revision, length(d.content) AS content_length,
+                           {", ".join(f"d.{field}" for field in DOCUMENT_METADATA_FIELDS)}
                     FROM documents d {join}{where} ORDER BY {order} LIMIT ? OFFSET ?""",
                 params,
             ).fetchall()
@@ -225,37 +294,49 @@ class Store:
         with self.connect() as db:
             row = db.execute(
                 """SELECT id, title, category, source_type, source, content, digest,
-                          created_at, updated_at, revision
+                          created_at, updated_at, revision,
+                          authority, date_created, date_reviewed, jurisdiction,
+                          confidence, supersedes, review_status
                    FROM documents WHERE id=?""",
                 (identity,),
             ).fetchone()
             return dict(row) if row else None
 
     def update_document(self, identity: int, *, title: str, category: str,
-                        source_type: str, source: str, content: str) -> int | None:
+                        source_type: str, source: str, content: str, **metadata) -> int | None:
         digest = hashlib.sha256(content.strip().encode()).hexdigest()
         with self.connect() as db:
             row = db.execute("SELECT * FROM documents WHERE id=?", (identity,)).fetchone()
             if not row:
                 return None
             previous = dict(row)
+            normalized_metadata = {
+                field: metadata.get(field, previous[field])
+                for field in DOCUMENT_METADATA_FIELDS
+            }
             if all(previous[field] == value for field, value in {
                 "title": title, "category": category, "source_type": source_type,
                 "source": source, "content": content.strip(), "digest": digest,
+                **normalized_metadata,
             }.items()):
                 return previous["revision"]
             revision = previous["revision"]
             db.execute(
                 """INSERT INTO document_revisions
-                   (document_id, revision, action, title, category, source_type, source, content, digest)
-                   VALUES (?, ?, 'updated', ?, ?, ?, ?, ?, ?)""",
+                   (document_id, revision, action, title, category, source_type, source, content, digest,
+                    authority, date_created, date_reviewed, jurisdiction, confidence, supersedes, review_status)
+                   VALUES (?, ?, 'updated', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
                 (identity, revision, previous["title"], previous["category"], previous["source_type"],
-                 previous["source"], previous["content"], previous["digest"]),
+                 previous["source"], previous["content"], previous["digest"],
+                 *(previous[field] for field in DOCUMENT_METADATA_FIELDS)),
             )
             db.execute(
                 """UPDATE documents SET title=?, category=?, source_type=?, source=?, content=?,
-                   digest=?, revision=?, updated_at=CURRENT_TIMESTAMP WHERE id=?""",
-                (title, category, source_type, source, content.strip(), digest, revision + 1, identity),
+                   digest=?, revision=?, updated_at=CURRENT_TIMESTAMP,
+                   authority=?, date_created=?, date_reviewed=?, jurisdiction=?, confidence=?,
+                   supersedes=?, review_status=? WHERE id=?""",
+                (title, category, source_type, source, content.strip(), digest, revision + 1,
+                 *(normalized_metadata[field] for field in DOCUMENT_METADATA_FIELDS), identity),
             )
             return revision + 1
 
@@ -272,7 +353,8 @@ class Store:
         with self.connect() as db:
             rows = db.execute(
                 """SELECT document_id, revision, action, title, category, source_type,
-                          source, digest, changed_at
+                          source, digest, changed_at, authority, date_created, date_reviewed,
+                          jurisdiction, confidence, supersedes, review_status
                    FROM document_revisions WHERE document_id=? ORDER BY revision""",
                 (identity,),
             ).fetchall()
@@ -283,7 +365,10 @@ class Store:
         placeholders = ",".join("?" for _ in categories)
         with self.connect() as db:
             rows = db.execute(
-                f"SELECT id,title,category,source_type,source,content FROM documents WHERE category IN ({placeholders}) ORDER BY id",
+                f"""SELECT id,title,category,source_type,source,content,
+                           authority,date_created,date_reviewed,jurisdiction,
+                           confidence,supersedes,review_status
+                    FROM documents WHERE category IN ({placeholders}) ORDER BY id""",
                 categories,
             ).fetchall()
         ranked = []

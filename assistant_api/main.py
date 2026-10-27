@@ -1,5 +1,5 @@
 from contextlib import asynccontextmanager
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from html import escape
 import hmac
 import ipaddress
@@ -8,11 +8,12 @@ import logging
 import os
 from pathlib import Path
 import sqlite3
+import time
 from typing import Literal
 from urllib.parse import quote, urlsplit
 
 from fastapi import Depends, FastAPI, File, Form, Header, HTTPException, Query, Request, UploadFile
-from fastapi.responses import HTMLResponse, PlainTextResponse
+from fastapi.responses import HTMLResponse, JSONResponse, PlainTextResponse
 import httpx
 from pydantic import BaseModel, Field, ValidationError, field_validator, model_validator
 
@@ -24,6 +25,7 @@ from assistant_api.knowledge import inspect_knowledge_control_plane
 from assistant_api.local_services import LocalServiceController
 from assistant_api.models import ModelManager
 from assistant_api.personas import BASE_INSTRUCTION, PERSONAS
+from assistant_api.provider import ProviderError
 from assistant_api.routing import conceptual_question, route_request
 from assistant_api.storage import Store
 from assistant_api.tools import execute_tools
@@ -62,6 +64,15 @@ class Document(BaseModel):
     source_type: Literal["user_context", "source_document", "manufacturer_evidence", "regulatory_source", "working_note"]
     source: str = Field(min_length=1, max_length=2000)
     content: str = Field(min_length=1, max_length=200000)
+    authority: str | None = Field(default=None, max_length=300)
+    date_created: date | None = Field(default=None, description="Date the source document was issued")
+    date_reviewed: date | None = Field(default=None, description="Date a human last reviewed this document")
+    jurisdiction: str | None = Field(default=None, max_length=200)
+    confidence: float | None = Field(default=None, ge=0, le=1, allow_inf_nan=False)
+    supersedes: str | None = Field(default=None, max_length=2000)
+    review_status: Literal[
+        "candidate", "pending_human_review", "reviewed", "rejected", "retired",
+    ] = "pending_human_review"
 
     @field_validator("title", "source", "content")
     @classmethod
@@ -83,6 +94,14 @@ class Document(BaseModel):
             raise ValueError("Dedicated evidence category requires a matching source type")
         return self
 
+    @model_validator(mode="after")
+    def review_dates_are_ordered(self) -> "Document":
+        if self.date_created and self.date_reviewed and self.date_reviewed < self.date_created:
+            raise ValueError("Review date cannot precede source issue date")
+        if self.review_status == "reviewed" and (not self.authority or not self.date_reviewed):
+            raise ValueError("Reviewed documents require an authority and human review date")
+        return self
+
 
 def create_app(settings: Settings | None = None, *, ollama_transport=None, feed_transport=None) -> FastAPI:
     settings = settings or Settings.from_env()
@@ -100,10 +119,54 @@ def create_app(settings: Settings | None = None, *, ollama_transport=None, feed_
             yield
 
     app = FastAPI(title="Mr Smith", lifespan=lifespan)
+    admin_failures: dict[str, list[float]] = {}
 
-    def admin(authorization: str | None = Header(default=None)):
+    @app.middleware("http")
+    async def local_security_headers(request: Request, call_next):
+        private_api = request.url.path.startswith(("/api/admin/", "/api/finance/"))
+        client_host = request.client.host if request.client else "unknown"
+        authorized = False
+        rate_limited = False
+        if private_api and settings.admin_token:
+            authorization = request.headers.get("authorization", "")
+            supplied = authorization.removeprefix("Bearer ") if authorization.startswith("Bearer ") else ""
+            authorized = hmac.compare_digest(supplied.encode(), settings.admin_token.encode())
+            now = time.monotonic()
+            for host, failures in list(admin_failures.items()):
+                recent = [attempt for attempt in failures if now - attempt < 60]
+                if recent:
+                    admin_failures[host] = recent
+                else:
+                    del admin_failures[host]
+            if authorized:
+                admin_failures.pop(client_host, None)
+                response = await call_next(request)
+            elif len(admin_failures.get(client_host, [])) >= 10:
+                response = JSONResponse(
+                    status_code=429,
+                    content={"detail": "Too many failed admin authentication attempts; wait one minute"},
+                )
+                rate_limited = True
+            else:
+                response = await call_next(request)
+        else:
+            response = await call_next(request)
+        if private_api and settings.admin_token and not authorized and not rate_limited and response.status_code == 401:
+            admin_failures.setdefault(client_host, []).append(time.monotonic())
+        response.headers.setdefault("X-Content-Type-Options", "nosniff")
+        response.headers.setdefault("X-Frame-Options", "DENY")
+        response.headers.setdefault("Referrer-Policy", "no-referrer")
+        response.headers.setdefault("Permissions-Policy", "camera=(), microphone=(), geolocation=()")
+        if private_api:
+            response.headers["Cache-Control"] = "no-store"
+        return response
+
+    def admin(request: Request, authorization: str | None = Header(default=None)):
+        require_loopback(request)
         if not settings.admin_token:
             raise HTTPException(503, "Set MR_SMITH_ADMIN_TOKEN to enable admin operations")
+        if len(settings.admin_token) < 32:
+            raise HTTPException(503, "MR_SMITH_ADMIN_TOKEN must be at least 32 characters to enable admin operations")
         if not authorization or not authorization.startswith("Bearer "):
             raise HTTPException(401, "Bearer admin token required")
         supplied = authorization.removeprefix("Bearer ")
@@ -121,7 +184,7 @@ def create_app(settings: Settings | None = None, *, ollama_transport=None, feed_
     async def ollama_operation(operation):
         try:
             return await operation
-        except (httpx.HTTPError, ValueError, KeyError, TypeError) as exc:
+        except (ProviderError, httpx.HTTPError, ValueError, KeyError, TypeError) as exc:
             logger.warning("Ollama operation failed: %s", type(exc).__name__)
             raise HTTPException(502, "Ollama unavailable, model not installed, or invalid response. Check Ollama and installed models.") from exc
 
@@ -169,7 +232,12 @@ Use a concise list of relevant dated developments followed by limitations.
 Do not use conceptual headings such as Mechanism for a news roundup.
 Do not present a stale item as today's news or infer unreported details.
 For mixed questions, also explain the stable concept from general knowledge."""
-        system = BASE_INSTRUCTION + "\n" + profile.instruction + "\n" + format_instruction
+        system = BASE_INSTRUCTION + "\n" + profile.instruction + "\n" + format_instruction + """
+For local knowledge documents, treat review_status=pending_human_review or
+candidate as unverified material, not authoritative evidence. Preserve supplied
+authority, jurisdiction, issue/review dates and supersession notes; do not
+upgrade a document's confidence or review status. If required evidence is
+missing, say so rather than inventing a match or compliance determination."""
         prompt = json.dumps({"question": request.question, "evidence": evidence, "tool_results": tools})
         if len(prompt) > 12000:
             raise HTTPException(422, "Combined question, material and evidence exceed the local context budget. Shorten the material or narrow the question.")
@@ -398,7 +466,7 @@ For mixed questions, also explain the stable concept from general knowledge."""
 
     @app.post("/api/admin/documents", dependencies=[Depends(admin)])
     async def add_document(request: Document):
-        identity, created = app.state.store.add_document(**request.model_dump())
+        identity, created = app.state.store.add_document(**request.model_dump(mode="json"))
         return {"id": f"document:{identity}", "created": created}
 
     @app.get("/api/admin/documents", dependencies=[Depends(admin)])
@@ -423,7 +491,7 @@ For mixed questions, also explain the stable concept from general knowledge."""
     @app.put("/api/admin/documents/{document_id}", dependencies=[Depends(admin)])
     async def update_document(document_id: int, request: Document):
         try:
-            revision = app.state.store.update_document(document_id, **request.model_dump())
+            revision = app.state.store.update_document(document_id, **request.model_dump(mode="json"))
         except sqlite3.IntegrityError as exc:
             raise HTTPException(409, "An identical document with the same attribution already exists") from exc
         if revision is None:
@@ -476,10 +544,11 @@ For mixed questions, also explain the stable concept from general knowledge."""
                     "source_type": source_type,
                     "source": page_source,
                     "content": page_text,
+                    "review_status": "pending_human_review",
                 })
             except ValidationError as exc:
                 raise HTTPException(422, "Invalid document metadata") from exc
-            page_documents.append((page_number, document.model_dump()))
+            page_documents.append((page_number, document.model_dump(mode="json")))
         try:
             stored = app.state.store.add_documents([document for _, document in page_documents])
         except sqlite3.IntegrityError as exc:

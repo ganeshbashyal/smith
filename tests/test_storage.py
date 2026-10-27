@@ -44,9 +44,12 @@ def test_document_migration_makes_verified_backup_and_rebuilds_search(tmp_path):
         assert backup.execute("SELECT answer FROM history WHERE id=1").fetchone()[0] == "Old answer"
     assert store.list_documents(query="resolver")[0]["id"] == 1
     assert store.get_document(1)["revision"] == 1
+    assert store.get_document(1)["review_status"] == "pending_human_review"
     old_history = store.get_history(1)
     assert old_history["answer"] == "Old answer"
     assert old_history["sources"] == [] and not old_history["is_research"]
+    with store.connect() as connection:
+        assert connection.execute("SELECT MAX(version) FROM app_schema_version").fetchone()[0] == 2
 
 
 def test_document_updates_are_versioned_and_search_index_tracks_changes(tmp_path):

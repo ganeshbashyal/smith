@@ -4,12 +4,11 @@ All tables are created with CREATE TABLE IF NOT EXISTS against the existing
 mr_smith.sqlite3 database so the pre-existing settings/documents/history/
 tool_cache/tool_status tables, selected model and user history are never
 touched. Before the finance tables exist for the first time against a
-pre-existing database, a timestamped verified backup copy is taken.
+pre-existing database, a timestamped SQLite online backup is taken and integrity-checked.
 """
 from contextlib import contextmanager
 from datetime import datetime, timezone
 import json
-import shutil
 import sqlite3
 from pathlib import Path
 
@@ -115,7 +114,7 @@ CREATE TABLE IF NOT EXISTS fin_holdings (
 
 
 def backup_path(db_path: Path) -> Path:
-    stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
     return db_path.with_name(f"{db_path.stem}.pre-finance-migration-{stamp}.sqlite3.bak")
 
 
@@ -143,13 +142,18 @@ class FinanceStore:
                 "SELECT 1 FROM sqlite_master WHERE type='table' AND name='finance_schema_version'"
             ).fetchone()
         if not already_migrated and pre_existing:
-            # Verified backup: copy then confirm the copy opens and matches size.
+            # Use SQLite's online backup API so committed WAL data is included.
             dest = backup_path(self.path)
-            shutil.copy2(self.path, dest)
-            if dest.stat().st_size != self.path.stat().st_size:
-                raise RuntimeError("Pre-migration backup verification failed: size mismatch")
-            with sqlite3.connect(dest) as verify:
-                verify.execute("PRAGMA integrity_check").fetchone()
+            source = sqlite3.connect(self.path)
+            backup = sqlite3.connect(dest)
+            try:
+                source.backup(backup)
+                integrity = backup.execute("PRAGMA integrity_check").fetchone()
+            finally:
+                backup.close()
+                source.close()
+            if not integrity or integrity[0] != "ok" or dest.stat().st_size == 0:
+                raise RuntimeError(f"Pre-migration backup failed integrity verification: {dest}")
         with self.connect() as db:
             db.executescript(SCHEMA)
             db.execute(
