@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "purpose": "Local, human-reviewable foundation modules for every Mr Smith persona. These are working notes, not authoritative evidence.",
+  "modules": [
+    {"persona": "general", "category": "general", "title": "General reasoning and decision support", "path": "general.md", "review_status": "pending_human_review"},
+    {"persona": "science", "category": "science", "title": "Science and evidence literacy", "path": "science.md", "review_status": "pending_human_review"},
+    {"persona": "engineering", "category": "engineering", "title": "Engineering systems and verification", "path": "engineering.md", "review_status": "pending_human_review"},
+    {"persona": "building", "category": "building", "title": "Australian building science and evidence boundaries", "path": "building.md", "review_status": "pending_human_review"},
+    {"persona": "finance", "category": "finance", "title": "Finance and investment analysis foundations", "path": "finance.md", "review_status": "pending_human_review"},
+    {"persona": "business", "category": "business", "title": "Business strategy and project delivery", "path": "business.md", "review_status": "pending_human_review"},
+    {"persona": "health", "category": "health", "title": "Health information and evidence literacy", "path": "health.md", "review_status": "pending_human_review"},
+    {"persona": "news", "category": "news", "title": "News verification and current-affairs analysis", "path": "news.md", "review_status": "pending_human_review"},
+    {"persona": "sports", "category": "sports", "title": "Football and Formula 1 analysis foundations", "path": "sports.md", "review_status": "pending_human_review"},
+    {"persona": "automotive", "category": "automotive", "title": "Automotive ownership and diagnostic reasoning", "path": "automotive.md", "review_status": "pending_human_review"}
+  ]
+}

@@ -73,6 +73,46 @@ def test_document_updates_are_versioned_and_search_index_tracks_changes(tmp_path
     assert store.list_document_revisions(identity) == []
 
 
+def test_retrieval_uses_fts_and_excludes_rejected_or_retired_documents(tmp_path):
+    store = Store(tmp_path)
+    store.add_document(
+        "Current motor specification", "engineering", "source_document",
+        "current-spec.txt", "Approved motor torque range is 12 to 15 Nm.",
+        review_status="reviewed",
+    )
+    store.add_document(
+        "Rejected motor specification", "engineering", "source_document",
+        "rejected-spec.txt", "Rejected motor torque range is 900 Nm.",
+        review_status="rejected",
+    )
+    store.add_document(
+        "Retired motor specification", "engineering", "source_document",
+        "retired-spec.txt", "Retired motor torque range is 800 Nm.",
+        review_status="retired",
+    )
+    store.add_document(
+        "Candidate motor specification", "engineering", "working_note",
+        "candidate-spec.txt", "Candidate motor torque range requires verification.",
+        review_status="pending_human_review",
+    )
+    store.add_document(
+        "Personal motor preference", "user_context", "user_context",
+        "profile", "Prefers lightweight motor housings.",
+    )
+
+    evidence = store.search("motor torque range", ("engineering", "user_context"))
+
+    titles = [item["title"] for item in evidence]
+    assert "Current motor specification" in titles
+    assert "Candidate motor specification" in titles
+    assert "Personal motor preference" in titles
+    assert "Rejected motor specification" not in titles
+    assert "Retired motor specification" not in titles
+    assert all(item["review_status"] not in ("rejected", "retired") for item in evidence)
+    assert store.search("motor", (), limit=5) == []
+    assert store.search("motor", ("engineering",), limit=0) == []
+
+
 def test_history_only_schema_migration_is_backed_up(tmp_path):
     database = tmp_path / "mr_smith.sqlite3"
     with sqlite3.connect(database) as connection:

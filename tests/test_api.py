@@ -98,6 +98,42 @@ def test_interfaces_and_validation(app_client):
     assert private_response.headers["cache-control"] == "no-store"
 
 
+def test_chat_never_includes_rejected_or_retired_knowledge(app_client):
+    client, fake, _ = app_client
+    store = client.app.state.store
+    store.add_document(
+        "Current motor torque", "engineering", "source_document", "current-motor.txt",
+        "Current verified motor torque is 12 Nm.", review_status="reviewed",
+        authority="Manufacturer", date_reviewed="2026-01-01",
+    )
+    store.add_document(
+        "Rejected motor torque", "engineering", "source_document", "rejected-motor.txt",
+        "Incorrect motor torque is 900 Nm.", review_status="rejected",
+    )
+    store.add_document(
+        "Retired motor torque", "engineering", "source_document", "retired-motor.txt",
+        "Superseded motor torque is 800 Nm.", review_status="retired",
+    )
+    store.add_document(
+        "Pending motor note", "engineering", "working_note", "pending-motor.txt",
+        "Unverified motor note mentions torque.", review_status="pending_human_review",
+    )
+
+    response = client.post(
+        "/api/chat", json={"question": "motor torque", "persona": "engineering"},
+    )
+
+    assert response.status_code == 200
+    titles = {source["title"] for source in response.json()["sources"]}
+    assert "Current motor torque" in titles
+    assert "Pending motor note" in titles
+    assert "Rejected motor torque" not in titles
+    assert "Retired motor torque" not in titles
+    prompt = fake.last_prompt["messages"][1]["content"]
+    assert "Incorrect motor torque is 900 Nm." not in prompt
+    assert "Superseded motor torque is 800 Nm." not in prompt
+
+
 def test_admin_local_service_status_and_unmanaged_process_stop_guard(app_client, monkeypatch):
     client, _, _ = app_client
     from assistant_api.local_services import LocalServiceController

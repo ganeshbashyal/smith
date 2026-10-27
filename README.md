@@ -106,6 +106,23 @@ reference-only candidates. The catalog does not enable fetching. Verify each
 source's official API/feed, current terms, licensing, attribution and rate
 limits before creating a bounded runtime connector.
 
+### Persona knowledge foundations
+
+The v1 foundation pack under [`knowledge/modules`](knowledge/modules/README.md)
+provides a reviewed-in-progress knowledge module for each persona. Validate or
+re-import it into the active local database with:
+
+```powershell
+.\.venv\Scripts\python.exe scripts\ingest_knowledge_modules.py --check-only
+.\.venv\Scripts\python.exe scripts\ingest_knowledge_modules.py
+```
+
+These are local working notes, not an exhaustive domain corpus or independent
+authority. Every imported module remains `pending_human_review`; review and
+update sources before treating it as verified. Re-imports are idempotent and
+changed module content creates a revision. The module guide records current
+coverage, limits, and the next domain-evidence steps.
+
 ### Offline database backup and recovery
 
 Create a consistent, versioned archive from SQLite's online backup API, verify

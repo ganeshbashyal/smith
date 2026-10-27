@@ -361,16 +361,39 @@ class Store:
         return [dict(row) for row in rows]
 
     def search(self, question: str, categories: tuple[str, ...], limit: int = 5) -> list[dict]:
-        terms = set(re.findall(r"\b\w{3,}\b", question.lower()))
+        if not categories or limit <= 0:
+            return []
+        terms = set(re.findall(r"\b\w{3,}\b", question.lower(), flags=re.UNICODE))
         placeholders = ",".join("?" for _ in categories)
+        params: list[object] = list(categories)
+        category_filter = f"category IN ({placeholders})"
+        if terms:
+            expression = " OR ".join(f'"{term}"*' for term in sorted(terms))
+            query = f"""WITH matches AS (
+                            SELECT rowid FROM documents_fts WHERE documents_fts MATCH ?
+                        )
+                        SELECT d.id,d.title,d.category,d.source_type,d.source,d.content,
+                               d.authority,d.date_created,d.date_reviewed,d.jurisdiction,
+                               d.confidence,d.supersedes,d.review_status
+                        FROM documents d
+                        JOIN documents_fts ON documents_fts.rowid=d.id
+                        LEFT JOIN matches ON matches.rowid=d.id
+                        WHERE d.{category_filter}
+                          AND d.review_status NOT IN ('rejected','retired')
+                          AND (matches.rowid IS NOT NULL OR d.category='user_context')
+                        ORDER BY bm25(documents_fts), d.id"""
+            params = [expression, *params]
+        else:
+            query = f"""SELECT id,title,category,source_type,source,content,
+                               authority,date_created,date_reviewed,jurisdiction,
+                               confidence,supersedes,review_status
+                        FROM documents
+                        WHERE {category_filter}
+                          AND category='user_context'
+                          AND review_status NOT IN ('rejected','retired')
+                        ORDER BY id"""
         with self.connect() as db:
-            rows = db.execute(
-                f"""SELECT id,title,category,source_type,source,content,
-                           authority,date_created,date_reviewed,jurisdiction,
-                           confidence,supersedes,review_status
-                    FROM documents WHERE category IN ({placeholders}) ORDER BY id""",
-                categories,
-            ).fetchall()
+            rows = db.execute(query, params).fetchall()
         ranked = []
         for row in rows:
             tokens = set(re.findall(r"\b\w{3,}\b", (row["title"] + " " + row["content"]).lower()))

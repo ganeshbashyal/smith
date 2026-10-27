@@ -15,6 +15,10 @@
     {"id": "australia_gov", "publisher": "Australian Government", "url": "https://www.australia.gov.au/", "personas": ["general"], "use": "Australian government information"},
     {"id": "abs", "publisher": "Australian Bureau of Statistics", "url": "https://www.abs.gov.au/", "personas": ["general", "finance", "business"], "use": "Australian statistics and economic data"},
     {"id": "khan_academy", "publisher": "Khan Academy", "url": "https://www.khanacademy.org/", "personas": ["general", "science"], "use": "Structured learning and explainers"},
+    {"id": "acara_australian_curriculum", "publisher": "Australian Curriculum, Assessment and Reporting Authority", "url": "https://www.australiancurriculum.edu.au/", "personas": ["general", "science"], "use": "Australian Curriculum reference; identify jurisdiction, curriculum version and learning-area scope before applying to senior-secondary courses"},
+    {"id": "vcaa_curriculum", "publisher": "Victorian Curriculum and Assessment Authority", "url": "https://www.vcaa.vic.edu.au/", "personas": ["general", "science"], "use": "Victoria-specific senior-secondary study designs, assessment information and curriculum updates; verify current study design and year"},
+    {"id": "qcaa_curriculum", "publisher": "Queensland Curriculum and Assessment Authority", "url": "https://www.qcaa.qld.edu.au/", "personas": ["general", "science"], "use": "Queensland-specific senior-secondary syllabuses and assessment materials; verify current syllabus and year"},
+    {"id": "nesa_curriculum", "publisher": "NSW Education Standards Authority", "url": "https://educationstandards.nsw.edu.au/", "personas": ["general", "science"], "use": "NSW-specific senior-secondary syllabuses and assessment materials; verify current syllabus and year"},
     {"id": "mit_opencourseware", "publisher": "MIT OpenCourseWare", "url": "https://ocw.mit.edu/", "personas": ["general", "science", "engineering"], "use": "Open course materials"},
     {"id": "nasa", "publisher": "NASA", "url": "https://www.nasa.gov/", "personas": ["science"], "use": "Space, climate, technology, and research"},
     {"id": "csiro", "publisher": "CSIRO", "url": "https://www.csiro.au/", "personas": ["science", "engineering"], "use": "Australian science and technology research"},
@@ -54,6 +58,7 @@
     {"id": "ancap", "publisher": "ANCAP Safety", "url": "https://www.ancap.com.au/", "personas": ["automotive"], "use": "Australasian vehicle safety ratings"},
     {"id": "vehicle_standards_au", "publisher": "Australian Department of Infrastructure vehicle standards", "url": "https://www.infrastructure.gov.au/infrastructure-transport-vehicles/vehicles", "personas": ["automotive"], "use": "Australian vehicle standards and regulation"},
     {"id": "nhtsa_recalls", "publisher": "US National Highway Traffic Safety Administration", "url": "https://www.nhtsa.gov/recalls", "personas": ["automotive"], "use": "United States vehicle recalls; applicability is market-specific"},
-    {"id": "manufacturer_manuals", "publisher": "Vehicle manufacturers", "url": null, "personas": ["automotive"], "use": "Model-, year-, and market-specific owner and service manuals"}
+    {"id": "manufacturer_manuals", "publisher": "Vehicle manufacturers", "url": null, "personas": ["automotive"], "use": "Model-, year-, and market-specific owner and service manuals"},
+    {"id": "manufacturer_building_product_documents", "publisher": "Building product manufacturers", "url": null, "personas": ["building", "engineering"], "use": "Product-, SKU-, market- and revision-specific technical data sheets, safety data sheets, test reports and installation manuals; verify exact product identity and document revision"}
   ]
 }
