@@ -911,7 +911,11 @@ def test_chat_links_finance_evidence_via_entity_symbol(finance_client):
         "symbol": "BHP.AX", "title": "FY24", "publisher": "BHP", "source_type": "annual_report",
         "document_type": "annual_report", "text": "Revenue grew 5% to $50bn.",
     })
-    response = client.post("/api/chat", json={"question": "Summarize BHP", "entity_symbol": "bhp.ax"})
+    response = client.post("/api/chat", json={
+        "question": "Summarize BHP revenue growth",
+        "entity_symbol": "bhp.ax",
+    })
     assert response.status_code == 200
     sources = response.json()["sources"]
     assert any(s["id"].startswith("finance_evidence:") for s in sources)
+    assert any("Revenue grew 5%" in s.get("content", "") for s in sources)

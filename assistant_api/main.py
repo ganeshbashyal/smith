@@ -205,7 +205,13 @@ def create_app(settings: Settings | None = None, *, ollama_transport=None, feed_
                               settings.research_model, research=research, persona=request.persona)
         evidence = app.state.store.search(request.question, route.knowledge_sources)
         if request.entity_symbol:
-            evidence.extend(app.state.finance_store.evidence_as_context(request.entity_symbol.upper()))
+            linked_evidence = app.state.finance_store.search_evidence(
+                request.entity_symbol.upper(), request.question, limit=3,
+            )
+            evidence.extend(
+                linked_evidence or
+                app.state.finance_store.evidence_as_context(request.entity_symbol.upper())
+            )
         tools = await execute_tools(route.tools, request.question, app.state.feeds, settings.external_feeds,
                                     store=app.state.store, refresh=request.refresh_sources)
         material = request.material if isinstance(request, Research) else ""

@@ -113,7 +113,7 @@ label { display: block; margin: .4rem 0; }
   <label>Source type
     <select id="ev-source-type">
       <option>issuer_filing</option><option>asx_announcement</option>
-      <option>annual_report</option><option>user_upload</option><option>manual_entry</option>
+      <option>annual_report</option><option>user_upload</option><option>manual_entry</option><option>research_snapshot</option>
     </select>
   </label>
   <label>Document type
@@ -602,6 +602,7 @@ el('company-deep-dive').onclick = async () => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         persona: 'finance',
+        entity_symbol: symbol,
         question: `Prepare a deep dive on ${symbol} using only the supplied company packet and clearly identified general concepts. State evidence dates and source links; separate facts from interpretation. Do not invent missing fundamentals or valuation. For entry areas and targets, use only the supplied conditional technical levels and explicitly call them technical scenarios, not a buy/sell recommendation.`,
         material: JSON.stringify(packet),
       }),

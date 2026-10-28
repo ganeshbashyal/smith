@@ -625,6 +625,33 @@ The CLI reports a preflight error if Ollama or the requested model is
 unavailable. It never imports holding quantities, changes the finance
 database, or makes trade decisions.
 
+#### Make completed ASX research retrievable by Smith
+
+After a batch completes, import its deterministic per-company reports into
+Smith's local finance evidence store. The import first validates that every
+constituent has one completed report, offers a no-write dry run by default,
+and creates an integrity-checked SQLite backup when `--apply` is used. It is
+idempotent and preserves existing security records. It does not import Llama
+analysis drafts or turn reports into reviewed/authoritative knowledge.
+
+```powershell
+.\.venv\Scripts\python.exe .\scripts\ingest_asx200_research.py `
+  --batch-dir .\data\research_jobs\asx200-10y-20261027-2356 `
+  --constituents .\data\asx200_ingest\asx200-10y-20261027-2356\constituents_snapshot.csv `
+  --data-dir .\data
+
+.\.venv\Scripts\python.exe .\scripts\ingest_asx200_research.py `
+  --batch-dir .\data\research_jobs\asx200-10y-20261027-2356 `
+  --constituents .\data\asx200_ingest\asx200-10y-20261027-2356\constituents_snapshot.csv `
+  --data-dir .\data --apply
+```
+
+Ticker-linked finance deep dives retrieve up to three relevant evidence passages
+from the imported report. For direct `/api/chat` or `/api/research` requests,
+include `entity_symbol` such as `CSL.AX`; the Finance page's company deep dive
+sets this automatically. Price reports do not replace issuer filings or
+fundamental statements; that missing coverage remains explicit.
+
 This supports growing a 300–500-company research set in bounded batches rather
 than launching an uncontrolled scrape. The worker currently uses a curated
 `<data_dir>/company_sources/<ASX_CODE>.json` manifest for issuer history,

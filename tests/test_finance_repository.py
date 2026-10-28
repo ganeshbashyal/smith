@@ -48,6 +48,38 @@ def test_additive_schema_creation_and_crud(tmp_path):
     assert [r["revision"] for r in revisions] == [1, 2]
 
 
+def test_legacy_evidence_passages_gain_chunk_index_additively(tmp_path):
+    database = tmp_path / "finance.sqlite3"
+    store = FinanceStore(database)
+    store.upsert_security("BHP", "BHP Group", "Materials", "")
+    store.add_evidence(
+        "BHP", "Existing report", "BHP", "annual_report", "annual_report", "",
+        date(2024, 8, 1), "annual", "existing-hash",
+        [{"page_number": 1, "chunk_index": 1, "text": "Existing evidence passage"}],
+        page_count=1,
+    )
+    with sqlite3.connect(database) as db:
+        db.execute("ALTER TABLE fin_evidence_passages DROP COLUMN chunk_index")
+
+    migrated = FinanceStore(database)
+    with migrated.connect() as db:
+        columns = {row["name"] for row in db.execute("PRAGMA table_info(fin_evidence_passages)")}
+        passage = db.execute(
+            "SELECT page_number, chunk_index, text FROM fin_evidence_passages"
+        ).fetchone()
+    assert "chunk_index" in columns
+    assert passage["chunk_index"] == 1
+    assert passage["text"] == "Existing evidence passage"
+    _, created = migrated.add_evidence(
+        "BHP", "New report", "Local research", "research_snapshot", "other", "",
+        date(2026, 10, 27), None, "new-hash",
+        [{"page_number": 1, "chunk_index": 2, "text": "New evidence passage"}],
+        page_count=1,
+    )
+    assert created is True
+    assert migrated.search_evidence("BHP", "new evidence")
+
+
 def test_statement_save_creates_new_revision_never_overwrites(tmp_path):
     """Defect 5 regression: confirming the same period twice must version, not upsert."""
     store = FinanceStore(tmp_path / "finance.sqlite3")

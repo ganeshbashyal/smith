@@ -12,7 +12,7 @@ import json
 import sqlite3
 from pathlib import Path
 
-SCHEMA_VERSION = 2
+SCHEMA_VERSION = 3
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS finance_schema_version (version INTEGER PRIMARY KEY, applied_at TEXT NOT NULL);
@@ -200,6 +200,7 @@ class FinanceStore:
             # Additive column migrations for tables created before these columns existed.
             self._ensure_column(db, "fin_price_bars", "observed_at_utc", "TEXT")
             self._ensure_column(db, "fin_price_bars", "exchange_timezone", "TEXT")
+            self._ensure_column(db, "fin_evidence_passages", "chunk_index", "INTEGER NOT NULL DEFAULT 1")
 
     @staticmethod
     def _ensure_column(db: sqlite3.Connection, table: str, column: str, coldef: str) -> None:
@@ -415,7 +416,7 @@ class FinanceStore:
              "title": doc["title"], "publisher": doc["publisher"],
              "source": doc["source_url"] or doc["title"],
              "source_type": doc["source_type"], "published_on": doc["published_on"],
-             "page": passage["page_number"], "content": passage["text"][:4000]}
+             "page": passage["page_number"], "content": passage["text"][:2000]}
             for score, doc, passage in ranked[:limit]
         ]
 

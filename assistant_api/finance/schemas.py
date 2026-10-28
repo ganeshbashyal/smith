@@ -13,7 +13,10 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator, model_valida
 
 Period = Literal["annual", "interim", "ttm"]
 Currency = Literal["AUD", "USD", "EUR", "GBP", "NZD", "JPY", "CAD", "CNY", "HKD", "SGD"]
-EvidenceSourceType = Literal["issuer_filing", "asx_announcement", "annual_report", "user_upload", "manual_entry"]
+EvidenceSourceType = Literal[
+    "issuer_filing", "asx_announcement", "annual_report", "user_upload",
+    "manual_entry", "research_snapshot",
+]
 DocumentType = Literal["annual_report", "half_year_report", "announcement", "transcript", "prospectus", "other"]
 ThesisStance = Literal["bull", "base", "bear"]
 AlertKind = Literal["developing", "material", "thesis_review", "confirmation"]
