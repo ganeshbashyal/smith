@@ -67,7 +67,9 @@ label { display: block; margin: .4rem 0; }
   <button id="gold-tab" type="button" role="tab" aria-selected="false" aria-controls="gold-panel">XAUUSD trader</button>
   <button id="manual-tab" type="button" role="tab" aria-selected="false" aria-controls="manual-panel">Manual analysis</button>
   <button id="scripts-tab" type="button" role="tab" aria-selected="false" aria-controls="scripts-panel">Scripts / analysis</button>
+  <button id="chart-tab" type="button" role="tab" aria-selected="false" aria-controls="chart-panel">Chart analysis</button>
 </div>
+<div id="chart-panel" role="tabpanel" aria-labelledby="chart-tab" hidden><section><h2>Interactive chart analysis</h2><p>Price and volume are sourced from the saved research packet. Fundamental fields remain evidence-gated.</p><label>Symbol <input id="chart-symbol" value="DRO"></label><label>Window <select id="chart-window"><option value="63">3M</option><option value="252">1Y</option><option value="756">3Y</option></select></label><button id="chart-load" type="button">Load chart</button><div id="chart-flags"></div><svg id="chart-svg" viewBox="0 0 900 360" role="img" aria-label="Price chart"></svg><div id="chart-matrix" class="findings-table"></div></section></div>
 <div id="scripts-panel" role="tabpanel" aria-labelledby="scripts-tab" hidden>
 <section><h2>Smith analysis scripts</h2><p>Repeatable local actions for screening, daily capture and deep dives.</p>
 <div class="snapshot-grid">
@@ -428,6 +430,7 @@ function tabTo(panel) {
     ['gold-tab', 'gold-panel'],
     ['manual-tab', 'manual-panel'],
     ['scripts-tab', 'scripts-panel'],
+    ['chart-tab', 'chart-panel'],
   ]) {
     const active = content === panel;
     el(content).hidden = !active;
@@ -439,6 +442,8 @@ el('deepdive-tab').onclick = () => tabTo('deepdive-panel');
 el('gold-tab').onclick = () => tabTo('gold-panel');
 el('manual-tab').onclick = () => tabTo('manual-panel');
 el('scripts-tab').onclick = () => tabTo('scripts-panel');
+el('chart-tab').onclick = () => tabTo('chart-panel');
+el('chart-load').onclick = async () => { const symbol=el('chart-symbol').value.trim().toUpperCase().replace(/^ASX:/,''); const response=await fetch(`/api/finance/chart-analysis/${encodeURIComponent(symbol)}`,{headers:headers()}); const data=await response.json(); if(!response.ok){el('chart-flags').textContent=data.detail||'Chart unavailable';return;} const bars=data.bars.slice(-Number(el('chart-window').value)), vals=bars.map(x=>Number(x.close)), svg=el('chart-svg'), w=900,h=360,p=35,min=Math.min(...vals),max=Math.max(...vals), y=v=>h-p-(v-min)/(max-min||1)*(h-2*p), points=vals.map((v,i)=>`${p+i*(w-2*p)/Math.max(1,vals.length-1)},${y(v)}`).join(' '); svg.innerHTML=`<polyline fill="none" stroke="#185abc" stroke-width="2" points="${points}"/><text x="${p}" y="20">${symbol} close</text>`; const change=(vals.at(-1)/vals[0]-1)*100; el('chart-flags').textContent=`${symbol}: ${change.toFixed(2)}% over selected window. ${change>0?'Positive':'Negative'} price structure; confirm with volume and issuer evidence.`; el('chart-matrix').innerHTML='<table><tr><th>Matrix</th><th>Status</th></tr><tr><td>Price / volume</td><td>Available</td></tr><tr><td>Revenue, EBITDA, EPS, debt, cash, margins</td><td>Issuer evidence required</td></tr></table>'; };
 document.querySelectorAll('[data-copy-command]').forEach(button => button.onclick = async () => { await navigator.clipboard.writeText(button.dataset.copyCommand); el('script-copy-status').textContent = 'Command copied to clipboard.'; });
 
 let researchPoll;

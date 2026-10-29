@@ -746,6 +746,19 @@ def build_router(*, get_store, admin_dependency, feeds_client_getter,
         from fastapi.responses import PlainTextResponse
         return PlainTextResponse(candidates[-1].read_text(encoding="utf-8"))
 
+    @router.get("/chart-analysis/{symbol}")
+    async def chart_analysis(symbol: str):
+        code = symbol.upper().removesuffix(".AX").removeprefix("ASX:")
+        candidates = sorted(research_data_dir.parent.glob(f"research_jobs/*ASX-{code}/market-data.json"))
+        if not candidates:
+            raise HTTPException(404, "No market packet is available for this company")
+        try:
+            packet = json.loads(candidates[-1].read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            raise HTTPException(500, "Market packet is unreadable") from exc
+        bars = packet.get("bars", [])
+        return {"instrument": f"ASX:{code}", "bars": bars, "statistics": packet.get("statistics", {}), "source": packet.get("source"), "retrieved_at": packet.get("retrieved_at")}
+
     @router.get("/opportunity/snapshot")
     async def opportunity_snapshot():
         candidates = sorted(research_data_dir.glob("asx_opportunity_snapshot_*/snapshot.json"))
