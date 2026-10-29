@@ -740,7 +740,7 @@ def build_router(*, get_store, admin_dependency, feeds_client_getter,
     @router.get("/opportunity/profiles/{symbol}/report")
     async def opportunity_profile_report(symbol: str):
         code = symbol.upper().removesuffix(".AX").removeprefix("ASX:")
-        candidates = sorted(research_data_dir.parent.glob(f"research_jobs/*-ASX-{code}/report.md"))
+        candidates = sorted(research_data_dir.glob(f"research_jobs/*-ASX-{code}/report.md"))
         if not candidates:
             raise HTTPException(404, "No detailed report is available for this company")
         from fastapi.responses import PlainTextResponse
@@ -749,7 +749,7 @@ def build_router(*, get_store, admin_dependency, feeds_client_getter,
     @router.get("/chart-analysis/{symbol}")
     async def chart_analysis(symbol: str):
         code = symbol.upper().removesuffix(".AX").removeprefix("ASX:")
-        candidates = sorted(research_data_dir.parent.glob(f"research_jobs/*ASX-{code}/market-data.json"))
+        candidates = sorted(research_data_dir.glob(f"research_jobs/*ASX-{code}/market-data.json"))
         if not candidates:
             raise HTTPException(404, "No market packet is available for this company")
         try:
