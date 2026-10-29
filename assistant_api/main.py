@@ -212,7 +212,7 @@ def create_app(settings: Settings | None = None, *, ollama_transport=None, feed_
                 linked_evidence or
                 app.state.finance_store.evidence_as_context(request.entity_symbol.upper())
             )
-        tools = await execute_tools(route.tools, request.question, app.state.feeds, settings.external_feeds,
+        tools = await execute_tools(route.tools, request.question, app.state.feeds, app.state.store.get_external_feeds(settings.external_feeds),
                                     store=app.state.store, refresh=request.refresh_sources)
         material = request.material if isinstance(request, Research) else ""
         if material.strip():
@@ -289,9 +289,21 @@ missing, say so rather than inventing a match or compliance determination."""
     @app.get("/api/sources")
     async def sources():
         status = app.state.store.tool_status()
-        return {"enabled": settings.external_feeds, "coverage": "Approved feeds only; no unrestricted browsing or universal live knowledge",
+        return {"enabled": app.state.store.get_external_feeds(settings.external_feeds), "coverage": "Approved feeds only; no unrestricted browsing or universal live knowledge",
                 "sources": [{"tool": name, "source": url, "publisher": PUBLISHERS[name],
                              "last_result": status.get(name)} for name, url in SOURCES.items()]}
+
+    @app.get("/api/admin/settings/external-feeds", dependencies=[Depends(admin)])
+    async def external_feeds_setting():
+        return {"enabled": app.state.store.get_external_feeds(settings.external_feeds)}
+
+    @app.post("/api/admin/settings/external-feeds", dependencies=[Depends(admin), Depends(require_loopback)])
+    async def update_external_feeds(payload: dict):
+        enabled = payload.get("enabled")
+        if not isinstance(enabled, bool):
+            raise HTTPException(422, "enabled must be true or false")
+        app.state.store.set_external_feeds(enabled)
+        return {"enabled": enabled, "message": "External feeds enabled" if enabled else "External feeds disabled"}
 
     @app.get("/api/admin/services", dependencies=[Depends(admin), Depends(require_loopback)])
     async def local_services():
@@ -379,7 +391,7 @@ missing, say so rather than inventing a match or compliance determination."""
                 "by_category": by_category,
                 "by_source_type": by_source_type,
             },
-            "external_feeds_enabled": settings.external_feeds,
+            "external_feeds_enabled": app.state.store.get_external_feeds(settings.external_feeds),
         }
 
     @app.get("/api/admin/history", dependencies=[Depends(admin)])
@@ -619,7 +631,7 @@ packet."""
         get_store=lambda: app.state.finance_store,
         admin_dependency=admin,
         feeds_client_getter=lambda: app.state.feeds,
-        external_feeds_enabled=lambda: settings.external_feeds,
+        external_feeds_enabled=lambda: app.state.store.get_external_feeds(settings.external_feeds),
         data_dir=settings.data_dir,
         model_status_getter=lambda: app.state.models.status(),
         model_analysis_generator=generate_finance_batch_analysis,

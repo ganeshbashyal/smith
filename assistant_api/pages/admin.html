@@ -54,6 +54,10 @@ th { background: #e8eef6; }
 <pre id="status" role="status"></pre>
 <h2>Approved current sources</h2>
 <pre id="sources" role="status"></pre>
+<h2>External feeds</h2>
+<p>Use the toggle to allow Smith to request only the approved external feeds. It is stored locally and is off by default.</p>
+<label class="row"><input id="external-feeds" type="checkbox"> Enable approved external feeds</label>
+<p id="feeds-status" role="status"></p>
 <form id="selection">
 <p><label>Daily model <select id="models" required></select></label></p>
 <button id="save">Activate and save model</button>
@@ -338,7 +342,30 @@ async function refresh() {
     });
   } catch (error) { el('error').textContent = error.message; }
   await refreshServices();
+  await refreshExternalFeeds();
 }
+async function refreshExternalFeeds() {
+  try {
+    const response = await fetch('/api/admin/settings/external-feeds', { headers: authorization() });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.detail || 'Could not read feed setting');
+    el('external-feeds').checked = data.enabled === true;
+    el('feeds-status').textContent = data.enabled ? 'Approved external feeds are enabled.' : 'Approved external feeds are disabled.';
+  } catch (error) { el('feeds-status').textContent = error.message; }
+}
+el('external-feeds').onchange = async event => {
+  const checkbox = event.target; checkbox.disabled = true;
+  try {
+    const response = await fetch('/api/admin/settings/external-feeds', {
+      method: 'POST', headers: { ...authorization(), 'Content-Type': 'application/json' },
+      body: JSON.stringify({ enabled: checkbox.checked })
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.detail || 'Could not update feed setting');
+    el('feeds-status').textContent = data.message + '.';
+  } catch (error) { checkbox.checked = !checkbox.checked; el('feeds-status').textContent = error.message; }
+  finally { checkbox.disabled = false; }
+};
 async function refreshServices() {
   el('service-error').textContent = '';
   try {

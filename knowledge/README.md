@@ -2,6 +2,26 @@
 
 ## Architecture review and next modules
 
+## Persona knowledge gathering
+
+`collection_plan.json` is the operating plan for expanding all ten personas.
+It identifies the first evidence pack, priority, source candidates and refresh
+cadence for each persona. It is deliberately separate from runtime connector
+authorization: a source must still pass terms, provenance, freshness and
+bounded-failure review before it can be connected.
+
+Validate the plan before collecting material:
+
+```powershell
+.\\.venv\\Scripts\\python.exe scripts\\validate_knowledge_plan.py
+```
+
+Collect one persona at a time. For each source, preserve the original document
+or link and record publisher, dates, jurisdiction, evidence tier, limitations
+and review status. Start with finance and building, then science/engineering,
+health/business, news/sports and automotive. Keep current facts in dated
+evidence records; keep stable reasoning principles in the persona modules.
+
 The current request path is:
 
 1. `routing.py` selects a code-defined persona, knowledge categories and

@@ -223,6 +223,26 @@ class Store:
         with self.connect() as db:
             db.execute("INSERT INTO settings VALUES ('selected_model', ?) ON CONFLICT(key) DO UPDATE SET value=excluded.value", (model,))
 
+    def get_setting(self, key: str, default: str = "") -> str:
+        with self.connect() as db:
+            row = db.execute("SELECT value FROM settings WHERE key=?", (key,)).fetchone()
+            return row["value"] if row else default
+
+    def set_setting(self, key: str, value: str) -> None:
+        with self.connect() as db:
+            db.execute(
+                "INSERT INTO settings(key, value) VALUES (?, ?) "
+                "ON CONFLICT(key) DO UPDATE SET value=excluded.value",
+                (key, value),
+            )
+
+    def get_external_feeds(self, default: bool = False) -> bool:
+        value = self.get_setting("external_feeds", "1" if default else "0")
+        return value == "1"
+
+    def set_external_feeds(self, enabled: bool) -> None:
+        self.set_setting("external_feeds", "1" if enabled else "0")
+
     def add_document(self, title: str, category: str, source_type: str, source: str,
                      content: str, **metadata) -> tuple[int, bool]:
         return self.add_documents([{

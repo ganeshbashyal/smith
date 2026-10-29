@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "purpose": "Human-reviewable collection plan for expanding Mr Smith knowledge without treating candidate sources as automatically authorized.",
+  "policy": {
+    "fetching_enabled_by_default": false,
+    "priority_order": ["official_primary", "regulator_or_professional", "reputable_secondary", "educational"],
+    "required_metadata": ["source_id", "publisher", "source_url", "published_or_observed_date", "retrieved_at", "jurisdiction", "evidence_tier", "limitations"],
+    "review_statuses": ["candidate", "collected", "pending_human_review", "reviewed", "retired"]
+  },
+  "personas": {
+    "general": {"priority": 3, "sources": ["australia_gov", "official_government_releases", "khan_academy"], "first_pack": "decision-making, planning, source literacy and user preferences", "cadence": "quarterly"},
+    "science": {"priority": 2, "sources": ["csiro", "nasa", "australian_academy_of_science", "arxiv"], "first_pack": "evidence quality, uncertainty, core science topics and current research review", "cadence": "monthly"},
+    "engineering": {"priority": 2, "sources": ["engineers_australia", "csiro", "mit_opencourseware", "manufacturer_building_product_documents"], "first_pack": "requirements, hazards, failure analysis, verification and industrial automation references", "cadence": "monthly"},
+    "building": {"priority": 1, "sources": ["abcb_ncc", "yourhome", "state_building_regulators", "manufacturer_building_product_documents"], "first_pack": "Australian building science, NCC boundaries, moisture, thermal, acoustic and product evidence", "cadence": "monthly"},
+    "finance": {"priority": 1, "sources": ["asx_announcements", "rba", "asic_moneysmart", "abs", "apra"], "first_pack": "ASX research, statements, valuation, portfolio risk, macro context and XAUUSD evidence", "cadence": "daily_for_market_data_monthly_for_reference"},
+    "business": {"priority": 2, "sources": ["business_gov_au", "accc", "asic", "ato", "abs"], "first_pack": "Australian business operations, unit economics, strategy, obligations and delivery", "cadence": "monthly"},
+    "health": {"priority": 2, "sources": ["healthdirect", "aihw", "health_gov_au", "better_health_channel"], "first_pack": "safe health information, evidence quality, prevention and escalation boundaries", "cadence": "monthly"},
+    "news": {"priority": 2, "sources": ["abc_news", "sbs_news", "bbc_news", "reuters", "official_government_releases"], "first_pack": "attribution, chronology, corroboration and current-affairs source handling", "cadence": "daily"},
+    "sports": {"priority": 2, "sources": ["fia_f1", "formula1", "premier_league", "uefa", "manchester_united", "real_madrid"], "first_pack": "F1 and football fixtures, results, rules, standings and club context", "cadence": "event_driven"},
+    "automotive": {"priority": 3, "sources": ["vehicle_recalls_au", "ancap", "vehicle_standards_au", "manufacturer_manuals"], "first_pack": "vehicle safety, diagnostics, ownership, recalls and model-specific manuals", "cadence": "monthly"}
+  }
+}
