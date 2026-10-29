@@ -715,6 +715,16 @@ def build_router(*, get_store, admin_dependency, feeds_client_getter,
     async def finance_market_snapshot():
         return macro_data.summarize_market_snapshot(store)
 
+    @router.get("/opportunity/benchmark")
+    async def opportunity_benchmark():
+        path = research_data_dir / "opportunity_first_run_20261029" / "benchmark.json"
+        if not path.is_file():
+            raise HTTPException(404, "No ASX opportunity benchmark snapshot has been generated")
+        try:
+            return json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            raise HTTPException(500, "ASX opportunity benchmark snapshot is unreadable") from exc
+
     @router.post("/xauusd/macro/evidence")
     async def add_xauusd_macro_evidence(body: GoldMacroEvidenceIn):
         evidence_id = store.add_gold_macro_evidence(body.model_dump())

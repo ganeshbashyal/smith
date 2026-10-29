@@ -34,6 +34,12 @@ pre { white-space: pre-wrap; overflow-wrap: anywhere; background: #fff; color: #
 section { border-top: 1px solid #65758b; padding-top: 1rem; margin-top: 1rem; }
 label { display: block; margin: .4rem 0; }
 .warn { color: #78350f; font-weight: 500; }
+.snapshot-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: .7rem; }
+.metric { border: 1px solid #65758b; border-radius: .35rem; padding: .7rem; background: #fff; }
+.metric strong { display: block; font-size: 1.35rem; }
+.bar-row { display: grid; grid-template-columns: 5rem 1fr 5rem; gap: .5rem; align-items: center; margin: .35rem 0; }
+.bar { height: 1rem; background: #2f6db2; border-radius: .2rem; }
+.bar.negative { background: #a94442; }
 </style>
 <h1>Finance research &amp; portfolio tools</h1>
 <nav aria-label="Mr Smith pages">
@@ -52,6 +58,13 @@ label { display: block; margin: .4rem 0; }
   <button id="manual-tab" type="button" role="tab" aria-selected="false" aria-controls="manual-panel">Manual analysis</button>
 </div>
 <div id="asx-panel" role="tabpanel" aria-labelledby="asx-tab">
+<section>
+<h2>ASX opportunity snapshot</h2>
+<p>Dated baseline from the first 200-company run. This is a research snapshot, not a live ranking or recommendation.</p>
+<div id="opportunity-summary" class="snapshot-grid"><div class="metric">Loading benchmark…</div></div>
+<div id="opportunity-chart"></div>
+<details><summary>Snapshot limitations</summary><p id="opportunity-limitations"></p></details>
+</section>
 <section>
 <h2>Single-company research</h2>
 <p>Reports and progress are saved locally and accumulate by run. A bare ticker is treated as an ASX candidate. Live data is retrieved only when <code>MR_SMITH_EXTERNAL_FEEDS=1</code> is enabled.</p>
@@ -270,6 +283,30 @@ label { display: block; margin: .4rem 0; }
 const el = id => document.getElementById(id);
 const headers = () => ({ Authorization: 'Bearer ' + el('token').value });
 const jsonHeaders = () => ({ ...headers(), 'Content-Type': 'application/json' });
+function renderOpportunity(data) {
+  const cohort = data.cohort;
+  el('opportunity-summary').innerHTML = [
+    ['Benchmark return', `${data.benchmark.return_pct}%`],
+    ['Median company return', `${cohort.median_return_pct}%`],
+    ['Beat benchmark', `${cohort.beat_benchmark_count}/${data.universe.price_available}`],
+    ['Price coverage', `${data.universe.price_available}/${data.universe.batch_rows}`]
+  ].map(([label, value]) => `<div class="metric"><span>${label}</span><strong>${value}</strong></div>`).join('');
+  const values = data.top_10_by_return.concat(data.bottom_10_by_return.slice(-5));
+  const max = Math.max(...values.map(item => Math.abs(item.return_pct)), Math.abs(data.benchmark.return_pct), 1);
+  el('opportunity-chart').innerHTML = '<h3>Return snapshot</h3>' + values.map(item => {
+    const negative = item.return_pct < 0;
+    return `<div class="bar-row"><span>${item.instrument.replace('ASX:', '')}</span><span class="bar ${negative ? 'negative' : ''}" style="width:${Math.max(2, Math.abs(item.return_pct) / max * 100)}%"></span><span>${item.return_pct}%</span></div>`;
+  }).join('');
+  el('opportunity-limitations').textContent = data.limitations.join(' ');
+}
+async function loadOpportunitySnapshot() {
+  try {
+    const response = await fetch('/api/finance/opportunity/benchmark', { headers: headers() });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.detail || 'Benchmark snapshot unavailable');
+    renderOpportunity(data);
+  } catch (error) { el('opportunity-summary').textContent = error.message; }
+}
 function showError(error) { el('error').textContent = error.message || String(error); }
 async function callJson(url, options, outId) {
   el('error').textContent = '';
@@ -641,5 +678,6 @@ el('pf-confirm').onclick = async () => {
   await callJson(`/api/finance/portfolios/${el('pf-id').value}/holdings/confirm`, { method: 'POST', headers: headers(), body: form }, 'pf-result');
 };
 el('pf-analyze').onclick = () => callJson(`/api/finance/portfolios/${el('pf-id').value}/analysis`, { headers: headers() }, 'pf-result');
+loadOpportunitySnapshot();
 </script>
 </html>
