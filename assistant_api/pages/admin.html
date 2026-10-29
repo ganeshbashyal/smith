@@ -51,9 +51,9 @@ th { background: #e8eef6; }
 <p>This local Admin panel is trusted when Mr Smith is started by the normal launcher. It is protected by loopback-only access; no token is required on this PC.</p>
 <input id="token" type="hidden" value="">
 <button id="refresh">Refresh model health</button>
-<pre id="status" role="status"></pre>
+<div id="status" role="status"></div>
 <h2>Approved current sources</h2>
-<pre id="sources" role="status"></pre>
+<div id="sources" role="status"></div>
 <h2>External feeds</h2>
 <p>Use the toggle to allow Smith to request only the approved external feeds. It is stored locally and is off by default.</p>
 <label class="row"><input id="external-feeds" type="checkbox"> Enable approved external feeds</label>
@@ -327,13 +327,37 @@ async function refresh() {
   try {
     const response = await fetch('/api/sources');
     if (!response.ok) throw new Error('Source status unavailable');
-    el('sources').textContent = JSON.stringify(await response.json(), null, 2);
+    const data = await response.json();
+    const container = el('sources'); container.replaceChildren();
+    const heading = document.createElement('p');
+    heading.textContent = `External feeds: ${data.enabled ? 'Enabled' : 'Disabled'}`;
+    container.append(heading);
+    const note = document.createElement('p'); note.textContent = data.coverage; container.append(note);
+    data.sources.forEach(source => {
+      const card = document.createElement('section'); card.className = 'document';
+      const title = document.createElement('strong'); title.textContent = `${source.publisher} — ${source.tool}`;
+      const link = document.createElement('a'); link.href = source.source; link.target = '_blank'; link.rel = 'noreferrer'; link.textContent = ' Open source';
+      const last = source.last_result;
+      const result = document.createElement('p');
+      result.textContent = last ? `Last status: ${last.status || 'unknown'}${last.retrieved_at ? ` | ${last.retrieved_at}` : ''}${last.error ? ` | ${last.error}` : ''}` : 'No request made yet.';
+      card.append(title, link, result); container.append(card);
+    });
+    const details = document.createElement('details');
+    const summary = document.createElement('summary'); summary.textContent = 'Technical source response';
+    const raw = document.createElement('pre'); raw.textContent = JSON.stringify(data, null, 2);
+    details.append(summary, raw); container.append(details);
   } catch (error) { el('sources').textContent = error.message; }
   try {
     const response = await fetch('/api/models');
     const data = await response.json();
     if (!response.ok) throw new Error(data.detail);
-    el('status').textContent = JSON.stringify(data, null, 2);
+    const container = el('status'); container.replaceChildren();
+    const card = document.createElement('section'); card.className = 'document';
+    const summary = document.createElement('p'); summary.textContent = `Model service: ${data.healthy ? 'Ready' : 'Unavailable'}`;
+    const selected = document.createElement('p'); selected.textContent = `Selected model: ${data.selected_model || 'none'} | Installed models: ${(data.installed_models || []).length}`;
+    card.append(summary, selected); container.append(card);
+    const details = document.createElement('details'); const heading = document.createElement('summary'); heading.textContent = 'Technical model response';
+    const raw = document.createElement('pre'); raw.textContent = JSON.stringify(data, null, 2); details.append(heading, raw); container.append(details);
     el('models').replaceChildren();
     data.installed_models.forEach(model => {
       const option = document.createElement('option');
