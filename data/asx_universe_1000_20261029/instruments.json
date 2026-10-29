@@ -1,0 +1,4004 @@
+{
+  "instruments": [
+    {
+      "instrument": "ASX:10X",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:14D",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:1AD",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:1AE",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:1AI",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:1CG",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:1MC",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:1TT",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:29M",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:360",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:3DA",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:3DP",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:3PL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:49M",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:4DS",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:4DX",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:5GG",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:5GN",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:6KA",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:88E",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:8CO",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:8IH",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:A11",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:A1M",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:A1N",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:A2M",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:A3D",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:A4N",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:A8G",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AA2",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AAC",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AAI",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AAJ",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AAL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AAM",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AAP",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AAR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AAT",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AAU",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ABB",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ABE",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ABG",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ABR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ABV",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ABX",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ABY",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AC1",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AC2",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AC3",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AC4",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ACE",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ACF",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ACL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ACM",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ACP",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ACQ",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ACR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ACS",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ACT",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ACU",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ACW",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AD1",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AD8",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ADC",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ADD",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ADH",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ADN",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ADO",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ADR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ADS",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ADX",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ADY",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AEC",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AEE",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AEF",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AEG",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AEI",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AEL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AEM",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AER",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AEU",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AEV",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AF2",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AF4",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AF5",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AF6",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AF7",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AF9",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AFA",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AFG",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AFI",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AFL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AFP",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AFT",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AGC",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AGD",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AGE",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AGI",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AGL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AGN",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AGR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AGT",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AGY",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AHC",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AHE",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AHF",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AHK",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AHL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AHN",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AI1",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AIA",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AIC",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AIH",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AIM",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AIQ",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AIS",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AIV",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AIX",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AIZ",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AJL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AJX",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AKA",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AKG",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AKM",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AKN",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AKO",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AL3",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ALA",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ALB",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ALC",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ALD",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ALI",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ALK",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ALL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ALM",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ALQ",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ALR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ALU",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ALV",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ALX",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ALY",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AM3",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AM5",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AM7",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AMA",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AMC",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AMD",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AMH",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AMI",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AMK",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AMN",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AMO",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AMP",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AMS",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AMU",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AMX",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AN1",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AN3",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ANG",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ANN",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ANO",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ANR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ANT",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ANV",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ANX",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ANZ",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AO2",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AO3",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AOA",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AOK",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AON",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AOV",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AP2",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:APA",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:APC",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:APE",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:APL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:APW",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:APX",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:APZ",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AQC",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AQD",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AQL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AQN",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AQT",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AQX",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AQZ",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AR1",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AR2",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AR3",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AR9",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ARA",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ARB",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ARC",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ARD",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ARF",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ARG",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ARI",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ARL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ARN",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ARO",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ARR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ART",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ARU",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ARV",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ARX",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AS1",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AS2",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ASB",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ASG",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ASH",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ASK",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ASL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ASN",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ASP",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ASQ",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ASV",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ASX",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AT1",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AT4",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ATA",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ATB",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ATC",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ATG",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ATH",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ATM",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ATP",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ATR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ATS",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ATT",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ATV",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ATX",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AU1",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AUA",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AUB",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AUC",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AUE",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AUG",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AUI",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AUQ",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AUR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AUV",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AUZ",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AV1",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AVA",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AVD",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AVE",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AVG",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AVH",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AVL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AVM",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AVR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AVW",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AW1",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AWJ",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AX1",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AX8",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AXE",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AXI",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AXL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AXN",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AXP",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AXQ",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AXR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AXX",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AYA",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AYM",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AYT",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AYU",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AZ9",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AZI",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AZJ",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:AZY",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:B01",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:B4P",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BA2",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BAK",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BAP",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BAS",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BB1",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BBC",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BBL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BBN",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BBT",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BC8",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BCA",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BCC",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BCI",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BCK",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BCM",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BCN",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BDM",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BDX",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BEL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BEN",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BEO",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BET",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BEZ",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BFG",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BFL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BGA",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BGD",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BGE",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BGL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BGP",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BGT",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BH6",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BHD",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BHL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BHM",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BHP",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BHY",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BIM",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BIO",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BIS",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BIT",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BKB",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BKI",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BKT",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BKY",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BLG",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BLS",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BLU",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BLX",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BLZ",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BM1",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BM8",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BMC",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BMH",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BML",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BMM",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BMN",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BMR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BMT",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BNL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BNR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BNZ",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BOA",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BOC",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BOE",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BOL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BOQ",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BOT",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BP1",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BPG",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BPH",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BPM",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BPP",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BPT",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BRE",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BRG",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BRI",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BRK",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BRL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BRN",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BRU",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BRY",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BS1",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BSA",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BSL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BSN",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BSR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BST",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BSX",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BTC",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BTE",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BTI",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BTL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BTM",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BTN",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BTR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BUB",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BUR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BUS",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BUX",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BUY",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BVR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BVS",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BW6",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BWF",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BWN",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BWP",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:BXB",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:C29",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:C2F",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:C79",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:C7A",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CAA",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CAE",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CAF",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CAM",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CAN",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CAQ",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CAR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CAT",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CAV",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CAY",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CAZ",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CBA",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CBE",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CBL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CBO",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CBY",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CC5",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CC9",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CCA",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CCE",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CCG",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CCL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CCM",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CCO",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CCP",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CCR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CCV",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CCX",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CD1",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CD2",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CD3",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CDA",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CDE",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CDM",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CDO",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CDP",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CDR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CEH",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CEL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CEN",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CF1",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CG1",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CGF",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CGO",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CGR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CGS",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CHC",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CHI",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CHL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CHM",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CHN",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CHR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CHW",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CIA",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CIM",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CIN",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CIP",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CIW",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CKA",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CKF",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CLA",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CLG",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CLV",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CLW",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CLX",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CMA",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CMB",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CMD",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CMG",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CML",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CMM",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CMO",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CMP",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CMW",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CMX",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CNB",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CND",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CNI",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CNJ",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CNQ",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CNU",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:COB",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:COD",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:COF",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:COG",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:COH",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:COI",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:COL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:COS",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:COV",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:COY",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CP8",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CPL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CPM",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CPN",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CPO",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CPU",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CPV",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CQE",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CQR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CQT",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CR1",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CR3",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CRB",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CRD",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CRG",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CRI",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CRN",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CRR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CRS",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CSC",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CSL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CST",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CSX",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CT1",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CTD",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CTE",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CTM",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CTN",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CTO",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CTP",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CTQ",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CTS",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CTT",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CU6",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CUE",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CUF",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CUL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CUP",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CUV",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CVB",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CVC",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CVL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CVN",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CVR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CVV",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CWP",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CWY",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CX1",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CX8",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CXL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CXO",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CXU",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CXZ",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CYB",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CYC",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CYG",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CYL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CYM",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CYP",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CYQ",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CYV",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CZN",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:CZR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:D10",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:D11",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:D3E",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:DA8",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:DA9",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:DAF",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:DAI",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:DAL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:DAM",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:DAT",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:DBF",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:DBI",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:DBO",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:DCC",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:DDR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:DDT",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:DEL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:DEM",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:DES",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:DEV",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:DGH",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:DGL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:DGR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:DGT",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:DJW",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:DKM",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:DLI",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:DLY",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:DM1",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:DME",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:DMN",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:DMP",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:DN1",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:DNK",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:DNL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:DOC",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:DOW",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:DPM",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:DRE",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:DRO",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:DRR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:DRX",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:DSK",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:DSM",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:DTL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:DTM",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:DTR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:DTZ",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:DUB",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:DUG",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:DUN",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:DUR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:DVL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:DVP",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:DWG",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:DXA",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:DXB",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:DXC",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:DXI",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:DXN",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:DXS",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:DYL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:DYM",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:E25",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:E79",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EAU",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EAX",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EBO",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EBR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ECH",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ECP",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ECS",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ECT",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EDE",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EDO",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EDU",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EDV",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EE1",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EF2",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EFE",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EFR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EG1",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EGA",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EGG",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EGH",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EGL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EGR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EGY",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EHL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EIQ",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EL8",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ELD",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ELK",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ELS",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ELT",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ELV",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EM2",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EM3",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EMA",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EMB",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EMC",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EMD",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EME",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EMH",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EMI",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EML",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EMN",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EMP",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EMR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EMT",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EMU",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EMV",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ENL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ENP",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ENR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ENT",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ENV",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EOL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EOS",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EPI",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EPM",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EPN",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EPX",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EPY",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EQR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EQT",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EQU",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EQX",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ERA",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ERD",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ERE",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ERG",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ERL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ESK",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ESR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ETM",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ETP",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EUR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EUZ",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EV1",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EV8",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EVE",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EVG",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EVN",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EVO",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EVT",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EVZ",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EWC",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EX2",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EXL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EXP",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EXR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EXT",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EYE",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EZL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:EZZ",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FAL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FAR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FAU",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FBR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FBU",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FCF",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FCG",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FCL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FCT",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FDC",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FDR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FDV",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FEG",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FEL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FEX",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FFG",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FFI",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FFM",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FG1",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FGG",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FGH",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FGR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FGX",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FHE",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FHS",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FID",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FIN",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FL1",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FLC",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FLG",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FLN",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FLT",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FLX",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FM1",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FM3",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FM5",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FME",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FMG",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FML",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FMN",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FMR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FND",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FNR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FNX",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FOS",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FPC",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FPH",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FPR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FRB",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FRE",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FRI",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FRM",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FRS",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FRW",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FRX",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FSA",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FSI",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FTI",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FUL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FUN",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FWD",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FXG",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:FZR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:G11",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:G1C",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:G20",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:G50",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:G6M",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:G88",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GA8",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GAL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GAP",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GAS",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GBE",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GBL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GBM",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GBR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GC1",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GCI",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GCM",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GCR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GD8",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GDF",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GDG",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GDI",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GDM",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GDR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GEA",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GED",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GEM",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GEN",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GES",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GFL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GG1",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GG8",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GGE",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GGM",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GGP",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GGR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GHM",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GHY",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GIB",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GL1",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GLB",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GLC",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GLE",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GLF",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GLH",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GLN",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GLS",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GM1",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GMD",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GMG",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GML",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GMN",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GNC",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GNE",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GNG",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GNM",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GNP",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GOL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GOW",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GOZ",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GPR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GPT",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GQG",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GR8",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GRE",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GRN",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GRR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GRS",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GRV",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GRX",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GSB",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GSE",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GSI",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GSM",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GSN",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GSS",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GT1",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GT3",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GTE",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GTI",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GTK",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GTN",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GUL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GUM",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GVF",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GW1",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GWA",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GWR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:GYG",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:H2G",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:H3E",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:HAL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:HAR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:HAS",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:HAV",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:HAW",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:HC1",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:HCF",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:HCH",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:HCL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:HCT",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:HCW",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:HDN",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:HE8",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:HFR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:HFY",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:HGH",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:HIO",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:HIQ",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:HIT",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:HLI",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:HLO",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:HLS",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:HLX",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:HM1",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:HMC",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:HMD",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:HMG",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:HMI",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:HMX",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:HMY",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:HOR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:HUB",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:HVN",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:IAG",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:IFL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:IFT",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:IGO",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ILU",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:IMD",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:JBH",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:JHX",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:L1G",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:LLC",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:LNW",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:LOV",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:LSF",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:LTR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:LYC",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:MCY",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:MEZ",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:MFF",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:MFG",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:MGR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:MIN",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:MND",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:MPL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:MQG",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:MSB",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:MTS",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:MXT",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:NAB",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:NEM",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:NHC",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:NHF",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:NIC",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:NSR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:NST",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:NWH",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:NWL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:NWS",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:NXG",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:NXT",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:OBM",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ORA",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ORG",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ORI",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:PDI",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:PDN",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:PLS",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:PME",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:PMV",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:PNI",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:PPT",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:PRN",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:PRU",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:PXA",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:QAN",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:QBE",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:QUB",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:RDX",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:REA",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:REG",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:REH",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:RGN",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:RHC",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:RIO",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:RMD",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:RMS",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:RRL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:RSG",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:RWC",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:RYM",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:S32",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:SCG",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:SDF",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:SEK",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:SFR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:SGH",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:SGM",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:SGP",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:SHL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:SIG",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:SMR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:SNZ",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:SOL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:SPK",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:STO",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:SUL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:SUN",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:TAH",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:TCL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:TLC",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:TLS",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:TLX",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:TNE",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:TPG",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:TUA",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:TWE",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:VAU",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:VCX",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:VEA",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:VGN",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:VNT",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:WAF",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:WAM",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:WBC",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:WDS",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:WES",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:WGX",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:WHC",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:WLE",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:WOR",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:WOW",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:WTC",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:XRO",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:XYX",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:YAL",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ZIM",
+      "asset_type": "asx_equity"
+    },
+    {
+      "instrument": "ASX:ZIP",
+      "asset_type": "asx_equity"
+    }
+  ]
+}

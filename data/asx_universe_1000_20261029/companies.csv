@@ -1,0 +1,1001 @@
+instrument,source_symbol,company,sector,cohorts,market_cap_status,liquidity_status,profile_status
+ASX:10X,10X.AX,EXULTANT MINING LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:14D,14D.AX,1414 DEGREES LIMITED,Capital Goods,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:1AD,1AD.AX,ADALTA LIMITED,"Pharmaceuticals, Biotechnology & Life Sciences",broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:1AE,1AE.AX,AURORA ENERGY METALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:1AI,1AI.AX,ALGORAE PHARMACEUTICALS LIMITED,"Pharmaceuticals, Biotechnology & Life Sciences",broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:1CG,1CG.AX,ONE CLICK GROUP LIMITED,Capital Goods,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:1MC,1MC.AX,MORELLA CORPORATION LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:1TT,1TT.AX,THRIVE TRIBE TECHNOLOGIES LIMITED,Software & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:29M,29M.AX,29METALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:360,360.AX,Life360,Information Technology,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:3DA,3DA.AX,AMAERO INC.,Capital Goods,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:3DP,3DP.AX,POINTERRA LIMITED,Software & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:3PL,3PL.AX,3P LEARNING LIMITED..,Consumer Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:49M,49M.AX,49 METALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:4DS,4DS.AX,4DS MEMORY LIMITED,Semiconductors & Semiconductor Equipment,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:4DX,4DX.AX,4DMedical,Healthcare,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:5GG,5GG.AX,PENTANET LIMITED,Telecommunication Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:5GN,5GN.AX,5G NETWORKS LIMITED.,Software & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:6KA,6KA.AX,"6K ADDITIVE, INC.",Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:88E,88E.AX,88 ENERGY LIMITED,Energy,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:8CO,8CO.AX,8COMMON LIMITED,Software & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:8IH,8IH.AX,8I HOLDINGS LTD,Financial Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:A11,A11.AX,ATLANTIC LITHIUM LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:A1M,A1M.AX,AIC MINES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:A1N,A1N.AX,ARN MEDIA LIMITED,Media & Entertainment,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:A2M,A2M.AX,a2 Milk Company,Consumer Staples,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:A3D,A3D.AX,AURORA LABS LIMITED,Capital Goods,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:A4N,A4N.AX,ALPHA HPA LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:A8G,A8G.AX,AUSTRALASIAN METALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AA2,AA2.AX,ARIANA RESOURCES PLC,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AAC,AAC.AX,AUSTRALIAN AGRICULTURAL COMPANY LIMITED.,"Food, Beverage & Tobacco",broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AAI,AAI.AX,Alcoa,Materials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AAJ,AAJ.AX,ARUMA RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AAL,AAL.AX,ALFABS AUSTRALIA LIMITED,Capital Goods,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AAM,AAM.AX,AUMEGA METALS LTD,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AAP,AAP.AX,AUSTRALIAN AGRICULTURAL PROJECTS LIMITED,"Food, Beverage & Tobacco",broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AAR,AAR.AX,ASTRAL RESOURCES NL,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AAT,AAT.AX,AUSTRALIAN ADVENTURE TOURISM GROUP LIMITED,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AAU,AAU.AX,ANTILLES GOLD LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ABB,ABB.AX,AUSSIE BROADBAND LIMITED,Telecommunication Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ABE,ABE.AX,AUSTRALIAN BOND EXCHANGE HOLDINGS LIMITED,Financial Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ABG,ABG.AX,ABACUS GROUP,Equity Real Estate Investment Trusts (REITs),broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ABR,ABR.AX,ALBRIGHT METALS LTD,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ABV,ABV.AX,ADVANCED BRAKING TECHNOLOGY LTD,Automobiles & Components,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ABX,ABX.AX,ABX GROUP LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ABY,ABY.AX,ADORE BEAUTY GROUP LIMITED,Consumer Discretionary Distribution & Retail,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AC1,AC1.AX,AIR CHANGE INTERNATIONAL LIMITED.,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AC2,AC2.AX,ALLIED CREDIT ABS TRUST 2025-1P,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AC3,AC3.AX,ALLIED CREDIT ABS TRUST 2025-2,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AC4,AC4.AX,ALLIED CREDIT ABS TRUST 2026-1,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ACE,ACE.AX,ACUSENSUS LIMITED.,Software & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ACF,ACF.AX,ACROW LIMITED,Capital Goods,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ACL,ACL.AX,AUSTRALIAN CLINICAL LABS LIMITED,Health Care Equipment & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ACM,ACM.AX,AUSTRALIAN CRITICAL MINERALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ACP,ACP.AX,AUDALIA RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ACQ,ACQ.AX,ACORN CAPITAL INVESTMENT FUND LIMITED,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ACR,ACR.AX,ACRUX LIMITED,"Pharmaceuticals, Biotechnology & Life Sciences",broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ACS,ACS.AX,ACCENT RESOURCES NL,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ACT,ACT.AX,ACTCELERATE INTERNATIONAL GROUP LTD,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ACU,ACU.AX,ACUMENTIS GROUP LIMITED,Real Estate Management & Development,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ACW,ACW.AX,ACTINOGEN MEDICAL LIMITED,"Pharmaceuticals, Biotechnology & Life Sciences",broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AD1,AD1.AX,ADNEO LIMITED,Media & Entertainment,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AD8,AD8.AX,AUDINATE GROUP LIMITED,Technology Hardware & Equipment,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ADC,ADC.AX,ACDC METALS LTD,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ADD,ADD.AX,ADAVALE RESOURCES LIMITED,Energy,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ADH,ADH.AX,ADAIRS LIMITED,Consumer Discretionary Distribution & Retail,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ADN,ADN.AX,ANDROMEDA METALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ADO,ADO.AX,ANTEOTECH LTD,"Pharmaceuticals, Biotechnology & Life Sciences",broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ADR,ADR.AX,ADHERIUM LIMITED,Health Care Equipment & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ADS,ADS.AX,ADSLOT LTD.,Software & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ADX,ADX.AX,ADX ENERGY LTD,Energy,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ADY,ADY.AX,ADMIRALTY RESOURCES NL.,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AEC,AEC.AX,BETASHARES AUSTRALIAN SHARES CATHOLIC VALUES ETF,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AEE,AEE.AX,AURA ENERGY LIMITED,Energy,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AEF,AEF.AX,AUSTRALIAN ETHICAL INVESTMENT LIMITED,Financial Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AEG,AEG.AX,ALAND EQUITY GROUP LIMITED,Financial Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AEI,AEI.AX,AERIS ENVIRONMENTAL LTD,Commercial & Professional Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AEL,AEL.AX,AMPLITUDE ENERGY LIMITED,Energy,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AEM,AEM.AX,ADVANCED ENGINEERED MATERIALS LTD,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AER,AER.AX,AEERIS LTD,Media & Entertainment,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AEU,AEU.AX,ATOMIC EAGLE LTD,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AEV,AEV.AX,AVENIRA LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AF2,AF2.AX,ANGLE ASSET FINANCE - RADIAN TRUST 2025-1,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AF4,AF4.AX,AFG 2024-1 TRUST IN RESPECT OF SERIES 2024-1,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AF5,AF5.AX,AFG 2025-1NC TRUST IN RESPECT OF SERIES 2025-1NC,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AF6,AF6.AX,AFG 2025-1 TRUST IN RESPECT OF SERIES 2025-1,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AF7,AF7.AX,ANGLE ASSET FINANCE - RADIAN TRUST 2025-2,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AF9,AF9.AX,ANGLE ASSET FINANCE - RADIAN TRUST 2026-1,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AFA,AFA.AX,ASF GROUP LIMITED,Financial Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AFG,AFG.AX,AUSTRALIAN FINANCE GROUP LTD,Financial Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AFI,AFI.AX,Australian Foundation Investment Company,Financials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AFL,AFL.AX,AF LEGAL GROUP LTD,Commercial & Professional Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AFP,AFP.AX,AFT PHARMACEUTICALS LIMITED,"Pharmaceuticals, Biotechnology & Life Sciences",broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AFT,AFT.AX,AFG 2023-1 TRUST IN RESPECT OF SERIES 2023-1,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AGC,AGC.AX,AUSTRALIAN GOLD AND COPPER LTD,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AGD,AGD.AX,AUSTRAL GOLD LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AGE,AGE.AX,ALLIGATOR ENERGY LIMITED,Energy,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AGI,AGI.AX,AINSWORTH GAME TECHNOLOGY LIMITED,Consumer Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AGL,AGL.AX,AGL Energy,Utilities,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AGN,AGN.AX,ARGENICA THERAPEUTICS LIMITED,"Pharmaceuticals, Biotechnology & Life Sciences",broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AGR,AGR.AX,AGUIA RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AGT,AGT.AX,ARBITR GROUP LIMITED,Media & Entertainment,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AGY,AGY.AX,ARGOSY MINERALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AHC,AHC.AX,AUSTCO HEALTHCARE LIMITED,Health Care Equipment & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AHE,AHE.AX,ADHERIS HEALTH LIMITED,Health Care Equipment & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AHF,AHF.AX,AUSTRALIAN DAIRY NUTRITIONALS LIMITED,"Food, Beverage & Tobacco",broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AHK,AHK.AX,ARK MINES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AHL,AHL.AX,ADRAD HOLDINGS LIMITED,Automobiles & Components,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AHN,AHN.AX,ATHENA RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AI1,AI1.AX,ADISYN LTD,Software & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AIA,AIA.AX,Auckland International Airport Limited,Industrials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AIC,AIC.AX,AUSTRALIAN SECURITIES & INVESTMENT COMMISSION,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AIH,AIH.AX,ADVANCED INNERGY HOLDINGS LIMITED,Capital Goods,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AIM,AIM.AX,AI-MEDIA TECHNOLOGIES LIMITED,Software & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AIQ,AIQ.AX,ALTERNATIVE INVESTMENT TRUST,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AIS,AIS.AX,AERIS RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AIV,AIV.AX,ACTIVEX LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AIX,AIX.AX,AI PRIVATE OPPORTUNITIES TRUST,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AIZ,AIZ.AX,AIR NEW ZEALAND LIMITED,Transportation,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AJL,AJL.AX,AJ LUCAS GROUP LIMITED,Capital Goods,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AJX,AJX.AX,ALEXIUM INTERNATIONAL GROUP LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AKA,AKA.AX,AUREKA LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AKG,AKG.AX,ACADEMIES AUSTRALASIA GROUP LIMITED,Consumer Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AKM,AKM.AX,ASPIRE MINING LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AKN,AKN.AX,AUKING MINING LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AKO,AKO.AX,AKORA RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AL3,AL3.AX,AML3D LIMITED,Capital Goods,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ALA,ALA.AX,AROVELLA THERAPEUTICS LIMITED,"Pharmaceuticals, Biotechnology & Life Sciences",broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ALB,ALB.AX,ALBION RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ALC,ALC.AX,ALCIDION GROUP LIMITED,Health Care Equipment & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ALD,ALD.AX,Ampol,Energy,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ALI,ALI.AX,ARGO GLOBAL LISTED INFRASTRUCTURE LIMITED,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ALK,ALK.AX,Alkane Resources,Materials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ALL,ALL.AX,Aristocrat Leisure,Consumer Discretionary,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ALM,ALM.AX,ALMA METALS LIMITED,Energy,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ALQ,ALQ.AX,ALS,Industrials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ALR,ALR.AX,ALTAIR MINERALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ALU,ALU.AX,ALURION RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ALV,ALV.AX,ALVO MINERALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ALX,ALX.AX,Atlas Arteria,Industrials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ALY,ALY.AX,ALCHEMY RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AM3,AM3.AX,AMARA MINERALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AM5,AM5.AX,ANTARES METALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AM7,AM7.AX,ARCADIA MINERALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AMA,AMA.AX,AMA GROUP LIMITED,Commercial & Professional Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AMC,AMC.AX,Amcor,Materials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AMD,AMD.AX,ARROW MINERALS LTD,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AMH,AMH.AX,AMCIL LIMITED,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AMI,AMI.AX,AURELIA METALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AMK,AMK.AX,ALMASAR MINERALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AMN,AMN.AX,AGRIMIN LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AMO,AMO.AX,AMBERTECH LIMITED,Technology Hardware & Equipment,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AMP,AMP.AX,AMP,Financials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AMS,AMS.AX,ATOMOS LIMITED,Consumer Durables & Apparel,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AMU,AMU.AX,AMERICAN URANIUM LTD,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AMX,AMX.AX,AEROMETREX LIMITED,Commercial & Professional Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AN1,AN1.AX,ANAGENICS LIMITED,"Pharmaceuticals, Biotechnology & Life Sciences",broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AN3,AN3.AX,AUSTRALIA AND NEW ZEALAND BANKING GROUP LIMITED.,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ANG,ANG.AX,AUSTIN ENGINEERING LIMITED,Capital Goods,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ANN,ANN.AX,Ansell,Healthcare,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ANO,ANO.AX,ADVANCE ZINCTEK LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ANR,ANR.AX,ANATARA LIFESCIENCES LTD,"Pharmaceuticals, Biotechnology & Life Sciences",broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ANT,ANT.AX,ANTIMONY RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ANV,ANV.AX,AUSNET SERVICES HOLDINGS PTY LTD,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ANX,ANX.AX,ANAX METALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ANZ,ANZ.AX,Australia & New Zealand Banking Group,Financials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AO2,AO2.AX,APOLLO SERIES 2017-2 TRUST,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AO3,AO3.AX,APOLLO SERIES 2018-1 TRUST,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AOA,AOA.AX,AUSMON RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AOK,AOK.AX,AUSTRALIAN OIL COMPANY LIMITED.,Energy,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AON,AON.AX,APOLLO MINERALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AOV,AOV.AX,AMOTIV LIMITED,Automobiles & Components,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AP2,AP2.AX,APA INFRASTRUCTURE LIMITED,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:APA,APA.AX,APA Group,Utilities,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:APC,APC.AX,APC MINERALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:APE,APE.AX,Eagers Automotive,Consumer Discretionary,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:APL,APL.AX,ASSOCIATE GLOBAL PARTNERS LIMITED,Financial Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:APW,APW.AX,AIMS PROPERTY SECURITIES FUND,Equity Real Estate Investment Trusts (REITs),broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:APX,APX.AX,APPEN LIMITED,Software & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:APZ,APZ.AX,ASPEN GROUP,Equity Real Estate Investment Trusts (REITs),broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AQC,AQC.AX,AUSTRALIAN PACIFIC COAL LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AQD,AQD.AX,AUSQUEST LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AQL,AQL.AX,BETASHARES AUSTRALIAN QUALITY ETF,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AQN,AQN.AX,AQUIRIAN LIMITED,Commercial & Professional Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AQT,AQT.AX,VANECK MSCI AUSTRALIAN QUALITY PLUS ETF,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AQX,AQX.AX,ALICE QUEEN LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AQZ,AQZ.AX,ALLIANCE AVIATION SERVICES LIMITED,Transportation,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AR1,AR1.AX,AUSTRAL RESOURCES AUSTRALIA LTD,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AR2,AR2.AX,ARRIS HOLDINGS BERHAD,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AR3,AR3.AX,AUSTRALIAN RARE EARTHS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AR9,AR9.AX,ARCHTIS LIMITED,Software & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ARA,ARA.AX,ARIADNE AUSTRALIA LIMITED,Commercial & Professional Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ARB,ARB.AX,ARB Corporation,Consumer Discretionary,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ARC,ARC.AX,ARC FUNDS LIMITED,Financial Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ARD,ARD.AX,ARGENT MINERALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ARF,ARF.AX,ARENA REIT.,Equity Real Estate Investment Trusts (REITs),broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ARG,ARG.AX,Argo Investments,Financials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ARI,ARI.AX,ARIKA RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ARL,ARL.AX,ARDEA RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ARN,ARN.AX,ALDORO RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ARO,ARO.AX,ALTORO METALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ARR,ARR.AX,AMERICAN RARE EARTHS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ART,ART.AX,AIRTASKER LIMITED,Media & Entertainment,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ARU,ARU.AX,ARAFURA RARE EARTHS LTD,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ARV,ARV.AX,ARTEMIS RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ARX,ARX.AX,AROA BIOSURGERY LIMITED,"Pharmaceuticals, Biotechnology & Life Sciences",broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AS1,AS1.AX,ASARA RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AS2,AS2.AX,ASKARI METALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ASB,ASB.AX,Austal,Industrials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ASG,ASG.AX,AUTOSPORTS GROUP LIMITED.,Consumer Discretionary Distribution & Retail,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ASH,ASH.AX,ASHLEY SERVICES GROUP LIMITED,Commercial & Professional Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ASK,ASK.AX,Abacus Storage King,Real Estate,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ASL,ASL.AX,ANDEAN SILVER LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ASN,ASN.AX,ANSON RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ASP,ASP.AX,ASPERMONT LIMITED.,Media & Entertainment,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ASQ,ASQ.AX,AUSTRALIAN SILICA QUARTZ GROUP LTD,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ASV,ASV.AX,ASSET VISION CO LTD,Commercial & Professional Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ASX,ASX.AX,ASX,Financials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AT1,AT1.AX,ATOMO DIAGNOSTICS LIMITED,Health Care Equipment & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AT4,AT4.AX,AMERICAN TUNGSTEN & ANTIMONY LTD,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ATA,ATA.AX,ATTURRA LIMITED,Software & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ATB,ATB.AX,ASIAN DEVELOPMENT BANK,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ATC,ATC.AX,ALTECH BATTERIES LTD,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ATG,ATG.AX,ARTICORE GROUP LIMITED,Consumer Discretionary Distribution & Retail,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ATH,ATH.AX,ALTERITY THERAPEUTICS LIMITED,"Pharmaceuticals, Biotechnology & Life Sciences",broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ATM,ATM.AX,PT ANTAM (PERSERO) TBK,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ATP,ATP.AX,ATLAS PEARLS LTD,Consumer Durables & Apparel,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ATR,ATR.AX,ASTRON LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ATS,ATS.AX,AUSTRALIS OIL & GAS LIMITED,Energy,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ATT,ATT.AX,ALTITUDE MINERALS LTD,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ATV,ATV.AX,ACTIVEPORT GROUP LTD,Software & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ATX,ATX.AX,AMPLIA THERAPEUTICS LIMITED,"Pharmaceuticals, Biotechnology & Life Sciences",broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AU1,AU1.AX,THE AGENCY GROUP AUSTRALIA LTD,Real Estate Management & Development,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AUA,AUA.AX,AUDEARA LIMITED,Consumer Durables & Apparel,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AUB,AUB.AX,AUB Group,Financials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AUC,AUC.AX,AUSGOLD LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AUE,AUE.AX,AURUM RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AUG,AUG.AX,AUGUSTUS MINERALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AUI,AUI.AX,AUSTRALIAN UNITED INVESTMENT COMPANY LIMITED,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AUQ,AUQ.AX,ALARA RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AUR,AUR.AX,AURIS MINERALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AUV,AUV.AX,AURAVELLE METALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AUZ,AUZ.AX,AUSTRALIAN MINES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AV1,AV1.AX,ADVERITAS LIMITED,Software & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AVA,AVA.AX,AVA RISK GROUP LIMITED,Technology Hardware & Equipment,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AVD,AVD.AX,AVADA GROUP LIMITED,Commercial & Professional Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AVE,AVE.AX,AVECHO BIOTECHNOLOGY LIMITED,"Pharmaceuticals, Biotechnology & Life Sciences",broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AVG,AVG.AX,AUSTRALIAN VINTAGE LTD,"Food, Beverage & Tobacco",broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AVH,AVH.AX,AVITA MEDICAL INC.,"Pharmaceuticals, Biotechnology & Life Sciences",broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AVL,AVL.AX,AUSTRALIAN VANADIUM LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AVM,AVM.AX,ADVANCE METALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AVR,AVR.AX,ANTERIS TECHNOLOGIES GLOBAL CORP.,Health Care Equipment & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AVW,AVW.AX,AVIRA RESOURCES LTD,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AW1,AW1.AX,AMERICAN WEST METALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AWJ,AWJ.AX,AURIC MINING LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AX1,AX1.AX,ACCENT GROUP LIMITED,Consumer Discretionary Distribution & Retail,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AX8,AX8.AX,ACCELERATE RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AXE,AXE.AX,ARCHER MATERIALS LIMITED,Semiconductors & Semiconductor Equipment,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AXI,AXI.AX,AXTEC LIMITED,Real Estate Management & Development,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AXL,AXL.AX,AXEL REE LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AXN,AXN.AX,ALLIANCE NICKEL LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AXP,AXP.AX,AXP ENERGY LIMITED,Energy,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AXQ,AXQ.AX,"AURA CONSOLIDATED GROUP, INC.",Class Pend,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AXR,AXR.AX,AXIANT RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AXX,AXX.AX,AUSTRALIAN COMPETITION & CONSUMER COMMISSION,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AYA,AYA.AX,ARTRYA LIMITED,Health Care Equipment & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AYM,AYM.AX,AUSTRALIA UNITED MINING LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AYT,AYT.AX,AUSTIN METALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AYU,AYU.AX,AUSTRALIAN UNITY LIMITED,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AZ9,AZ9.AX,AZZURO RESOURCES PLC,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AZI,AZI.AX,ALTAMIN LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AZJ,AZJ.AX,Aurizon,Industrials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:AZY,AZY.AX,ANTIPA MINERALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:B01,B01.AX,BANCO SANTANDER S.A.,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:B4P,B4P.AX,BEFOREPAY GROUP LIMITED,Financial Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BA2,BA2.AX,SERIES 2019-1 REDS TRUST,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BAK,BAK.AX,BARKLY RARE EARTHS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BAP,BAP.AX,BAPCOR LIMITED,Consumer Discretionary Distribution & Retail,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BAS,BAS.AX,BASS OIL LIMITED,Energy,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BB1,BB1.AX,BLINKLAB LIMITED,Health Care Equipment & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BBC,BBC.AX,BNK BANKING CORPORATION LIMITED,Banks,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BBL,BBL.AX,BRISBANE BRONCOS LIMITED,Media & Entertainment,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BBN,BBN.AX,BABY BUNTING GROUP LIMITED,Consumer Discretionary Distribution & Retail,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BBT,BBT.AX,BETR ENTERTAINMENT LIMITED,Consumer Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BC8,BC8.AX,BLACK CAT SYNDICATE LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BCA,BCA.AX,BLACK CANYON LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BCC,BCC.AX,BEAM COMMUNICATIONS HOLDINGS LIMITED,Technology Hardware & Equipment,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BCI,BCI.AX,BCI MINERALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BCK,BCK.AX,BROCKMAN MINING LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BCM,BCM.AX,BRAZILIAN CRITICAL MINERALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BCN,BCN.AX,BEACON MINERALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BDM,BDM.AX,BURGUNDY DIAMOND MINES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BDX,BDX.AX,BCAL DIAGNOSTICS LIMITED,"Pharmaceuticals, Biotechnology & Life Sciences",broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BEL,BEL.AX,BENTLEY CAPITAL LIMITED,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BEN,BEN.AX,Bendigo & Adelaide Bank,Financials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BEO,BEO.AX,BEONIC LTD,Software & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BET,BET.AX,BETMAKERS TECHNOLOGY GROUP LTD,Consumer Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BEZ,BEZ.AX,BESRA GOLD INC.,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BFG,BFG.AX,BELL FINANCIAL GROUP LIMITED,Financial Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BFL,BFL.AX,BSP Financial Group,Financials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BGA,BGA.AX,Bega Cheese,Consumer Staples,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BGD,BGD.AX,BARTON GOLD HOLDINGS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BGE,BGE.AX,BRIDGE SAAS LIMITED,Software & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BGL,BGL.AX,Bellevue Gold,Materials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BGP,BGP.AX,BRISCOE GROUP AUSTRALASIA LIMITED,Consumer Discretionary Distribution & Retail,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BGT,BGT.AX,BIO-GENE TECHNOLOGY LTD,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BH6,BH6.AX,BROKEN HILL GOLD LTD,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BHD,BHD.AX,BENJAMIN HORNIGOLD LIMITED,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BHL,BHL.AX,BLACK HORSE MINING LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BHM,BHM.AX,BROKEN HILL MINES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BHP,BHP.AX,BHP,Materials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BHY,BHY.AX,BETASHARES AUSTRALIAN MAJOR BANK HYBRIDS INDEX ETF,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BIM,BIM.AX,BINDI METALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BIO,BIO.AX,BIOME AUSTRALIA LIMITED,Household & Personal Products,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BIS,BIS.AX,BISALLOY STEEL GROUP LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BIT,BIT.AX,BIOTRON LIMITED,"Pharmaceuticals, Biotechnology & Life Sciences",broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BKB,BKB.AX,BLACK BEAR MINERALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BKI,BKI.AX,BKI INVESTMENT COMPANY LIMITED,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BKT,BKT.AX,BLACK ROCK MINING LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BKY,BKY.AX,BERKELEY ENERGIA LIMITED,Energy,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BLG,BLG.AX,BLUGLASS LIMITED,Semiconductors & Semiconductor Equipment,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BLS,BLS.AX,BLS PHARMACEUTICALS LIMITED,Household & Personal Products,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BLU,BLU.AX,BLUE ENERGY LIMITED.,Energy,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BLX,BLX.AX,BEACON LIGHTING GROUP LIMITED,Consumer Discretionary Distribution & Retail,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BLZ,BLZ.AX,BLAZE MINERALS LIMITED,Energy,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BM1,BM1.AX,BALLARD MINING LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BM8,BM8.AX,BATTERY AGE MINERALS LTD,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BMC,BMC.AX,BMC MINERALS LTD.,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BMH,BMH.AX,BAUMART HOLDINGS LIMITED,Capital Goods,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BML,BML.AX,BOAB METALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BMM,BMM.AX,BAYAN MINING AND MINERALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BMN,BMN.AX,BANNERMAN ENERGY LTD,Energy,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BMR,BMR.AX,BALLYMORE RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BMT,BMT.AX,BEAMTREE HOLDINGS LIMITED,Health Care Equipment & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BNL,BNL.AX,BLUE STAR HELIUM LIMITED,Energy,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BNR,BNR.AX,BULLETIN RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BNZ,BNZ.AX,BENZ MINING CORP.,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BOA,BOA.AX,BOA RESOURCES LTD,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BOC,BOC.AX,BOUGAINVILLE COPPER LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BOE,BOE.AX,BOSS ENERGY LTD,Energy,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BOL,BOL.AX,BOOM LOGISTICS LIMITED,Capital Goods,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BOQ,BOQ.AX,Bank of Queensland,Financials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BOT,BOT.AX,BOTANIX PHARMACEUTICALS LTD,"Pharmaceuticals, Biotechnology & Life Sciences",broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BP1,BP1.AX,BP CAPITAL MARKETS P.L.C.,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BPG,BPG.AX,BLACK PEARL GROUP LIMITED,Software & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BPH,BPH.AX,BPH ENERGY LTD,Financial Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BPM,BPM.AX,BPM MINERALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BPP,BPP.AX,BABYLON PUMP & POWER LIMITED,Capital Goods,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BPT,BPT.AX,Beach Energy,Energy,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BRE,BRE.AX,BRAZILIAN RARE EARTHS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BRG,BRG.AX,Breville Group,Consumer Discretionary,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BRI,BRI.AX,BIG RIVER INDUSTRIES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BRK,BRK.AX,BROOKSIDE ENERGY LIMITED,Energy,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BRL,BRL.AX,BATHURST RESOURCES LIMITED.,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BRN,BRN.AX,BRAINCHIP HOLDINGS LTD,Software & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BRU,BRU.AX,BURU ENERGY LIMITED,Energy,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BRY,BRY.AX,BARYS RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BS1,BS1.AX,BLUESTONE PRIME 2024-1 TRUST,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BSA,BSA.AX,BSA LIMITED,Commercial & Professional Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BSL,BSL.AX,BlueScope,Materials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BSN,BSN.AX,BASIN ENERGY LIMITED,Energy,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BSR,BSR.AX,BISON RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BST,BST.AX,BORESIGHT LTD,Capital Goods,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BSX,BSX.AX,BLACKSTONE MINERALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BTC,BTC.AX,BTC HEALTH LTD,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BTE,BTE.AX,BOTALA ENERGY LTD,Energy,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BTI,BTI.AX,BAILADOR TECHNOLOGY INVESTMENTS LIMITED,Financial Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BTL,BTL.AX,BEETALOO ENERGY AUSTRALIA LIMITED,Energy,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BTM,BTM.AX,BREAKTHROUGH MINERALS LIMITED,Energy,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BTN,BTN.AX,BUTN LIMITED,Financial Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BTR,BTR.AX,BRIGHTSTAR RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BUB,BUB.AX,BUBS AUSTRALIA LIMITED,"Food, Beverage & Tobacco",broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BUR,BUR.AX,BURLEY MINERALS LTD,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BUS,BUS.AX,BUBALUS RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BUX,BUX.AX,BUXTON RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BUY,BUY.AX,BOUNTY OIL & GAS NL,Energy,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BVR,BVR.AX,BELLAVISTA RESOURCES LTD,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BVS,BVS.AX,BRAVURA SOLUTIONS LIMITED.,Software & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BW6,BW6.AX,BLACKWATTLE SERIES RMBS TRUST NO.6,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BWF,BWF.AX,BLACKWALL LIMITED,Financial Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BWN,BWN.AX,BHAGWAN MARINE LIMITED,Transportation,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BWP,BWP.AX,BWP Trust,Real Estate,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:BXB,BXB.AX,Brambles,Industrials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:C29,C29.AX,C29 METALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:C2F,C2F.AX,CENTURIA FUNDS MANAGEMENT LIMITED,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:C79,C79.AX,CHRYSOS CORPORATION LIMITED,Commercial & Professional Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:C7A,C7A.AX,CLARA RESOURCES AUSTRALIA LTD,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CAA,CAA.AX,CAPRAL LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CAE,CAE.AX,CANNINDAH RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CAF,CAF.AX,CENTREPOINT ALLIANCE LIMITED,Financial Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CAM,CAM.AX,CLIME CAPITAL LIMITED,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CAN,CAN.AX,CANN GROUP LIMITED,"Pharmaceuticals, Biotechnology & Life Sciences",broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CAQ,CAQ.AX,CAQ HOLDINGS LIMITED,Real Estate Management & Development,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CAR,CAR.AX,CAR Group,Communication Services,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CAT,CAT.AX,CATAPULT SPORTS LTD,Software & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CAV,CAV.AX,CARNAVALE RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CAY,CAY.AX,CANYON RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CAZ,CAZ.AX,CAZALY RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CBA,CBA.AX,Commonwealth Bank,Financials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CBE,CBE.AX,COBRE LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CBL,CBL.AX,CONTROL BIONICS LIMITED,Health Care Equipment & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CBO,CBO.AX,COBRAM ESTATE OLIVES LIMITED,"Food, Beverage & Tobacco",broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CBY,CBY.AX,CANTERBURY RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CC5,CC5.AX,CLEVER CULTURE SYSTEMS LIMITED,Health Care Equipment & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CC9,CC9.AX,CHARIOT RESOURCES LTD,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CCA,CCA.AX,CHANGE FINANCIAL LIMITED,Financial Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CCE,CCE.AX,CARNEGIE CLEAN ENERGY LIMITED,Utilities,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CCG,CCG.AX,COMMS GROUP LTD,Telecommunication Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CCL,CCL.AX,CUSCAL LIMITED,Financial Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CCM,CCM.AX,CADOUX LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CCO,CCO.AX,THE CALMER CO INTERNATIONAL LIMITED,Household & Personal Products,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CCP,CCP.AX,CREDIT CORP GROUP LIMITED,Financial Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CCR,CCR.AX,CREDIT CLEAR LIMITED,Software & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CCV,CCV.AX,CASH CONVERTERS INTERNATIONAL,Financial Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CCX,CCX.AX,CITY CHIC COLLECTIVE LIMITED,Consumer Discretionary Distribution & Retail,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CD1,CD1.AX,CD PRIVATE EQUITY FUND I,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CD2,CD2.AX,CD PRIVATE EQUITY FUND II,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CD3,CD3.AX,CD PRIVATE EQUITY FUND III,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CDA,CDA.AX,Codan,Information Technology,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CDE,CDE.AX,CODEIFAI LIMITED,Commercial & Professional Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CDM,CDM.AX,CADENCE CAPITAL LIMITED,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CDO,CDO.AX,CADENCE OPPORTUNITIES FUND LIMITED.,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CDP,CDP.AX,CARINDALE PROPERTY TRUST,Equity Real Estate Investment Trusts (REITs),broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CDR,CDR.AX,CODRUS MINERALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CEH,CEH.AX,COAST ENTERTAINMENT HOLDINGS LIMITED,Consumer Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CEL,CEL.AX,CHALLENGER GOLD LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CEN,CEN.AX,Contact Energy,Utilities,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CF1,CF1.AX,COMPLII FINTECH SOLUTIONS LTD,Software & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CG1,CG1.AX,CARBONXT GROUP LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CGF,CGF.AX,Challenger,Financials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CGO,CGO.AX,CPT GLOBAL LIMITED,Software & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CGR,CGR.AX,CGN RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CGS,CGS.AX,COGSTATE LTD,Health Care Equipment & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CHC,CHC.AX,Charter Hall,Real Estate,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CHI,CHI.AX,CHANNEL INFRASTRUCTURE NZ LIMITED,Energy,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CHL,CHL.AX,CAMPLIFY HOLDINGS LIMITED,Transportation,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CHM,CHM.AX,CHIMERIC THERAPEUTICS LIMITED,"Pharmaceuticals, Biotechnology & Life Sciences",broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CHN,CHN.AX,CHALICE MINING LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CHR,CHR.AX,CHARGER METALS NL,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CHW,CHW.AX,CHILWA MINERALS LTD,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CIA,CIA.AX,Champion Iron,Materials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CIM,CIM.AX,CHALLENGER IM CAPITAL LIMITED,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CIN,CIN.AX,CARLTON INVESTMENTS LIMITED,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CIP,CIP.AX,Centuria Industrial REIT,Real Estate,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CIW,CIW.AX,CLIME INVESTMENT MANAGEMENT LTD,Financial Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CKA,CKA.AX,COKAL LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CKF,CKF.AX,COLLINS FOODS LIMITED,Consumer Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CLA,CLA.AX,CELSIUS RESOURCES LIMITED.,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CLG,CLG.AX,CLOSE THE LOOP LTD.,Commercial & Professional Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CLV,CLV.AX,CLOVER CORPORATION LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CLW,CLW.AX,Charter Hall Long WALE REIT,Real Estate,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CLX,CLX.AX,CTI LOGISTICS LIMITED,Transportation,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CMA,CMA.AX,CARMA LIMITED,Consumer Discretionary Distribution & Retail,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CMB,CMB.AX,CAMBIUM BIO LIMITED,"Pharmaceuticals, Biotechnology & Life Sciences",broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CMD,CMD.AX,CASSIUS MINING LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CMG,CMG.AX,CRITICAL MINERALS GROUP LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CML,CML.AX,CONNECTED MINERALS LIMITED,Technology Hardware & Equipment,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CMM,CMM.AX,Capricorn Metals,Materials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CMO,CMO.AX,COSMO METALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CMP,CMP.AX,COMPUMEDICS LIMITED,Health Care Equipment & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CMW,CMW.AX,CROMWELL PROPERTY GROUP,Equity Real Estate Investment Trusts (REITs),broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CMX,CMX.AX,CHEMX MATERIALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CNB,CNB.AX,CARNABY RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CND,CND.AX,CONDOR ENERGY LIMITED,Energy,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CNI,CNI.AX,CENTURIA CAPITAL GROUP,Equity Real Estate Investment Trusts (REITs),broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CNJ,CNJ.AX,CONICO LTD,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CNQ,CNQ.AX,CLEAN TEQ WATER LIMITED,Commercial & Professional Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CNU,CNU.AX,Chorus,Communication Services,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:COB,COB.AX,COBALT BLUE HOLDINGS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:COD,COD.AX,CODA MINERALS LTD,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:COF,COF.AX,CENTURIA OFFICE REIT,Equity Real Estate Investment Trusts (REITs),broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:COG,COG.AX,COG FINANCIAL SERVICES LIMITED,Financial Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:COH,COH.AX,Cochlear,Healthcare,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:COI,COI.AX,COMET RIDGE LIMITED,Energy,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:COL,COL.AX,Coles Group,Consumer Staples,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:COS,COS.AX,COSOL LIMITED,Software & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:COV,COV.AX,CLEO DIAGNOSTICS LTD,"Pharmaceuticals, Biotechnology & Life Sciences",broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:COY,COY.AX,COPPERMOLY LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CP8,CP8.AX,CANADIAN PHOSPHATE LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CPL,CPL.AX,CSL FINANCE PLC,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CPM,CPM.AX,COOPER METALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CPN,CPN.AX,CASPIN RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CPO,CPO.AX,CULPEO MINERALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CPU,CPU.AX,Computershare,Information Technology,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CPV,CPV.AX,CLEARVUE TECHNOLOGIES LIMITED,Capital Goods,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CQE,CQE.AX,CHARTER HALL SOCIAL INFRASTRUCTURE REIT,Equity Real Estate Investment Trusts (REITs),broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CQR,CQR.AX,Charter Hall Retail REIT,Real Estate,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CQT,CQT.AX,CONNEQT HEALTH LIMITED,Health Care Equipment & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CR1,CR1.AX,CONSTELLATION RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CR3,CR3.AX,CORE ENERGY MINERALS LTD,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CRB,CRB.AX,CARBINE RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CRD,CRD.AX,CONRAD ASIA ENERGY LTD.,Energy,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CRG,CRG.AX,CRIGEN RESOURCES LIMITED,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CRI,CRI.AX,CRITICA LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CRN,CRN.AX,CORONADO GLOBAL RESOURCES INC.,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CRR,CRR.AX,CRITICAL RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CRS,CRS.AX,CAPRICE RESOURCES LTD,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CSC,CSC.AX,Capstone Copper,Materials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CSL,CSL.AX,CSL,Healthcare,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CST,CST.AX,CASTILE RESOURCES LTD,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CSX,CSX.AX,CLEANSPACE HOLDINGS LIMITED,Health Care Equipment & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CT1,CT1.AX,CONSTELLATION TECHNOLOGIES LIMITED,Technology Hardware & Equipment,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CTD,CTD.AX,Corporate Travel Management,Consumer Discretionary,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CTE,CTE.AX,CRYOSITE LIMITED,"Pharmaceuticals, Biotechnology & Life Sciences",broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CTM,CTM.AX,CENTAURUS METALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CTN,CTN.AX,CATALINA RESOURCES LTD,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CTO,CTO.AX,CITIGOLD CORPORATION LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CTP,CTP.AX,CENTRAL PETROLEUM LIMITED,Energy,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CTQ,CTQ.AX,CARETEQ LIMITED,Health Care Equipment & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CTS,CTS.AX,CERETAS LIMITED,Health Care Equipment & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CTT,CTT.AX,CETTIRE LIMITED,Consumer Discretionary Distribution & Retail,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CU6,CU6.AX,CLARITY PHARMACEUTICALS LTD,"Pharmaceuticals, Biotechnology & Life Sciences",broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CUE,CUE.AX,CUE ENERGY RESOURCES LIMITED,Energy,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CUF,CUF.AX,CUFE LTD,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CUL,CUL.AX,CULLEN RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CUP,CUP.AX,COUNT LIMITED,Commercial & Professional Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CUV,CUV.AX,CLINUVEL PHARMACEUTICALS LIMITED,"Pharmaceuticals, Biotechnology & Life Sciences",broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CVB,CVB.AX,CURVEBEAM AI LIMITED,Health Care Equipment & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CVC,CVC.AX,CVC LIMITED,Financial Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CVL,CVL.AX,CIVMEC LIMITED,Capital Goods,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CVN,CVN.AX,CARNARVON ENERGY LIMITED,Energy,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CVR,CVR.AX,CAVALIER RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CVV,CVV.AX,CARAVEL MINERALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CWP,CWP.AX,CEDAR WOODS PROPERTIES LIMITED,Real Estate Management & Development,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CWY,CWY.AX,Cleanaway,Industrials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CX1,CX1.AX,"CAIXABANK, S.A.",Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CX8,CX8.AX,CAPABILITY X LIMITED,Class Pend,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CXL,CXL.AX,CALIX LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CXO,CXO.AX,CORE LITHIUM LTD,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CXU,CXU.AX,CAULDRON ENERGY LIMITED,Energy,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CXZ,CXZ.AX,CONNEXION MOBILITY LTD,Software & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CYB,CYB.AX,AUCYBER LIMITED,Software & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CYC,CYC.AX,CYCLOPHARM LIMITED,Health Care Equipment & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CYG,CYG.AX,COVENTRY GROUP LIMITED,Capital Goods,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CYL,CYL.AX,Catalyst Metals,Materials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CYM,CYM.AX,CYPRIUM METALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CYP,CYP.AX,CYNATA THERAPEUTICS LIMITED,"Pharmaceuticals, Biotechnology & Life Sciences",broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CYQ,CYQ.AX,CYCLIQ GROUP LTD,Consumer Durables & Apparel,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CYV,CYV.AX,CERYVYN THERAPEUTICS LIMITED,"Pharmaceuticals, Biotechnology & Life Sciences",broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CZN,CZN.AX,CORAZON MINING LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:CZR,CZR.AX,CZR RESOURCES LTD,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:D10,D10.AX,DRIVER AUSTRALIA TEN TRUST,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:D11,D11.AX,DRIVER AUSTRALIA ELEVEN TRUST,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:D3E,D3E.AX,D3 ENERGY LIMITED,Energy,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:DA8,DA8.AX,DRIVER AUSTRALIA EIGHT TRUST,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:DA9,DA9.AX,DRIVER AUSTRALIA NINE TRUST,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:DAF,DAF.AX,DISCOVERY ALASKA LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:DAI,DAI.AX,DECIDR AI INDUSTRIES LTD,"Food, Beverage & Tobacco",broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:DAL,DAL.AX,DALAROO METALS LTD,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:DAM,DAM.AX,DRIVER AUSTRALIA MASTER TRUST,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:DAT,DAT.AX,DRIVER AUSTRALIA SEVEN TRUST,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:DBF,DBF.AX,DUXTON FARMS LTD,"Food, Beverage & Tobacco",broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:DBI,DBI.AX,Dalrymple Bay Infrastructure,Industrials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:DBO,DBO.AX,DIABLO RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:DCC,DCC.AX,DIGITALX LIMITED,Software & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:DDR,DDR.AX,DICKER DATA LIMITED,Technology Hardware & Equipment,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:DDT,DDT.AX,DATADOT TECHNOLOGY LIMITED,Automobiles & Components,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:DEL,DEL.AX,DELOREAN CORPORATION LIMITED,Utilities,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:DEM,DEM.AX,DE.MEM LIMITED,Utilities,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:DES,DES.AX,DESOTO RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:DEV,DEV.AX,DEVEX RESOURCES LIMITED,Energy,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:DGH,DGH.AX,DESANE GROUP HOLDINGS LIMITED,Real Estate Management & Development,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:DGL,DGL.AX,DGL GROUP LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:DGR,DGR.AX,DGR GLOBAL LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:DGT,DGT.AX,DIGICO INFRASTRUCTURE REIT,Class Pend,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:DJW,DJW.AX,DJERRIWARRH INVESTMENTS LIMITED,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:DKM,DKM.AX,DUKETON MINING LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:DLI,DLI.AX,DELTA LITHIUM LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:DLY,DLY.AX,DALY RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:DM1,DM1.AX,DESERT METALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:DME,DME.AX,DOME GOLD MINES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:DMN,DMN.AX,DOMINION INVESTMENT GROUP LIMITED,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:DMP,DMP.AX,DOMINO'S PIZZA ENTERPRISES LIMITED,Consumer Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:DN1,DN1.AX,DOMINION INCOME TRUST 1,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:DNK,DNK.AX,DANAKALI LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:DNL,DNL.AX,Dyno Nobel,Materials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:DOC,DOC.AX,DOCTOR CARE ANYWHERE GROUP PLC,Health Care Equipment & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:DOW,DOW.AX,Downer Group,Industrials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:DPM,DPM.AX,DPM METALS INC.,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:DRE,DRE.AX,DREADNOUGHT RESOURCES LTD,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:DRO,DRO.AX,Droneshield,Industrials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:DRR,DRR.AX,Deterra Royalties,Materials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:DRX,DRX.AX,DIATREME RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:DSK,DSK.AX,DUSK GROUP LIMITED,Consumer Discretionary Distribution & Retail,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:DSM,DSM.AX,DESERT MINERALS LTD,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:DTL,DTL.AX,DATA#3 LIMITED,Software & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:DTM,DTM.AX,DART MINING NL,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:DTR,DTR.AX,DATELINE RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:DTZ,DTZ.AX,DOTZ NANO LIMITED,Technology Hardware & Equipment,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:DUB,DUB.AX,DUBBER CORPORATION LIMITED,Software & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:DUG,DUG.AX,DUG TECHNOLOGY LTD,Software & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:DUN,DUN.AX,DUNDAS MINERALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:DUR,DUR.AX,DURATEC LIMITED,Capital Goods,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:DVL,DVL.AX,DORSAVI LTD,"Pharmaceuticals, Biotechnology & Life Sciences",broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:DVP,DVP.AX,DEVELOP GLOBAL LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:DWG,DWG.AX,DATAWORKS GROUP LIMITED,Software & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:DXA,DXA.AX,CAISSE FRANCAISE DE FINANCEMENT LOCAL,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:DXB,DXB.AX,DIMERIX LIMITED,"Pharmaceuticals, Biotechnology & Life Sciences",broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:DXC,DXC.AX,DEXUS CONVENIENCE RETAIL REIT,Equity Real Estate Investment Trusts (REITs),broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:DXI,DXI.AX,DEXUS INDUSTRIA REIT.,Equity Real Estate Investment Trusts (REITs),broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:DXN,DXN.AX,DXN LIMITED,Software & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:DXS,DXS.AX,Dexus,Real Estate,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:DYL,DYL.AX,Deep Yellow,Energy,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:DYM,DYM.AX,DYNAMIC METALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:E25,E25.AX,ELEMENT 25 LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:E79,E79.AX,E79 GOLD MINES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EAU,EAU.AX,EAU LITHIUM LTD,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EAX,EAX.AX,ENERGY ACTION LIMITED,Commercial & Professional Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EBO,EBO.AX,EBOS Group,Healthcare,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EBR,EBR.AX,EBR SYSTEMS INC.,Health Care Equipment & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ECH,ECH.AX,ECHELON RESOURCES LIMITED,Energy,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ECP,ECP.AX,ECP EMERGING GROWTH LIMITED,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ECS,ECS.AX,ECS BOTANICS HOLDINGS LTD,"Pharmaceuticals, Biotechnology & Life Sciences",broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ECT,ECT.AX,ENVIRONMENTAL CLEAN TECHNOLOGIES LIMITED.,Commercial & Professional Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EDE,EDE.AX,EDEN INNOVATIONS LTD,Energy,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EDO,EDO.AX,EL DORADO GOLDFIELDS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EDU,EDU.AX,EDU HOLDINGS LIMITED,Consumer Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EDV,EDV.AX,Endeavour Group,Consumer Staples,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EE1,EE1.AX,EARTHS ENERGY LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EF2,EF2.AX,ENERGY FUELS INC.,Class Pend,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EFE,EFE.AX,EASTERN RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EFR,EFR.AX,EVERFLOW RESOURCES LTD,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EG1,EG1.AX,EVERGOLD MINERALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EGA,EGA.AX,EASTERN GAS CORPORATION LIMITED,Energy,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EGG,EGG.AX,ENERO GROUP LIMITED,Media & Entertainment,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EGH,EGH.AX,EUREKA GROUP HOLDINGS LIMITED,Real Estate Management & Development,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EGL,EGL.AX,ENVIRONMENTAL GROUP LIMITED (THE),Capital Goods,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EGR,EGR.AX,ECOGRAF LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EGY,EGY.AX,ENERGY TECHNOLOGIES LIMITED,Capital Goods,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EHL,EHL.AX,EMECO HOLDINGS LIMITED,Capital Goods,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EIQ,EIQ.AX,ECHOIQ LIMITED,Software & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EL8,EL8.AX,ELEVATE URANIUM LTD,Energy,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ELD,ELD.AX,ELDERS LIMITED,"Food, Beverage & Tobacco",broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ELK,ELK.AX,ELK RANGE MINING LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ELS,ELS.AX,ELSIGHT LIMITED,Technology Hardware & Equipment,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ELT,ELT.AX,ELEMENTOS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ELV,ELV.AX,ELEVRA LITHIUM LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EM2,EM2.AX,EAGLE MOUNTAIN MINING LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EM3,EM3.AX,EMC GOLD CORPORATION,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EMA,EMA.AX,EMINENCE MINERALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EMB,EMB.AX,EMBELTON LIMITED,Capital Goods,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EMC,EMC.AX,EVEREST METALS CORPORATION LTD,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EMD,EMD.AX,EMYRIA LIMITED,Health Care Equipment & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EME,EME.AX,ENERGY METALS LTD,Energy,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EMH,EMH.AX,EUROPEAN METALS HOLDINGS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EMI,EMI.AX,EMIRATES NBD PJSC,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EML,EML.AX,EML PAYMENTS LIMITED,Financial Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EMN,EMN.AX,EURO MANGANESE INC,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EMP,EMP.AX,EMPEROR ENERGY LIMITED,Energy,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EMR,EMR.AX,Emerald Resources,Materials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EMT,EMT.AX,EMETALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EMU,EMU.AX,EMU NL,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EMV,EMV.AX,EMVISION MEDICAL DEVICES LTD,Health Care Equipment & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ENL,ENL.AX,ENLITIC INC.,Health Care Equipment & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ENP,ENP.AX,ENTROPY NEURODYNAMICS LIMITED,"Pharmaceuticals, Biotechnology & Life Sciences",broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ENR,ENR.AX,ENCOUNTER RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ENT,ENT.AX,ENTERPRISE METALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ENV,ENV.AX,ENOVA MINING LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EOL,EOL.AX,ENERGY ONE LIMITED,Software & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EOS,EOS.AX,Electro Optic Systems Holdings,Industrials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EPI,EPI.AX,EPIMINDER LIMITED,Health Care Equipment & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EPM,EPM.AX,ECLIPSE METALS LIMITED.,Energy,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EPN,EPN.AX,EPSILON HEALTHCARE LIMITED,"Pharmaceuticals, Biotechnology & Life Sciences",broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EPX,EPX.AX,EPX LIMITED,Software & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EPY,EPY.AX,EARLYPAY LTD,Financial Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EQR,EQR.AX,EQ RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EQT,EQT.AX,EQT HOLDINGS LIMITED,Financial Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EQU,EQU.AX,EQUUS ENERGY LIMITED,Energy,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EQX,EQX.AX,EQUATORIAL RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ERA,ERA.AX,ENERGY RESOURCES OF AUSTRALIA LIMITED,Energy,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ERD,ERD.AX,EROAD LIMITED,Technology Hardware & Equipment,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ERE,ERE.AX,EUROPEAN RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ERG,ERG.AX,ENECO REFRESH LTD,"Food, Beverage & Tobacco",broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ERL,ERL.AX,EMPIRE RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ESK,ESK.AX,ETHERSTACK PLC,Software & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ESR,ESR.AX,ESTRELLA RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ETM,ETM.AX,ENERGY TRANSITION MINERALS LTD,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ETP,ETP.AX,GLOBAL X METAL SECURITIES AUSTRALIA LIMITED,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EUR,EUR.AX,EUROPEAN LITHIUM LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EUZ,EUZ.AX,EUROPA METALS LTD,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EV1,EV1.AX,EVOLUTION ENERGY MINERALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EV8,EV8.AX,EVERLAST MINERALS LTD.,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EVE,EVE.AX,EVE HEALTH GROUP LIMITED.,Financial Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EVG,EVG.AX,EVION GROUP NL,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EVN,EVN.AX,Evolution Mining,Materials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EVO,EVO.AX,EMBARK EARLY EDUCATION LIMITED,Consumer Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EVT,EVT.AX,EVT,Communication Services,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EVZ,EVZ.AX,EVZ LIMITED,Capital Goods,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EWC,EWC.AX,ENERGY WORLD CORPORATION LTD,Utilities,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EX2,EX2.AX,BETASHARES AUSTRALIAN EX-20 PORTFOLIO DIVERSIFIER ETF,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EXL,EXL.AX,ELIXINOL WELLNESS LIMITED,Household & Personal Products,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EXP,EXP.AX,EXPERIENCE CO LIMITED,Consumer Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EXR,EXR.AX,ELIXIR ENERGY LIMITED,Energy,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EXT,EXT.AX,EXCITE TECHNOLOGY SERVICES LTD,Software & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EYE,EYE.AX,NOVA EYE MEDICAL LIMITED,Health Care Equipment & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EZL,EZL.AX,EUROZ HARTLEYS GROUP LIMITED,Financial Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:EZZ,EZZ.AX,EZZ LIFE SCIENCE HOLDINGS LIMITED,Consumer Discretionary Distribution & Retail,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FAL,FAL.AX,FALCON METALS LTD,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FAR,FAR.AX,FAR LIMITED,Energy,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FAU,FAU.AX,FIRST AU LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FBR,FBR.AX,FBR LTD,Capital Goods,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FBU,FBU.AX,Fletcher Building,Industrials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FCF,FCF.AX,FREMANTLE COMMUNITY FINANCIAL SERVICES LIMITED,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FCG,FCG.AX,FREEDOM CARE GROUP HOLDINGS LIMITED,Health Care Equipment & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FCL,FCL.AX,FINEOS CORPORATION HOLDINGS PLC,Software & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FCT,FCT.AX,FIRSTWAVE CLOUD TECHNOLOGY LIMITED,Software & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FDC,FDC.AX,FDC CONSOLIDATED HOLDINGS LIMITED,Capital Goods,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FDR,FDR.AX,FINDER ENERGY HOLDINGS LIMITED,Energy,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FDV,FDV.AX,FRONTIER DIGITAL VENTURES LIMITED,Media & Entertainment,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FEG,FEG.AX,FAR EAST GOLD LTD,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FEL,FEL.AX,FORTE ENERGY LIMITED,Energy,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FEX,FEX.AX,FENIX RESOURCES LTD,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FFG,FFG.AX,FATFISH GROUP LIMITED,Financial Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FFI,FFI.AX,FFI HOLDINGS LIMITED,"Food, Beverage & Tobacco",broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FFM,FFM.AX,FIREFLY METALS LTD,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FG1,FG1.AX,FLYNN GOLD LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FGG,FGG.AX,FUTURE GENERATION GLOBAL LIMITED,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FGH,FGH.AX,FORESTA GROUP HOLDINGS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FGR,FGR.AX,FIRST GRAPHENE LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FGX,FGX.AX,FUTURE GENERATION AUSTRALIA LIMITED,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FHE,FHE.AX,FRONTIER ENERGY LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FHS,FHS.AX,FREEHILL MINING LIMITED.,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FID,FID.AX,FIDUCIAN GROUP LIMITED,Financial Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FIN,FIN.AX,FIN RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FL1,FL1.AX,FIRST LITHIUM LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FLC,FLC.AX,FLUENCE CORPORATION LIMITED,Utilities,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FLG,FLG.AX,FLAGSHIP MINERALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FLN,FLN.AX,FREELANCER LIMITED,Commercial & Professional Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FLT,FLT.AX,Flight Centre Travel Group,Consumer Discretionary,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FLX,FLX.AX,FELIX GROUP HOLDINGS LTD,Software & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FM1,FM1.AX,FIRSTMAC MORTGAGE FUNDING TRUST NO.4 SERIES 4-2019,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FM3,FM3.AX,FIRSTMAC MORTGAGE FUNDING TRUST NO. 4 SERIES 1-2020,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FM5,FM5.AX,FIRSTMAC MORTGAGE FUNDING TRUST NO.4 SERIES 2-2020,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FME,FME.AX,FUTURE METALS NL,Energy,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FMG,FMG.AX,Fortescue,Materials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FML,FML.AX,FOCUS MINERALS LTD,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FMN,FMN.AX,FAMIEN RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FMR,FMR.AX,FMR RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FND,FND.AX,FINDI LIMITED,Software & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FNR,FNR.AX,FAR NORTHERN RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FNX,FNX.AX,FINEXIA FINANCIAL GROUP LIMITED,Financial Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FOS,FOS.AX,FOS CAPITAL LTD,Capital Goods,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FPC,FPC.AX,FAT PROPHETS GLOBAL CONTRARIAN FUND LTD,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FPH,FPH.AX,Fisher & Paykel Healthcare,Healthcare,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FPR,FPR.AX,FLEETPARTNERS GROUP LIMITED,Financial Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FRB,FRB.AX,FIREBIRD METALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FRE,FRE.AX,FIREBRICK PHARMA LIMITED,"Pharmaceuticals, Biotechnology & Life Sciences",broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FRI,FRI.AX,FINBAR GROUP LIMITED,Real Estate Management & Development,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FRM,FRM.AX,FARM PRIDE FOODS LIMITED,"Food, Beverage & Tobacco",broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FRS,FRS.AX,FORRESTANIA RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FRW,FRW.AX,Freightways Group,Industrials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FRX,FRX.AX,FLEXIROAM LIMITED,Telecommunication Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FSA,FSA.AX,FSA GROUP LIMITED,Financial Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FSI,FSI.AX,FLAGSHIP INVESTMENTS LIMITED,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FTI,FTI.AX,FORTIFAI LTD,Media & Entertainment,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FUL,FUL.AX,FULCRUM LITHIUM LTD,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FUN,FUN.AX,FORTUNA METALS LTD,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FWD,FWD.AX,FLEETWOOD LIMITED,Consumer Durables & Apparel,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FXG,FXG.AX,FELIX GOLD LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:FZR,FZR.AX,FITZROY RIVER CORPORATION LTD,Energy,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:G11,G11.AX,G11 RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:G1C,G1C.AX,GROUP ONE CAPITAL LIMITED,Real Estate Management & Development,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:G20,G20.AX,BETASHARES WEALTHBUILDER AUS200 GEARED COMPLEX ETF,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:G50,G50.AX,G50 CORP LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:G6M,G6M.AX,GROUP 6 METALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:G88,G88.AX,GOLDEN MILE RESOURCES LTD,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GA8,GA8.AX,GOLDARC RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GAL,GAL.AX,GALILEO MINING LTD,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GAP,GAP.AX,GALE PACIFIC LIMITED,Consumer Durables & Apparel,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GAS,GAS.AX,STATE GAS LIMITED,Energy,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GBE,GBE.AX,GLOBE METALS & MINING LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GBL,GBL.AX,GREAT BEAR EXPLORATION LTD,Energy,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GBM,GBM.AX,GBM RESOURCES LIMITED.,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GBR,GBR.AX,GREAT BOULDER RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GC1,GC1.AX,GLENNON SMALL COMPANIES LIMITED,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GCI,GCI.AX,GRYPHON CAPITAL INCOME TRUST,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GCM,GCM.AX,GCM CORPORATION LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GCR,GCR.AX,GOLDEN CROSS RESOURCES LTD,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GD8,GD8.AX,GO-DX CORPORATION (AUST) LIMITED,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GDF,GDF.AX,GARDA PROPERTY GROUP,Equity Real Estate Investment Trusts (REITs),broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GDG,GDG.AX,Generation Development Group,Financials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GDI,GDI.AX,GDI PROPERTY GROUP,Equity Real Estate Investment Trusts (REITs),broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GDM,GDM.AX,GREAT DIVIDE MINING LTD,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GDR,GDR.AX,GOLDEN DRAGON MINING LTD,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GEA,GEA.AX,BETASHARES GEARED AUSTRALIAN EQUITIES COMPLEX ETF,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GED,GED.AX,GOLDEN DEEPS LIMITED.,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GEM,GEM.AX,G8 EDUCATION LIMITED,Consumer Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GEN,GEN.AX,GENMIN LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GES,GES.AX,GENESIS RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GFL,GFL.AX,GLOBAL MASTERS FUND LIMITED,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GG1,GG1.AX,GREEN & GOLD MINERALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GG8,GG8.AX,GORILLA GOLD MINES LTD,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GGE,GGE.AX,GRAND GULF ENERGY LIMITED,Energy,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GGM,GGM.AX,GLOBAL GOLD MINING LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GGP,GGP.AX,Greatland Resources,Materials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GGR,GGR.AX,GOLDEN GLOBE RESOURCES LTD.,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GHM,GHM.AX,GOLDEN HORSE MINERALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GHY,GHY.AX,GOLD HYDROGEN LIMITED,Energy,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GIB,GIB.AX,GIBB RIVER DIAMONDS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GL1,GL1.AX,GLOBAL LITHIUM RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GLB,GLB.AX,GLOBE INTERNATIONAL LIMITED,Consumer Durables & Apparel,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GLC,GLC.AX,GLENCORE PLC,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GLE,GLE.AX,GLG CORP LTD,Consumer Durables & Apparel,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GLF,GLF.AX,GEMLIFE COMMUNITIES GROUP,Real Estate Management & Development,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GLH,GLH.AX,GLOBAL HEALTH LIMITED,Health Care Equipment & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GLN,GLN.AX,GALAN LITHIUM LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GLS,GLS.AX,L1 GLOBAL LONG SHORT FUND LIMITED,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GM1,GM1.AX,GLADIATOR METALS CORP.,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GMD,GMD.AX,Genesis Minerals,Materials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GMG,GMG.AX,Goodman Group,Real Estate,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GML,GML.AX,GATEWAY MINING LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GMN,GMN.AX,GOLD MOUNTAIN LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GNC,GNC.AX,GRAINCORP LIMITED,Consumer Staples Distribution & Retail,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GNE,GNE.AX,Genesis Energy,Utilities,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GNG,GNG.AX,GR ENGINEERING SERVICES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GNM,GNM.AX,GREAT NORTHERN MINERALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GNP,GNP.AX,GENUSPLUS GROUP LTD,Capital Goods,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GOL,GOL.AX,GLOBAL X PHYSICAL GOLD STRUCTURED,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GOW,GOW.AX,GOWING BROS LIMITED,Financial Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GOZ,GOZ.AX,GROWTHPOINT PROPERTIES AUSTRALIA,Equity Real Estate Investment Trusts (REITs),broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GPR,GPR.AX,GEOPACIFIC RESOURCES LTD,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GPT,GPT.AX,GPT Group,Real Estate,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GQG,GQG.AX,GQG Partners,Financials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GR8,GR8.AX,GREAT DIRT RESOURCES LTD,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GRE,GRE.AX,GREENTECH METALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GRN,GRN.AX,VANECK MSCI AUSTRALIAN SUSTAINABLE EQUITY ETF,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GRR,GRR.AX,GRANGE RESOURCES LIMITED.,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GRS,GRS.AX,GWARDAR RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GRV,GRV.AX,GREENVALE ENERGY LTD,Energy,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GRX,GRX.AX,GREENX METALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GSB,GSB.AX,COMMONWEALTH OF AUSTRALIA.,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GSE,GSE.AX,GULF STREAM ENERGY LTD,Energy,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GSI,GSI.AX,COMMONWEALTH OF AUSTRALIA..,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GSM,GSM.AX,GOLDEN STATE MINING LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GSN,GSN.AX,GREAT SOUTHERN MINING LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GSS,GSS.AX,GENETIC SIGNATURES LIMITED,"Pharmaceuticals, Biotechnology & Life Sciences",broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GT1,GT1.AX,GREEN TECHNOLOGY METALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GT3,GT3.AX,GREEN360 TECHNOLOGIES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GTE,GTE.AX,GREAT WESTERN EXPLORATION LIMITED.,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GTI,GTI.AX,GRATIFII LIMITED,Software & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GTK,GTK.AX,GENTRACK GROUP LIMITED,Software & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GTN,GTN.AX,GTN LIMITED,Media & Entertainment,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GUL,GUL.AX,GULLEWA LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GUM,GUM.AX,GUMTREE AUSTRALIA MARKETS LIMITED,Media & Entertainment,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GVF,GVF.AX,STAUDE CAPITAL GLOBAL VALUE FUND LIMITED,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GW1,GW1.AX,GREENWING RESOURCES LTD,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GWA,GWA.AX,GWA GROUP LIMITED.,Capital Goods,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GWR,GWR.AX,GWR GROUP LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:GYG,GYG.AX,GUZMAN Y GOMEZ LIMITED,Consumer Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:H2G,H2G.AX,H2G LIMITED,Commercial & Professional Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:H3E,H3E.AX,H3 ENERGY LIMITED,Energy,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:HAL,HAL.AX,HALO TECHNOLOGIES HOLDINGS LTD,Financial Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:HAR,HAR.AX,HARANGA RESOURCES LIMITED.,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:HAS,HAS.AX,HASTINGS TECHNOLOGY METALS LTD,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:HAV,HAV.AX,HAVILAH RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:HAW,HAW.AX,HAWTHORN RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:HC1,HC1.AX,HOUSEHOLD CAPITAL 2025-1 RMBS TRUST,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:HCF,HCF.AX,H&G HIGH CONVICTION LIMITED,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:HCH,HCH.AX,HOT CHILI LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:HCL,HCL.AX,HIGHCOM LIMITED,Capital Goods,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:HCT,HCT.AX,HOLISTA COLLTECH LIMITED,Household & Personal Products,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:HCW,HCW.AX,HEALTHCO HEALTHCARE AND WELLNESS REIT,Equity Real Estate Investment Trusts (REITs),broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:HDN,HDN.AX,HomeCo Daily Needs REIT,Real Estate,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:HE8,HE8.AX,HELIOS ENERGY LTD,Energy,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:HFR,HFR.AX,HIGHFIELD RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:HFY,HFY.AX,HUBIFY LIMITED,Telecommunication Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:HGH,HGH.AX,HEARTLAND GROUP HOLDINGS LIMITED,Banks,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:HIO,HIO.AX,HAWSONS IRON LTD,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:HIQ,HIQ.AX,HITIQ LIMITED,Health Care Equipment & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:HIT,HIT.AX,HITECH GROUP AUSTRALIA LIMITED,Commercial & Professional Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:HLI,HLI.AX,HELIA GROUP LIMITED,Financial Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:HLO,HLO.AX,HELLOWORLD TRAVEL LIMITED,Consumer Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:HLS,HLS.AX,HEALIUS LIMITED,Health Care Equipment & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:HLX,HLX.AX,HELIX RESOURCES LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:HM1,HM1.AX,HEARTS AND MINDS INVESTMENTS LIMITED,Not Applic,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:HMC,HMC.AX,HMC CAPITAL LIMITED,Financial Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:HMD,HMD.AX,HERAMED LIMITED,Health Care Equipment & Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:HMG,HMG.AX,HAMELIN GOLD LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:HMI,HMI.AX,HIREMII LIMITED,Commercial & Professional Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:HMX,HMX.AX,HAMMER METALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:HMY,HMY.AX,HARMONEY CORP LIMITED,Financial Services,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:HOR,HOR.AX,HORSESHOE METALS LIMITED,Materials,broad_asx;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:HUB,HUB.AX,HUB24,Financials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:HVN,HVN.AX,Harvey Norman,Consumer Discretionary,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:IAG,IAG.AX,Insurance Australia Group,Financials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:IFL,IFL.AX,Insignia Financial,Financials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:IFT,IFT.AX,Infratil,Financials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:IGO,IGO.AX,IGO,Materials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ILU,ILU.AX,Iluka Resources,Materials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:IMD,IMD.AX,IMDEX,Materials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:JBH,JBH.AX,JB Hi-Fi,Consumer Discretionary,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:JHX,JHX.AX,James Hardie,Materials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:L1G,L1G.AX,L1 Group,Financials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:LLC,LLC.AX,Lendlease,Real Estate,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:LNW,LNW.AX,Light & Wonder,Consumer Discretionary,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:LOV,LOV.AX,Lovisa,Consumer Discretionary,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:LSF,LSF.AX,L1 Long Short Fund,Financials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:LTR,LTR.AX,Liontown Resources,Materials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:LYC,LYC.AX,Lynas Rare Earths,Materials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:MCY,MCY.AX,Mercury NZ,Utilities,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:MEZ,MEZ.AX,Meridian Energy,Utilities,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:MFF,MFF.AX,MFF Capital Investments,Financials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:MFG,MFG.AX,Magellan Financial Group,Financials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:MGR,MGR.AX,Mirvac,Real Estate,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:MIN,MIN.AX,Mineral Resources,Materials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:MND,MND.AX,Monadelphous Group,Industrials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:MPL,MPL.AX,Medibank,Financials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:MQG,MQG.AX,Macquarie Group,Financials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:MSB,MSB.AX,Mesoblast,Healthcare,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:MTS,MTS.AX,Metcash,Consumer Staples,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:MXT,MXT.AX,Metrics Master Income Trust,Financials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:NAB,NAB.AX,National Australia Bank,Financials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:NEM,NEM.AX,Newmont,Materials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:NHC,NHC.AX,New Hope,Energy,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:NHF,NHF.AX,Nib,Financials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:NIC,NIC.AX,Nickel Industries,Materials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:NSR,NSR.AX,National Storage,Real Estate,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:NST,NST.AX,Northern Star Resources,Materials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:NWH,NWH.AX,NRW Holdings,Industrials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:NWL,NWL.AX,Netwealth Group,Financials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:NWS,NWS.AX,News Corp Class B,Communication Services,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:NXG,NXG.AX,Nexgen Energy,Energy,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:NXT,NXT.AX,NextDC,Information Technology,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:OBM,OBM.AX,Ora Banda Mining,Materials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ORA,ORA.AX,Orora,Materials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ORG,ORG.AX,Origin Energy,Utilities,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ORI,ORI.AX,Orica,Materials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:PDI,PDI.AX,Predictive Discovery,Materials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:PDN,PDN.AX,Paladin Energy,Energy,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:PLS,PLS.AX,PLS Group,Materials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:PME,PME.AX,Pro Medicus,Healthcare,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:PMV,PMV.AX,Premier Investments,Consumer Discretionary,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:PNI,PNI.AX,Pinnacle Investment Management,Financials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:PPT,PPT.AX,Perpetual,Financials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:PRN,PRN.AX,Perenti,Materials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:PRU,PRU.AX,Perseus Mining,Materials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:PXA,PXA.AX,Pexa Group,Real Estate,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:QAN,QAN.AX,Qantas,Industrials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:QBE,QBE.AX,QBE Insurance,Financials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:QUB,QUB.AX,Qube Holdings,Industrials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:RDX,RDX.AX,Redox,Industrials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:REA,REA.AX,REA Group,Communication Services,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:REG,REG.AX,Regis Healthcare,Healthcare,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:REH,REH.AX,Reece Group,Industrials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:RGN,RGN.AX,Region Group,Real Estate,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:RHC,RHC.AX,Ramsay Health Care,Healthcare,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:RIO,RIO.AX,Rio Tinto,Materials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:RMD,RMD.AX,ResMed,Healthcare,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:RMS,RMS.AX,Ramelius Resources,Materials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:RRL,RRL.AX,Regis Resources,Materials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:RSG,RSG.AX,Resolute Mining,Materials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:RWC,RWC.AX,Reliance Worldwide Corporation,Industrials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:RYM,RYM.AX,Ryman Healthcare,Healthcare,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:S32,S32.AX,South32,Materials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:SCG,SCG.AX,Scentre Group,Real Estate,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:SDF,SDF.AX,Steadfast Group,Financials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:SEK,SEK.AX,Seek,Communication Services,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:SFR,SFR.AX,Sandfire Resources,Materials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:SGH,SGH.AX,SGH,Industrials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:SGM,SGM.AX,Sims Metal,Materials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:SGP,SGP.AX,Stockland,Real Estate,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:SHL,SHL.AX,Sonic Healthcare,Healthcare,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:SIG,SIG.AX,Sigma Healthcare,Healthcare,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:SMR,SMR.AX,Stanmore Resources,Materials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:SNZ,SNZ.AX,Summerset Group Holdings,Healthcare,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:SOL,SOL.AX,Soul Patts,Financials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:SPK,SPK.AX,Spark New Zealand,Communication Services,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:STO,STO.AX,Santos,Energy,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:SUL,SUL.AX,Super Retail Group,Consumer Discretionary,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:SUN,SUN.AX,Suncorp,Financials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:TAH,TAH.AX,Tabcorp,Consumer Discretionary,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:TCL,TCL.AX,Transurban,Industrials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:TLC,TLC.AX,The Lottery Corporation,Consumer Discretionary,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:TLS,TLS.AX,Telstra,Communication Services,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:TLX,TLX.AX,Telix Pharmaceuticals,Healthcare,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:TNE,TNE.AX,TechnologyOne,Information Technology,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:TPG,TPG.AX,TPG Telecom,Communication Services,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:TUA,TUA.AX,Tuas,Communication Services,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:TWE,TWE.AX,Treasury Wine Estates,Consumer Staples,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:VAU,VAU.AX,Vault Minerals,Materials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:VCX,VCX.AX,Vicinity Centres,Real Estate,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:VEA,VEA.AX,Viva Energy,Energy,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:VGN,VGN.AX,Virgin Australia Holdings,Industrials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:VNT,VNT.AX,Ventia Services Group,Industrials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:WAF,WAF.AX,West African Resources,Materials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:WAM,WAM.AX,WAM Capital,Financials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:WBC,WBC.AX,Westpac,Financials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:WDS,WDS.AX,Woodside Energy Group,Energy,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:WES,WES.AX,Wesfarmers,Consumer Discretionary,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:WGX,WGX.AX,Westgold Resources,Materials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:WHC,WHC.AX,Whitehaven Coal,Energy,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:WLE,WLE.AX,WAM Leaders,Financials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:WOR,WOR.AX,Worley,Energy,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:WOW,WOW.AX,Woolworths Group,Consumer Staples,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:WTC,WTC.AX,Wisetech Global,Information Technology,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:XRO,XRO.AX,Xero,Information Technology,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:XYX,XYX.AX,"Block, Inc.",Financials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:YAL,YAL.AX,Yancoal Australia,Materials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ZIM,ZIM.AX,Zimplats Holdings,Materials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
+ASX:ZIP,ZIP.AX,Zip,Financials,broad_asx;asx200_seed;microcap_candidate_pending_market_cap,not_loaded,not_loaded,price_only_pending
