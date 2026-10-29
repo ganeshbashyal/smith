@@ -1,0 +1,10 @@
+{
+  "enabled": true,
+  "poll_seconds": 30,
+  "input_dir": "data/background_queue",
+  "output_dir": "data/morning_brief",
+  "model_path": "models/npu/sentiment.onnx",
+  "preferred_providers": ["OpenVINOExecutionProvider", "DmlExecutionProvider", "CPUExecutionProvider"],
+  "max_items_per_cycle": 20,
+  "note": "The worker is event-driven and deterministic until an ONNX model is supplied. It never starts Ollama."
+}
