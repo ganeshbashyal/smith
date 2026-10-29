@@ -40,6 +40,15 @@ label { display: block; margin: .4rem 0; }
 .bar-row { display: grid; grid-template-columns: 5rem 1fr 5rem; gap: .5rem; align-items: center; margin: .35rem 0; }
 .bar { height: 1rem; background: #2f6db2; border-radius: .2rem; }
 .bar.negative { background: #a94442; }
+.findings-toolbar { display:flex; flex-wrap:wrap; gap:.6rem; align-items:end; }
+.findings-toolbar label { margin:0; }
+.findings-table { overflow:auto; margin-top:1rem; }
+.findings-table table { border-collapse:collapse; min-width:900px; width:100%; background:#fff; }
+.findings-table th, .findings-table td { border:1px solid #a8b3c2; padding:.45rem; text-align:left; }
+.findings-table th { background:#e8eef6; cursor:pointer; }
+.badge { display:inline-block; padding:.1rem .35rem; border-radius:.25rem; background:#e8eef6; font-size:.9rem; }
+.gap { color:#8a2e0b; background:#fff0e6; }
+.drawer { position:fixed; right:0; top:0; width:min(520px, 92vw); height:100vh; overflow:auto; background:#fff; border-left:2px solid #174ea6; padding:1rem; box-sizing:border-box; box-shadow:-4px 0 16px #0003; z-index:3; }
 </style>
 <h1>Finance research &amp; portfolio tools</h1>
 <nav aria-label="Mr Smith pages">
@@ -58,6 +67,21 @@ label { display: block; margin: .4rem 0; }
   <button id="manual-tab" type="button" role="tab" aria-selected="false" aria-controls="manual-panel">Manual analysis</button>
 </div>
 <div id="asx-panel" role="tabpanel" aria-labelledby="asx-tab">
+<section>
+<h2>ASX findings</h2>
+<p>Sortable profiles from the current ASX research run. Missing evidence is shown explicitly.</p>
+<div class="findings-toolbar">
+<label>Sector <select id="finding-sector"><option value="">All sectors</option></select></label>
+<label>Cohort <select id="finding-cohort"><option value="">All cohorts</option></select></label>
+<label>Flow <select id="finding-flow"><option value="">All flow states</option><option>accumulation_proxy</option><option>distribution_proxy</option><option>mixed_or_inconclusive</option></select></label>
+<label>Momentum <select id="finding-momentum"><option value="">All momentum</option><option value="positive">Positive 1Y</option><option value="negative">Negative 1Y</option></select></label>
+<label>RSI <select id="finding-rsi"><option value="">Any RSI</option><option value="oversold">Oversold (&lt;30)</option><option value="overbought">Overbought (&gt;70)</option></select></label>
+</div>
+<div id="findings-count" role="status"></div><div class="findings-table"><table><thead><tr>
+<th data-sort="instrument">Symbol</th><th data-sort="company">Company</th><th data-sort="sector">Sector</th><th data-sort="flow">Flow</th><th data-sort="rsi">RSI</th><th data-sort="return">1Y return</th><th>Evidence</th><th>Profile</th>
+</tr></thead><tbody id="findings-body"></tbody></table></div>
+<div id="profile-drawer" class="drawer" hidden><button id="drawer-close" type="button">Close</button><div id="profile-content"></div></div>
+</section>
 <section>
 <h2>ASX opportunity snapshot</h2>
 <p>Dated baseline from the first 200-company run. This is a research snapshot, not a live ranking or recommendation.</p>
@@ -307,6 +331,52 @@ async function loadOpportunitySnapshot() {
     renderOpportunity(data);
   } catch (error) { el('opportunity-summary').textContent = error.message; }
 }
+let findingProfiles = [], findingSort = { key: 'instrument', direction: 1 };
+function populateFindingFilter(id, values) {
+  const select = el(id); const current = select.value;
+  [...new Set(values.filter(Boolean).flatMap(value => Array.isArray(value) ? value : [value]))].sort().forEach(value => select.add(new Option(value, value)));
+  if ([...select.options].some(option => option.value === current)) select.value = current;
+}
+function renderFindings() {
+  const sector = el('finding-sector').value, cohort = el('finding-cohort').value, flow = el('finding-flow').value;
+  const momentum = el('finding-momentum').value, rsiFilter = el('finding-rsi').value;
+  const rows = findingProfiles.filter(item => {
+    const tech = item.technical || {}, oneYear = tech.returns_pct?.['1y'], rsi = tech.rsi14;
+    return (!sector || item.sector === sector) && (!cohort || item.cohort === cohort) && (!flow || tech.flow_proxy_60d === flow) &&
+      (!momentum || (momentum === 'positive' ? oneYear > 0 : oneYear < 0)) && (!rsiFilter || (rsiFilter === 'oversold' ? rsi < 30 : rsi > 70));
+  }).sort((a, b) => {
+    const values = item => ({instrument:item.instrument, company:item.company, sector:item.sector, flow:item.technical?.flow_proxy_60d, rsi:item.technical?.rsi14 ?? -Infinity, return:item.technical?.returns_pct?.['1y'] ?? -Infinity});
+    const av = values(a)[findingSort.key], bv = values(b)[findingSort.key]; return String(av).localeCompare(String(bv), undefined, {numeric:true}) * findingSort.direction;
+  });
+  el('findings-count').textContent = `${rows.length} of ${findingProfiles.length} profiles shown`;
+  el('findings-body').replaceChildren();
+  rows.forEach(item => {
+    const tech = item.technical || {}, tr = document.createElement('tr');
+    const cells = [item.instrument, item.company || '—', item.sector || 'Unclassified', tech.flow_proxy_60d || 'Unavailable', tech.rsi14 ?? '—', tech.returns_pct?.['1y'] == null ? '—' : `${tech.returns_pct['1y']}%`, item.evidence_gaps?.length ? 'Gaps' : 'Available'];
+    cells.forEach((value, index) => { const td = document.createElement('td'); td.textContent = value; if (index === 6 && item.evidence_gaps?.length) td.className = 'gap'; tr.append(td); });
+    const action = document.createElement('td'); const button = document.createElement('button'); button.type='button'; button.textContent='Open'; button.onclick=()=>openProfile(item); action.append(button); tr.append(action); el('findings-body').append(tr);
+  });
+}
+function openProfile(item) {
+  const tech = item.technical || {}, content = el('profile-content'); content.replaceChildren();
+  const title = document.createElement('h2'); title.textContent = `${item.instrument} — ${item.company || 'Company profile'}`;
+  const text = document.createElement('pre'); text.textContent = JSON.stringify(item, null, 2);
+  const report = document.createElement('a'); report.href = `/api/finance/opportunity/profiles/${encodeURIComponent(item.instrument)}/report`; report.target='_blank'; report.textContent='Open detailed research report';
+  content.append(title, report, text); el('profile-drawer').hidden = false;
+}
+async function loadFindings() {
+  try {
+    const response = await fetch('/api/finance/opportunity/profiles', { headers: headers() }); const data = await response.json();
+    if (!response.ok) throw new Error(data.detail || 'ASX profiles unavailable');
+    findingProfiles = data.profiles || [];
+    populateFindingFilter('finding-sector', findingProfiles.map(item => item.sector));
+    populateFindingFilter('finding-cohort', findingProfiles.map(item => item.cohort));
+    renderFindings();
+  } catch (error) { el('findings-count').textContent = error.message; }
+}
+['finding-sector','finding-cohort','finding-flow','finding-momentum','finding-rsi'].forEach(id => el(id).onchange = renderFindings);
+document.querySelectorAll('[data-sort]').forEach(header => header.onclick = () => { const key = header.dataset.sort; findingSort = { key, direction: findingSort.key === key ? -findingSort.direction : 1 }; renderFindings(); });
+el('drawer-close').onclick = () => { el('profile-drawer').hidden = true; };
 function showError(error) { el('error').textContent = error.message || String(error); }
 async function callJson(url, options, outId) {
   el('error').textContent = '';
@@ -679,5 +749,6 @@ el('pf-confirm').onclick = async () => {
 };
 el('pf-analyze').onclick = () => callJson(`/api/finance/portfolios/${el('pf-id').value}/analysis`, { headers: headers() }, 'pf-result');
 loadOpportunitySnapshot();
+loadFindings();
 </script>
 </html>

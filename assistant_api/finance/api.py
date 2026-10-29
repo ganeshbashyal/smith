@@ -726,6 +726,26 @@ def build_router(*, get_store, admin_dependency, feeds_client_getter,
         except (OSError, json.JSONDecodeError) as exc:
             raise HTTPException(500, "ASX opportunity benchmark snapshot is unreadable") from exc
 
+    @router.get("/opportunity/profiles")
+    async def opportunity_profiles():
+        candidates = sorted(research_data_dir.glob("asx_entity_profiles_*/profiles.json"))
+        path = candidates[-1] if candidates else None
+        if path is None or not path.is_file():
+            raise HTTPException(404, "No ASX entity profiles have been generated")
+        try:
+            return json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            raise HTTPException(500, "ASX entity profiles are unreadable") from exc
+
+    @router.get("/opportunity/profiles/{symbol}/report")
+    async def opportunity_profile_report(symbol: str):
+        code = symbol.upper().removesuffix(".AX").removeprefix("ASX:")
+        candidates = sorted(research_data_dir.parent.glob(f"research_jobs/*-ASX-{code}/report.md"))
+        if not candidates:
+            raise HTTPException(404, "No detailed report is available for this company")
+        from fastapi.responses import PlainTextResponse
+        return PlainTextResponse(candidates[-1].read_text(encoding="utf-8"))
+
     @router.post("/xauusd/macro/evidence")
     async def add_xauusd_macro_evidence(body: GoldMacroEvidenceIn):
         evidence_id = store.add_gold_macro_evidence(body.model_dump())
