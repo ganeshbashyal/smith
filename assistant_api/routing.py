@@ -62,7 +62,7 @@ def route_request(question: str, selected_model: str, research_model: str,
         tools.append("news_feed")
     if current:
         candidates = {
-            "general": ("news_feed",), "science": ("science_news", "technology_news"),
+            "general": ("news_feed",), "science": ("science_news", "technology_news", "nasa_news", "esa_news", "arxiv_ai", "arxiv_physics", "sciencedaily_science", "sciencedaily_technology"),
             "engineering": ("technology_news",), "building": ("news_feed",),
             "business": ("finance_news",), "automotive": ("technology_news",),
         }.get(persona, ())

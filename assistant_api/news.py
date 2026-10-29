@@ -10,6 +10,11 @@ FEEDS = {
     "NASA": "https://www.nasa.gov/rss/dyn/breaking_news.rss",
     "Medium Technology": "https://medium.com/feed/tag/technology",
     "Yahoo Finance": "https://finance.yahoo.com/news/rssindex",
+    "ESA": "https://www.esa.int/rssfeed/TopNews",
+    "arXiv AI": "https://export.arxiv.org/rss/cs.AI",
+    "arXiv Physics": "https://export.arxiv.org/rss/physics",
+    "ScienceDaily Science": "https://www.sciencedaily.com/rss/top/science.xml",
+    "ScienceDaily Technology": "https://www.sciencedaily.com/rss/top/technology.xml",
 }
 
 

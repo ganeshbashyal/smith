@@ -17,13 +17,20 @@ FEEDS = {
     "science_news": "https://feeds.bbci.co.uk/news/science_and_environment/rss.xml",
     "nasa_news": "https://www.nasa.gov/feed/",
     "rba_news": "https://www.rba.gov.au/rss/rss-cb-media-releases.xml",
+    "esa_news": "https://www.esa.int/rssfeed/TopNews",
+    "arxiv_ai": "https://export.arxiv.org/rss/cs.AI",
+    "arxiv_physics": "https://export.arxiv.org/rss/physics",
+    "sciencedaily_science": "https://www.sciencedaily.com/rss/top/science.xml",
+    "sciencedaily_technology": "https://www.sciencedaily.com/rss/top/technology.xml",
 }
 SOURCES = {**FEEDS, "asx_quote": "https://finance.yahoo.com/",
            "f1_standings": "https://api.jolpi.ca/ergast/f1/current/driverStandings/"}
 
 PUBLISHERS = {name: "BBC" for name in ("news_feed", "technology_news", "science_news")}
 PUBLISHERS.update(finance_news="Yahoo Finance", asx_quote="Yahoo Finance",
-                  nasa_news="NASA", rba_news="Reserve Bank of Australia", f1_standings="Jolpica")
+                  nasa_news="NASA", rba_news="Reserve Bank of Australia", esa_news="European Space Agency",
+                  arxiv_ai="arXiv", arxiv_physics="arXiv", sciencedaily_science="ScienceDaily",
+                  sciencedaily_technology="ScienceDaily", f1_standings="Jolpica")
 STOP_WORDS = set("what is are the a an in on of for and to explain how why latest current today news headlines updates developments please give me about".split())
 
 
