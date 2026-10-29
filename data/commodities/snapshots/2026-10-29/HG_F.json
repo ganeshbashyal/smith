@@ -1,0 +1,29 @@
+{
+  "symbol": "HG=F",
+  "name": "Copper futures",
+  "group": "industrial_metals",
+  "bars": [
+    {
+      "observed_on": "2026-10-26",
+      "close": 6.507999897003174,
+      "volume": 712
+    },
+    {
+      "observed_on": "2026-10-27",
+      "close": 6.622000217437744,
+      "volume": 542
+    },
+    {
+      "observed_on": "2026-10-28",
+      "close": 6.641499996185303,
+      "volume": 542
+    },
+    {
+      "observed_on": "2026-10-29",
+      "close": 6.593999862670898,
+      "volume": 9189
+    }
+  ],
+  "retrieved_at": "2026-10-29T11:38:11.952980+00:00",
+  "source": "Yahoo Finance public chart endpoint (unofficial)"
+}

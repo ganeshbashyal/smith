@@ -1,0 +1,21 @@
+{
+  "version": "v1",
+  "created_on": "2026-10-29",
+  "instruments": [
+    {"symbol": "GC=F", "name": "Gold futures", "group": "precious_metals"},
+    {"symbol": "SI=F", "name": "Silver futures", "group": "precious_metals"},
+    {"symbol": "HG=F", "name": "Copper futures", "group": "industrial_metals"},
+    {"symbol": "TIO=F", "name": "Iron ore proxy", "group": "industrial_metals"},
+    {"symbol": "LIT", "name": "Lithium ETF proxy", "group": "industrial_metals"},
+    {"symbol": "XAUUSD=X", "name": "Gold / US dollar proxy", "group": "macro"},
+    {"symbol": "AUDUSD=X", "name": "Australian dollar / US dollar", "group": "macro"},
+    {"symbol": "DX-Y.NYB", "name": "US dollar index proxy", "group": "macro"},
+    {"symbol": "^VIX", "name": "VIX volatility index", "group": "macro"},
+    {"symbol": "^AXJO", "name": "S&P/ASX 200", "group": "macro"}
+  ],
+  "limitations": [
+    "Yahoo symbols are unofficial proxies and may be delayed.",
+    "Iron ore and lithium proxies are not equivalent to physical spot or contract settlement prices.",
+    "Futures curves, inventories and open interest require additional approved sources."
+  ]
+}

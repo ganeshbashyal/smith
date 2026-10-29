@@ -1,0 +1,29 @@
+{
+  "symbol": "SI=F",
+  "name": "Silver futures",
+  "group": "precious_metals",
+  "bars": [
+    {
+      "observed_on": "2026-10-26",
+      "close": 54.108001708984375,
+      "volume": 128
+    },
+    {
+      "observed_on": "2026-10-27",
+      "close": 54.292999267578125,
+      "volume": 229
+    },
+    {
+      "observed_on": "2026-10-28",
+      "close": 53.457000732421875,
+      "volume": 229
+    },
+    {
+      "observed_on": "2026-10-29",
+      "close": 52.935001373291016,
+      "volume": 24200
+    }
+  ],
+  "retrieved_at": "2026-10-29T11:38:10.577144+00:00",
+  "source": "Yahoo Finance public chart endpoint (unofficial)"
+}

@@ -1,0 +1,29 @@
+{
+  "symbol": "GC=F",
+  "name": "Gold futures",
+  "group": "precious_metals",
+  "bars": [
+    {
+      "observed_on": "2026-10-26",
+      "close": 4038.39990234375,
+      "volume": 126007
+    },
+    {
+      "observed_on": "2026-10-27",
+      "close": 4074.60009765625,
+      "volume": 139103
+    },
+    {
+      "observed_on": "2026-10-28",
+      "close": 4051.60009765625,
+      "volume": 139103
+    },
+    {
+      "observed_on": "2026-10-29",
+      "close": 4045.800048828125,
+      "volume": 60929
+    }
+  ],
+  "retrieved_at": "2026-10-29T11:38:09.206259+00:00",
+  "source": "Yahoo Finance public chart endpoint (unofficial)"
+}

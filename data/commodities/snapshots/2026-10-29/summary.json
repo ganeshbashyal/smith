@@ -1,0 +1,57 @@
+{
+  "date": "2026-10-29",
+  "completed": 9,
+  "failed": 1,
+  "items": [
+    {
+      "symbol": "GC=F",
+      "status": "ok",
+      "bars": 4
+    },
+    {
+      "symbol": "SI=F",
+      "status": "ok",
+      "bars": 4
+    },
+    {
+      "symbol": "HG=F",
+      "status": "ok",
+      "bars": 4
+    },
+    {
+      "symbol": "TIO=F",
+      "status": "ok",
+      "bars": 3
+    },
+    {
+      "symbol": "LIT",
+      "status": "ok",
+      "bars": 5
+    },
+    {
+      "symbol": "XAUUSD=X",
+      "status": "error",
+      "error": "HTTPError"
+    },
+    {
+      "symbol": "AUDUSD=X",
+      "status": "ok",
+      "bars": 5
+    },
+    {
+      "symbol": "DX-Y.NYB",
+      "status": "ok",
+      "bars": 4
+    },
+    {
+      "symbol": "^VIX",
+      "status": "ok",
+      "bars": 5
+    },
+    {
+      "symbol": "^AXJO",
+      "status": "ok",
+      "bars": 5
+    }
+  ]
+}

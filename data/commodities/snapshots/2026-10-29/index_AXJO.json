@@ -1,0 +1,34 @@
+{
+  "symbol": "^AXJO",
+  "name": "S&P/ASX 200",
+  "group": "macro",
+  "bars": [
+    {
+      "observed_on": "2026-10-22",
+      "close": 8795.2001953125,
+      "volume": 970700
+    },
+    {
+      "observed_on": "2026-10-25",
+      "close": 8809.900390625,
+      "volume": 766800
+    },
+    {
+      "observed_on": "2026-10-26",
+      "close": 8850.099609375,
+      "volume": 780700
+    },
+    {
+      "observed_on": "2026-10-27",
+      "close": 8847.2998046875,
+      "volume": 823700
+    },
+    {
+      "observed_on": "2026-10-29",
+      "close": 8891.7998046875,
+      "volume": 0
+    }
+  ],
+  "retrieved_at": "2026-10-29T11:38:21.839347+00:00",
+  "source": "Yahoo Finance public chart endpoint (unofficial)"
+}

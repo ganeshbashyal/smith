@@ -1,0 +1,29 @@
+{
+  "symbol": "DX-Y.NYB",
+  "name": "US dollar index proxy",
+  "group": "macro",
+  "bars": [
+    {
+      "observed_on": "2026-10-26",
+      "close": 101.95999908447266,
+      "volume": 0
+    },
+    {
+      "observed_on": "2026-10-27",
+      "close": 102.31999969482422,
+      "volume": 0
+    },
+    {
+      "observed_on": "2026-10-28",
+      "close": 102.19000244140625,
+      "volume": 0
+    },
+    {
+      "observed_on": "2026-10-29",
+      "close": 102.13899993896484,
+      "volume": 0
+    }
+  ],
+  "retrieved_at": "2026-10-29T11:38:19.058229+00:00",
+  "source": "Yahoo Finance public chart endpoint (unofficial)"
+}
