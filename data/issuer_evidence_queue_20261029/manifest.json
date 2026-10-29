@@ -1,0 +1,12 @@
+{
+  "created_on": "2026-10-29",
+  "purpose": "Issuer evidence queue for five-year financial and fundamental ingestion",
+  "companies": {
+    "DRO": {"name": "DroneShield Limited", "status": "seed_downloaded", "source_page": "https://www.droneshield.com/investor-relations", "files": ["DRO/2024-annual-report.pdf"]},
+    "SRG": {"name": "SRG Global Limited", "status": "seed_downloaded", "source_page": "https://srgglobal.com.au/investors/reports-and-presentations/", "files": ["SRG/2024-annual-report.pdf"]},
+    "KMD": {"name": "KMD Brands Limited", "status": "source_page_identified", "source_page": "https://www.kmdbrands.com/reports/", "files": []},
+    "STP": {"name": "Step One Clothing Limited", "status": "seed_downloaded", "source_page": "https://www.stepone.group/investor-centre/", "files": ["STP/2024-report-evidence.pdf"]}
+  },
+  "ingestion_policy": "Extract text and tables, preserve source URL, publication date, fiscal period and SHA-256 hash; map only reported figures; reconcile annual and half-year statements before indexing.",
+  "model_policy": "Llama may summarise and compare evidence after deterministic extraction. It must not fill missing financial values or treat management guidance as historical fact."
+}

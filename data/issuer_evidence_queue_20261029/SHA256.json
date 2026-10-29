@@ -1,0 +1,17 @@
+[
+  {
+    "Algorithm": "SHA256",
+    "Hash": "0216012F7CCAA5F1DBC289E141FC50EB202A1DD1791C5387DB84F950651B77B2",
+    "Path": "D:\\Mr_Smith\\data\\issuer_evidence_queue_20261029\\DRO\\2024-annual-report.pdf"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "23612518707BD72E14CC0327648383D303E87FA32CE1A016CD3E1EA1185C69F7",
+    "Path": "D:\\Mr_Smith\\data\\issuer_evidence_queue_20261029\\SRG\\2024-annual-report.pdf"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "C3C39541D88D32C92E1B82DF1894D40B7E71AB036280885769728F4409CEEB1F",
+    "Path": "D:\\Mr_Smith\\data\\issuer_evidence_queue_20261029\\STP\\2024-report-evidence.pdf"
+  }
+]
