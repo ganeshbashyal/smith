@@ -593,6 +593,18 @@ missing, say so rather than inventing a match or compliance determination."""
         )
         return page.replace("<!-- PERSONA_OPTIONS -->", options)
 
+    @app.get("/api/morning/plug")
+    async def plug_morning_signals():
+        directory = settings.data_dir / "morning_brief"
+        files = sorted(directory.glob("*.json")) if directory.is_dir() else []
+        if not files:
+            return {"status": "no_data", "message": "Plug has not produced a morning signal file yet."}
+        try:
+            payload = json.loads(files[-1].read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            raise HTTPException(500, "Plug morning signal is unreadable") from exc
+        return {"status": "ok", "file": files[-1].name, **payload}
+
     @app.get("/admin", response_class=HTMLResponse)
     async def admin_page():
         return (Path(__file__).parent / "pages" / "admin.html").read_text(encoding="utf-8")

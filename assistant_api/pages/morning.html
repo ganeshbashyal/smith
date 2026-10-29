@@ -76,9 +76,12 @@ a { overflow-wrap: anywhere; }
 <pre id="answer"></pre>
 <div id="sources"></div>
 </section>
+<section class="card" id="plug-card"><h2>Plug background signals</h2><p id="plug-status">Loading latest local signal…</p><div id="plug-items"></div></section>
 <script>
 let mode = 'morning';
 const el = id => document.getElementById(id);
+async function loadPlugSignals() { try { const response=await fetch('/api/morning/plug'); const data=await response.json(); if(data.status!=='ok'){el('plug-status').textContent=data.message;return;} el('plug-status').textContent=`${data.file} · ${data.items?.length||0} items · runtime: ${data.runtime||'unknown'}`; el('plug-items').innerHTML=(data.items||[]).map(item=>`<p><strong>${item.source}</strong>: ${item.sentiment} (${item.positive_hits||0} positive, ${item.negative_hits||0} negative)</p>`).join(''); } catch(error) { el('plug-status').textContent='Plug signal unavailable'; } }
+loadPlugSignals();
 document.querySelectorAll('[data-mode]').forEach(button => {
   button.onclick = () => {
     mode = button.dataset.mode;
