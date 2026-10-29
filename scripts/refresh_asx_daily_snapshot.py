@@ -13,7 +13,7 @@ from pathlib import Path
 from urllib.parse import quote
 from urllib.request import Request, urlopen
 
-from assistant_api.finance.repository import FinanceRepository
+from assistant_api.finance.repository import FinanceStore
 
 
 def fetch(symbol: str) -> dict:
@@ -45,7 +45,7 @@ def main() -> int:
     parser.add_argument("--pause-seconds", type=float, default=1.5)
     args = parser.parse_args()
     items = json.loads(args.instruments.read_text(encoding="utf-8"))["instruments"]
-    repo = FinanceRepository(args.data_dir / "mr_smith.sqlite3")
+    repo = FinanceStore(args.data_dir / "mr_smith.sqlite3")
     day = datetime.now(timezone.utc).date().isoformat()
     output = args.data_dir / "daily_snapshots" / day
     output.mkdir(parents=True, exist_ok=True)
