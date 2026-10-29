@@ -746,6 +746,17 @@ def build_router(*, get_store, admin_dependency, feeds_client_getter,
         from fastapi.responses import PlainTextResponse
         return PlainTextResponse(candidates[-1].read_text(encoding="utf-8"))
 
+    @router.get("/opportunity/snapshot")
+    async def opportunity_snapshot():
+        candidates = sorted(research_data_dir.glob("asx_opportunity_snapshot_*/snapshot.json"))
+        path = candidates[-1] if candidates else None
+        if path is None or not path.is_file():
+            raise HTTPException(404, "No ASX deep-dive snapshot has been generated")
+        try:
+            return json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            raise HTTPException(500, "ASX deep-dive snapshot is unreadable") from exc
+
     @router.post("/xauusd/macro/evidence")
     async def add_xauusd_macro_evidence(body: GoldMacroEvidenceIn):
         evidence_id = store.add_gold_macro_evidence(body.model_dump())

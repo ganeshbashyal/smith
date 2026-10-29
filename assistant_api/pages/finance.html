@@ -63,9 +63,15 @@ label { display: block; margin: .4rem 0; }
 
 <div role="tablist" aria-label="Finance workflows">
   <button id="asx-tab" type="button" role="tab" aria-selected="true" aria-controls="asx-panel">ASX investor</button>
+  <button id="deepdive-tab" type="button" role="tab" aria-selected="false" aria-controls="deepdive-panel">Deep dive / profiles</button>
   <button id="gold-tab" type="button" role="tab" aria-selected="false" aria-controls="gold-panel">XAUUSD trader</button>
   <button id="manual-tab" type="button" role="tab" aria-selected="false" aria-controls="manual-panel">Manual analysis</button>
 </div>
+<div id="deepdive-panel" role="tabpanel" aria-labelledby="deepdive-tab" hidden>
+<section><h2>Deep dive / initial profiling</h2>
+<p>This queue identifies companies worthy of issuer-document and fundamental research. It is not a buy/sell list.</p>
+<div id="deepdive-summary" class="snapshot-grid">Loading shortlist…</div><div id="deepdive-list"></div>
+</section></div>
 <div id="asx-panel" role="tabpanel" aria-labelledby="asx-tab">
 <section>
 <h2>ASX findings</h2>
@@ -374,6 +380,24 @@ async function loadFindings() {
     renderFindings();
   } catch (error) { el('findings-count').textContent = error.message; }
 }
+async function loadDeepDiveSnapshot() {
+  try {
+    const response = await fetch('/api/finance/opportunity/snapshot', { headers: headers() }); const data = await response.json();
+    if (!response.ok) throw new Error(data.detail || 'Deep-dive snapshot unavailable');
+    el('deepdive-summary').textContent = `${data.deep_dive_queue.length} companies queued from ${data.candidate_count} profiles. ${data.next_action}`;
+    const list = document.createElement('div');
+    data.deep_dive_queue.forEach((item, index) => {
+      const card = document.createElement('section'); card.className = 'document';
+      const title = document.createElement('h3'); title.textContent = `${index + 1}. ${item.instrument} — ${item.company || 'Unnamed company'}`;
+      const details = document.createElement('p'); details.textContent = `${item.sector || 'Unclassified'} | score ${item.score} | ${item.flow || 'flow unavailable'}`;
+      const reasons = document.createElement('p'); reasons.textContent = `Signals: ${(item.reasons || []).join(', ')}`;
+      const gaps = document.createElement('p'); gaps.textContent = item.evidence_gaps?.length ? `Evidence gaps: ${item.evidence_gaps.join(', ')}` : 'Evidence gaps: none recorded';
+      const open = document.createElement('button'); open.type = 'button'; open.textContent = 'Open profile'; open.onclick = () => { const profile = findingProfiles.find(candidate => candidate.instrument === item.instrument); if (profile) openProfile(profile); };
+      card.append(title, details, reasons, gaps, open); list.append(card);
+    });
+    el('deepdive-list').replaceChildren(list);
+  } catch (error) { el('deepdive-summary').textContent = error.message; }
+}
 ['finding-sector','finding-cohort','finding-flow','finding-momentum','finding-rsi'].forEach(id => el(id).onchange = renderFindings);
 document.querySelectorAll('[data-sort]').forEach(header => header.onclick = () => { const key = header.dataset.sort; findingSort = { key, direction: findingSort.key === key ? -findingSort.direction : 1 }; renderFindings(); });
 el('drawer-close').onclick = () => { el('profile-drawer').hidden = true; };
@@ -392,6 +416,7 @@ async function callJson(url, options, outId) {
 function tabTo(panel) {
   for (const [tab, content] of [
     ['asx-tab', 'asx-panel'],
+    ['deepdive-tab', 'deepdive-panel'],
     ['gold-tab', 'gold-panel'],
     ['manual-tab', 'manual-panel'],
   ]) {
@@ -401,6 +426,7 @@ function tabTo(panel) {
   }
 }
 el('asx-tab').onclick = () => tabTo('asx-panel');
+el('deepdive-tab').onclick = () => tabTo('deepdive-panel');
 el('gold-tab').onclick = () => tabTo('gold-panel');
 el('manual-tab').onclick = () => tabTo('manual-panel');
 
@@ -750,5 +776,6 @@ el('pf-confirm').onclick = async () => {
 el('pf-analyze').onclick = () => callJson(`/api/finance/portfolios/${el('pf-id').value}/analysis`, { headers: headers() }, 'pf-result');
 loadOpportunitySnapshot();
 loadFindings();
+loadDeepDiveSnapshot();
 </script>
 </html>
