@@ -13,3 +13,9 @@ def test_external_feeds_toggle_is_admin_protected_and_persistent(tmp_path):
         response = client.post("/api/admin/settings/external-feeds", headers=headers, json={"enabled": True})
         assert response.json()["enabled"] is True
         assert client.get("/api/admin/settings/external-feeds", headers=headers).json() == {"enabled": True}
+
+
+def test_local_trust_allows_admin_without_token(tmp_path):
+    settings = Settings(tmp_path, "http://ollama", "daily", "research", "", False, True)
+    with TestClient(create_app(settings), client=("127.0.0.1", 50000)) as client:
+        assert client.get("/api/admin/settings/external-feeds").json() == {"enabled": False}

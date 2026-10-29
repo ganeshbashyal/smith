@@ -163,6 +163,8 @@ def create_app(settings: Settings | None = None, *, ollama_transport=None, feed_
 
     def admin(request: Request, authorization: str | None = Header(default=None)):
         require_loopback(request)
+        if settings.local_trust:
+            return
         if not settings.admin_token:
             raise HTTPException(503, "Set MR_SMITH_ADMIN_TOKEN to enable admin operations")
         if len(settings.admin_token) < 32:

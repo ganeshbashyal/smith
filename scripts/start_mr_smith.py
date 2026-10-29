@@ -152,7 +152,7 @@ def start_app(port: int, log_path: Path) -> subprocess.Popen:
                     "--host", "127.0.0.1", "--port", str(port),
                 ],
                 cwd=ROOT,
-                env=os.environ.copy(),
+                env={**os.environ, "MR_SMITH_LOCAL_TRUST": "1"},
                 stdin=subprocess.DEVNULL,
                 stdout=log,
                 stderr=subprocess.STDOUT,

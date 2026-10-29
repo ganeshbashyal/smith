@@ -11,6 +11,7 @@ class Settings:
     research_model: str
     admin_token: str
     external_feeds: bool
+    local_trust: bool = False
 
     @classmethod
     def from_env(cls) -> "Settings":
@@ -21,4 +22,5 @@ class Settings:
             research_model=os.getenv("MR_SMITH_RESEARCH_MODEL", "gemma4:26b"),
             admin_token=os.getenv("MR_SMITH_ADMIN_TOKEN", ""),
             external_feeds=os.getenv("MR_SMITH_EXTERNAL_FEEDS", "0") == "1",
+            local_trust=os.getenv("MR_SMITH_LOCAL_TRUST", "0") == "1",
         )

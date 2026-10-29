@@ -48,8 +48,8 @@ th { background: #e8eef6; }
 <a aria-current="page" href="/admin">System / Admin</a>
 </nav>
 <p>Research uses the configured research model. Daily requests use your saved selection.</p>
-<p><label>Admin token (used for service controls and admin actions; held only in this page)
-<input id="token" type="password" autocomplete="off" required></label></p>
+<p>This local Admin panel is trusted when Mr Smith is started by the normal launcher. It is protected by loopback-only access; no token is required on this PC.</p>
+<input id="token" type="hidden" value="">
 <button id="refresh">Refresh model health</button>
 <pre id="status" role="status"></pre>
 <h2>Approved current sources</h2>

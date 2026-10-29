@@ -54,6 +54,11 @@ keep it private. If port 8000 is occupied, the script leaves that service alone
 and starts Mr Smith on the next available local port. It does not stop or
 replace existing processes.
 
+When started with `scripts\\start_mr_smith.py`, Mr Smith uses local-trust mode:
+Admin and Finance remain available without repeatedly entering a token, but
+all private operations remain restricted to loopback connections. Token mode
+is still available for a manually hosted or shared local service.
+
 Ollama must be running at `http://127.0.0.1:11434`. Open
 [the widget](http://127.0.0.1:8000/morning),
 [model admin](http://127.0.0.1:8000/admin), or
