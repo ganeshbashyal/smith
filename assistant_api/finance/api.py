@@ -717,8 +717,9 @@ def build_router(*, get_store, admin_dependency, feeds_client_getter,
 
     @router.get("/opportunity/benchmark")
     async def opportunity_benchmark():
-        path = research_data_dir / "opportunity_first_run_20261029" / "benchmark.json"
-        if not path.is_file():
+        candidates = sorted(research_data_dir.glob("opportunity_first_run_*/benchmark.json"))
+        path = candidates[-1] if candidates else None
+        if path is None or not path.is_file():
             raise HTTPException(404, "No ASX opportunity benchmark snapshot has been generated")
         try:
             return json.loads(path.read_text(encoding="utf-8"))
