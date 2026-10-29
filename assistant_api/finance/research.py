@@ -947,8 +947,8 @@ def _deduplicate_batch_items(items: list[dict]) -> list[dict]:
         })
     if not results:
         raise ResearchError("No instrument symbols were found in the list")
-    if len(results) > 200:
-        raise ResearchError("A research batch is limited to 200 unique instruments")
+    if len(results) > 5000:
+        raise ResearchError("A research batch is limited to 5,000 unique instruments")
     return results
 
 

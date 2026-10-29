@@ -30,14 +30,16 @@ def read_symbols(path: Path | None) -> list[dict]:
         return []
     rows = []
     with path.open(encoding="utf-8-sig", newline="") as handle:
-        for row in csv.DictReader(handle):
-            code = (row.get("code") or row.get("symbol") or "").strip().upper().removesuffix(".AX")
+        lines = handle.readlines()
+    header_index = next((index for index, line in enumerate(lines) if "ASX code" in line or "code" in line.lower()), 0)
+    for row in csv.DictReader(lines[header_index:]):
+            code = (row.get("code") or row.get("symbol") or row.get("ASX code") or "").strip().upper().removesuffix(".AX")
             if code:
-                rows.append({"code": code, "company": (row.get("company") or "").strip(), "sector": (row.get("sector") or "").strip()})
+                rows.append({"code": code, "company": (row.get("company") or row.get("Company name") or "").strip(), "sector": (row.get("sector") or row.get("GICS industry group") or "").strip()})
     return rows
 
 
-def build(snapshot: Path, additional: Path | None, output: Path) -> dict:
+def build(snapshot: Path, additional: Path | None, output: Path, limit: int = 1000) -> dict:
     with snapshot.open(encoding="utf-8-sig", newline="") as handle:
         seed = list(csv.DictReader(handle))
     if not seed:
@@ -49,15 +51,23 @@ def build(snapshot: Path, additional: Path | None, output: Path) -> dict:
         if not code:
             continue
         by_code.setdefault(code, {"code": code, "company": row.get("company", ""), "sector": row.get("sector", "")})
+    seed_codes = {(row.get("code") or "").strip().upper().removesuffix(".AX") for row in seed}
+    if limit < len(seed_codes):
+        raise ValueError(f"--limit must be at least the seed size ({len(seed_codes)})")
+    ordered_codes = sorted(by_code)
+    selected_codes = set(seed_codes)
+    for code in ordered_codes:
+        if len(selected_codes) >= limit:
+            break
+        selected_codes.add(code)
     companies = []
-    for row in sorted(by_code.values(), key=lambda item: item["code"]):
+    for row in sorted((item for code, item in by_code.items() if code in selected_codes), key=lambda item: item["code"]):
         companies.append({
             "instrument": f"ASX:{row['code']}", "source_symbol": f"{row['code']}.AX",
             "company": row.get("company", ""), "sector": row.get("sector", ""),
             "cohorts": ["broad_asx"], "market_cap_status": "not_loaded",
             "liquidity_status": "not_loaded", "profile_status": "price_only_pending",
         })
-    seed_codes = {(row.get("code") or "").strip().upper().removesuffix(".AX") for row in seed}
     for company in companies:
         if company["source_symbol"].removesuffix(".AX") in seed_codes:
             company["cohorts"].append("asx200_seed")
@@ -66,9 +76,14 @@ def build(snapshot: Path, additional: Path | None, output: Path) -> dict:
         "profile": "asx_opportunity_first_run",
         "created_on": date.today().isoformat(),
         "snapshot_date": snapshot_date,
+        "source": {
+            "additional_file": str(additional) if additional else None,
+            "source_note": "Official ASX listed-companies directory snapshot; selection is deterministic alphabetical completion after the ASX 200 seed.",
+            "selection_policy": "retain all ASX 200 seed names, then add alphabetically until --limit is reached",
+        },
         "benchmarks": BENCHMARKS,
         "companies": companies,
-        "counts": {"companies": len(companies), "asx200_seed": len(seed_codes), "additional_symbols": max(0, len(companies) - len(seed_codes))},
+        "counts": {"companies": len(companies), "asx200_seed": len(seed_codes), "additional_symbols": max(0, len(companies) - len(seed_codes)), "source_candidates": len(by_code)},
         "limitations": [
             "Current membership snapshots are not historical membership.",
             "Micro-cap status is not asserted until market capitalisation and liquidity data are loaded.",
@@ -92,8 +107,9 @@ def main() -> None:
     parser.add_argument("--snapshot", type=Path, required=True)
     parser.add_argument("--additional", type=Path, help="Optional CSV with code, company and sector columns")
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--limit", type=int, default=1000)
     args = parser.parse_args()
-    print(json.dumps(build(args.snapshot, args.additional, args.output), indent=2))
+    print(json.dumps(build(args.snapshot, args.additional, args.output, args.limit), indent=2))
 
 
 if __name__ == "__main__":
