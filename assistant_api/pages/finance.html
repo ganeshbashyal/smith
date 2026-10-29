@@ -66,7 +66,15 @@ label { display: block; margin: .4rem 0; }
   <button id="deepdive-tab" type="button" role="tab" aria-selected="false" aria-controls="deepdive-panel">Deep dive / profiles</button>
   <button id="gold-tab" type="button" role="tab" aria-selected="false" aria-controls="gold-panel">XAUUSD trader</button>
   <button id="manual-tab" type="button" role="tab" aria-selected="false" aria-controls="manual-panel">Manual analysis</button>
+  <button id="scripts-tab" type="button" role="tab" aria-selected="false" aria-controls="scripts-panel">Scripts / analysis</button>
 </div>
+<div id="scripts-panel" role="tabpanel" aria-labelledby="scripts-tab" hidden>
+<section><h2>Smith analysis scripts</h2><p>Repeatable local actions for screening, daily capture and deep dives.</p>
+<div class="snapshot-grid">
+<div class="metric"><strong>Multi-factor screen</strong><p>Trend, momentum, MA alignment, flow, volume, RSI and evidence quality.</p><button type="button" data-copy-command=".\\.venv\\Scripts\\python.exe scripts\\build_asx_multi_factor_screen.py --profiles .\\data\\asx_entity_profiles_1000_20261029\\profiles.json --output .\\data\\asx_multi_factor_snapshot.json --limit 50">Copy screen command</button></div>
+<div class="metric"><strong>Daily capture</strong><p>Append price and volume data to SQLite with a protection pause.</p><button type="button" data-copy-command=".\\.venv\\Scripts\\python.exe scripts\\refresh_asx_daily_snapshot.py --instruments .\\data\\asx_universe_full_20261029\\instruments.json --data-dir .\\data --pause-seconds 2">Copy daily command</button></div>
+<div class="metric"><strong>Deep-dive queue</strong><p>Run local Llama analysis on promoted candidates.</p><button type="button" data-copy-command=".\\.venv\\Scripts\\python.exe -m assistant_api.finance.research --batch-file .\\data\\asx_deep_dive_queue.json --batch-dir .\\data\\research_jobs\\deepdives --data-dir .\\data --allow-network --model llama3.1:8b">Copy deep-dive command</button></div>
+</div><p id="script-copy-status" role="status"></p></section></div>
 <div id="deepdive-panel" role="tabpanel" aria-labelledby="deepdive-tab" hidden>
 <section><h2>Deep dive / initial profiling</h2>
 <p>This queue identifies companies worthy of issuer-document and fundamental research. It is not a buy/sell list.</p>
@@ -419,6 +427,7 @@ function tabTo(panel) {
     ['deepdive-tab', 'deepdive-panel'],
     ['gold-tab', 'gold-panel'],
     ['manual-tab', 'manual-panel'],
+    ['scripts-tab', 'scripts-panel'],
   ]) {
     const active = content === panel;
     el(content).hidden = !active;
@@ -429,6 +438,8 @@ el('asx-tab').onclick = () => tabTo('asx-panel');
 el('deepdive-tab').onclick = () => tabTo('deepdive-panel');
 el('gold-tab').onclick = () => tabTo('gold-panel');
 el('manual-tab').onclick = () => tabTo('manual-panel');
+el('scripts-tab').onclick = () => tabTo('scripts-panel');
+document.querySelectorAll('[data-copy-command]').forEach(button => button.onclick = async () => { await navigator.clipboard.writeText(button.dataset.copyCommand); el('script-copy-status').textContent = 'Command copied to clipboard.'; });
 
 let researchPoll;
 let batchPoll;
