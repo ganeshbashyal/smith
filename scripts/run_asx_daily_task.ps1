@@ -13,4 +13,6 @@ New-Item -ItemType Directory -Force -Path 'D:\Mr_Smith\data\daily_snapshots' | O
 & 'D:\Mr_Smith\.venv\Scripts\python.exe' 'D:\Mr_Smith\scripts\build_daily_end_of_day_report.py' `
   --snapshot-dir "D:\Mr_Smith\data\daily_snapshots\$stamp" `
   --output-dir 'D:\Mr_Smith\data\end_of_day' *>> $log
+& 'D:\Mr_Smith\.venv\Scripts\python.exe' 'D:\Mr_Smith\scripts\cleanup_runtime_data.py' `
+  --data-dir 'D:\Mr_Smith\data' --apply *>> $log
 exit $LASTEXITCODE

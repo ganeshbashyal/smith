@@ -1,0 +1,8 @@
+{
+  "daily_snapshot_days": 30,
+  "end_of_day_report_days": 90,
+  "morning_brief_days": 30,
+  "worker_log_days": 14,
+  "processed_queue_days": 7,
+  "preserve": ["research_jobs", "issuer_evidence_queue_20261029", "commodities", "asx_universe_1000_20261029", "asx_universe_full_20261029", "mr_smith.sqlite3"]
+}
