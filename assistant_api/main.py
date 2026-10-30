@@ -605,6 +605,17 @@ missing, say so rather than inventing a match or compliance determination."""
             raise HTTPException(500, "Plug morning signal is unreadable") from exc
         return {"status": "ok", "file": files[-1].name, **payload}
 
+    @app.get("/api/source-health")
+    async def source_health():
+        status = app.state.store.tool_status()
+        now = datetime.now(timezone.utc)
+        result=[]
+        for name, source in SOURCES.items():
+            item = status.get(name) or {}
+            observed = item.get("retrieved_at") or item.get("observed_at")
+            result.append({"tool": name, "source": source, "status": item.get("status", "never_run"), "retrieved_at": observed, "freshness": "unknown" if not observed else "reported_by_connector"})
+        return {"enabled": app.state.store.get_external_feeds(settings.external_feeds), "sources": result, "generated_at": now.isoformat()}
+
     @app.get("/admin", response_class=HTMLResponse)
     async def admin_page():
         return (Path(__file__).parent / "pages" / "admin.html").read_text(encoding="utf-8")
